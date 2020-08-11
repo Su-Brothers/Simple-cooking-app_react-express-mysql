@@ -1,0 +1,12 @@
+//글로벌 스타일
+$lgray: #ececec;
+html,
+body,
+#root {
+  height: 100%;
+  padding: 0;
+}
+
+#root {
+  background-color: $lgray;
+}
