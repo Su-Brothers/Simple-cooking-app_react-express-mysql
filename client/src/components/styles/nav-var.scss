@@ -25,15 +25,14 @@ header {
       margin-left: 25px;
       color: white;
       .header-title-icon {
-        font-size: 2.5rem;
-        margin-right: 5px;
-        color: $dorange;
+        width: 100px;
       }
     }
     .header-search {
       height: 2rem;
       font-size: 0px;
       position: relative;
+      margin-right: 25px;
       .header-search-icon {
         position: absolute;
         vertical-align: middle;
