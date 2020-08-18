@@ -34,7 +34,7 @@ function NavBar() {
           </span>
           과사전
         </div>
-        <div className="header-search">
+        <div className="header-searader-search">
           <FaSearch className="header-search-icon" />
           <input type="text" placeholder="레시피를 입력하세요..." />
         </div>
