@@ -1,0 +1,118 @@
+$gray: #b3b3b3;
+$dorange: #ff7300;
+@mixin flexColum {
+  display: flex;
+  flex-direction: column;
+}
+@mixin slide($animation-name, $from, $to) {
+  @keyframes #{$animation-name} {
+    from {
+      #{$animation-name}: #{$from};
+      opacity: 0;
+    }
+    to {
+      #{$animation-name}: #{$to};
+      opacity: 1;
+    }
+  }
+}
+@include slide(margin-right, -300px, 0px); //슬라이드 효과
+@include slide(transform, translateY(40px), translateY(-20px));
+.login_container {
+  width: 960px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  margin: 0 auto;
+  .login_container_logo {
+    animation-name: margin-right;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+
+    .login_container_logo_title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      font-family: "Jua", sans-serif;
+      opacity: 0;
+      transform: translateY(40px);
+      animation-name: transform;
+      animation-duration: 1s;
+      animation-delay: 1.4s;
+      animation-fill-mode: forwards;
+    }
+    img {
+      width: 300px;
+    }
+  }
+  .login_container_info {
+    width: 400px;
+    height: 400px;
+    @include flexColum();
+    align-items: center;
+    justify-content: center;
+    box-shadow: 1px 1px 10px $gray;
+    background-color: white;
+    border-radius: 2px;
+    .login_container_info_title {
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+    form {
+      @include flexColum();
+      margin-top: 20px;
+      width: 80%;
+      input {
+        height: 40px;
+        border: 1px solid $gray;
+        padding-left: 10px;
+        outline: none;
+        &:focus {
+          box-shadow: 1px 1px 10px #5fad50;
+        }
+      }
+      .hr-text {
+        display: flex;
+        flex-basis: 100%;
+        align-items: center;
+        color: rgba(0, 0, 0, 0.35);
+        font-size: 12px;
+        margin: 12px 0px 24px 0px;
+      }
+      .hr-text::before,
+      .hr-text::after {
+        content: "";
+        flex-grow: 1;
+        background: rgba(0, 0, 0, 0.35);
+        height: 1px;
+        font-size: 0px;
+        line-height: 0px;
+        margin: 0px 12px;
+      }
+      button {
+        height: 40px;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 2px;
+      }
+      .login_btn {
+        margin-top: 15px;
+        background-color: $dorange;
+        &:hover {
+          background-color: #e96900;
+        }
+      }
+      .singup_btn {
+        background-color: #6cbb5d;
+        &:hover {
+          background-color: #5fad50;
+        }
+      }
+    }
+  }
+}
