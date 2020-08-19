@@ -4,19 +4,44 @@ $dorange: #ff7300;
   display: flex;
   flex-direction: column;
 }
-
+@mixin slide($animation-name, $from, $to) {
+  @keyframes #{$animation-name} {
+    from {
+      #{$animation-name}: #{$from};
+      opacity: 0;
+    }
+    to {
+      #{$animation-name}: #{$to};
+      opacity: 1;
+    }
+  }
+}
+@include slide(margin-right, -300px, 0px); //슬라이드 효과
+@include slide(transform, translateY(40px), translateY(-20px));
 .login_container {
   width: 960px;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
+
   margin: 0 auto;
   .login_container_logo {
+    animation-name: margin-right;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+
     .login_container_logo_title {
       text-align: center;
-      font-size: 2rem;
+      font-size: 2.5rem;
       font-weight: bold;
+      font-family: "Jua", sans-serif;
+      opacity: 0;
+      transform: translateY(40px);
+      animation-name: transform;
+      animation-duration: 1s;
+      animation-delay: 1.4s;
+      animation-fill-mode: forwards;
     }
     img {
       width: 300px;

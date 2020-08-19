@@ -6,7 +6,7 @@ function LoginPage() {
     <>
       <div className="login_container">
         <div className="login_container_logo">
-          <div className="login_container_logo_title">환영합니다.</div>
+          <div className="login_container_logo_title">환영합니다!</div>
           <img src={logo} alt="logo" />
         </div>
         <div className="login_container_info">
