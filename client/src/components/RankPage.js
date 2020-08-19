@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import Cooking from '../icons/cooking.svg';
 import "./styles/rankpage.scss";
 import {FaAngleLeft, FaAngleRight} from 'react-icons/fa';
-import timeline from './TimeLine';
+import MiniTimeline from './MiniTimeline';
 import TimeLine from './TimeLine';
 
 const TOTAL_SLIDES = 3;
@@ -80,7 +80,7 @@ function RankPage() {
                 <li>양식</li>
             </ul>
         </div>
-                   <div className = "content_container"> <TimeLine/></div>
+            <div className = "content_container"> <TimeLine/></div>
     </div>
     )
 }
