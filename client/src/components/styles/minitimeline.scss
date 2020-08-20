@@ -1,0 +1,77 @@
+.minitime_container{
+    display: flex;
+    flex-direction: column;
+    width: 275px;
+    height: 400px;
+    border : 1px solid #ddd;
+    border-radius: 10px;
+    background-color: white;
+    position: relative;
+    box-shadow: 3px 3px 3px gray;
+
+.picture_rank{
+    position: relative;
+width: 100%;
+
+.picture{
+    display: block;
+    overflow: hidden;
+    height: 250px;
+    padding : 0;
+    img {
+        border-radius: 10px 10px 0px 0px;
+    }
+}
+
+.rank{
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    
+    width: 40px;
+    height: 40px;
+    border-radius:  100%;
+    background-color: #f5e58d;
+    
+}
+
+}
+.aaa{
+    position: absolute;
+    width: 100%;
+    bottom: 5px;
+    margin : 0 5px;
+    .timeline_name_container{
+        display: flex;
+        height: 30px;
+
+    
+        .timeline_picture{
+            width: 30px;
+            height: 30px;
+            border-radius: 70%;
+            overflow: hidden;
+        }
+        .timeline_name{
+            text-align: center;
+            line-height: 30px;
+        }
+    
+    }
+
+    .miniTimeline_bottom{
+        display: flex;
+        opacity: 0.5;
+        justify-content: space-between;
+         margin : 0 5px;
+        
+        }
+}
+
+
+.text{
+    word-break: normal;
+    font-weight: bold;
+}
+
+}
