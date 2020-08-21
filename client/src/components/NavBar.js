@@ -5,7 +5,7 @@ import logo from "../images/jabakLogo_v4.png";
 import { withRouter } from "react-router-dom";
 
 function NavBar({ location }) {
-  return location.pathname !== "/login" ? (
+  return location.pathname !== "/login" && location.pathname !== "/signup" ? (
     <header>
       <div className="header-left-menu">
         <div className="header-title-container">

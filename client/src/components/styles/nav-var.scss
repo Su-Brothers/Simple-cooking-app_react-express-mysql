@@ -6,8 +6,10 @@ $ygray: #6e6906;
 $gray: #b3b3b3;
 header {
   height: 75px;
+  width: 100%;
   background-color: $orange;
   box-shadow: 0px -2px 10px $ygray;
+  position: absolute;
   display: flex;
   justify-content: space-between;
   align-items: center;
