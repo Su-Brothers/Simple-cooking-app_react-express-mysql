@@ -3,7 +3,6 @@ import Cooking from '../icons/cooking.svg';
 import "./styles/rankpage.scss";
 import {FaAngleLeft, FaAngleRight} from 'react-icons/fa';
 import MiniTimeline from './MiniTimeline';
-import TimeLine from './TimeLine'
 
 
 const TOTAL_SLIDES = 3;
