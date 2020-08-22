@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "./styles/signup-page.scss";
 import logo from "../images/jabakLogo_v4.png";
-function SignupPage() {
+import { useDispatch } from "react-redux";
+import { signupHandler } from "../modules/user";
+function SignupPage({ history }) {
   const [info, setInfo] = useState({
     email: "",
     userId: "",
@@ -17,7 +19,7 @@ function SignupPage() {
   const [nicknameBool, setNicknameBool] = useState(""); //닉네임 일치 상태
 
   const { email, userId, password, passwordCheck, userNickname } = info;
-
+  const dispatch = useDispatch();
   const onInputHandler = (e) => {
     setInfo({
       ...info,
@@ -44,13 +46,29 @@ function SignupPage() {
       setPasswordCheckBool("");
     }
   };
+
+  const onSignup = (e) => {
+    e.preventDefault();
+    const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; //정규식 사용
+
+    const checkInfo =
+      Object.values(info).every((x) => x !== "") &&
+      password.length > 7 &&
+      password === passwordCheck &&
+      reg_email.test(email); //하나라도 비어있고 형식에 안맞으면 x x
+    if (!checkInfo) {
+      alert("입력하신 정보가 일치하지 않습니다.");
+    } else {
+      dispatch(signupHandler(email, userId, password, userNickname, history));
+    }
+  };
   return (
     <div className="signup_container">
       <div className="signup_container_logo">
         <img src={logo} alt="logo" />
       </div>
       <div className="signup_container_info">
-        <div className="signup_container_info_title">SING UP</div>
+        <div className="signup_container_info_title">SIGN UP</div>
         <form>
           <input
             type="text"
@@ -111,7 +129,7 @@ function SignupPage() {
             }
           />
           <div style={{ fontSize: "0.8rem", color: "red" }}>{nicknameBool}</div>
-          <button type="submit" className="singup_btn">
+          <button type="submit" className="singup_btn" onClick={onSignup}>
             회원가입
           </button>
         </form>
