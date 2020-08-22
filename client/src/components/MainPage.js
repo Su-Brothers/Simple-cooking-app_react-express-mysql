@@ -1,10 +1,11 @@
 import React from "react";
 import "./styles/mainpage.scss";
-import MiniTimeline from "./MiniTimeline"
+
+import { useSelector } from "react-redux";
 function MainPage() {
-  return (
-  <div className="main-container">메인화면</div>
-  )
+  const state = useSelector((state) => state.user);
+  console.log(state);
+  return <div className="main-container">메인화면</div>;
 }
 
 export default MainPage;
