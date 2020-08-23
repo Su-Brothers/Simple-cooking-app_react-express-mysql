@@ -6,6 +6,7 @@ import NavBar from "./components/NavBar";
 import RankPage from "./components/RankPage";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
+import Auth from "./components/hoc/auth";
 
 function App(props) {
   return (
@@ -13,10 +14,10 @@ function App(props) {
       <NavBar />
       <main>
         <Switch>
-          <Route exact path="/" component={MainPage} />
-          <Route exact path="/login" component={LoginPage} />
-          <Route path="/ranking" component={RankPage} />
-          <Route path="/signup" component={SignupPage} />
+          <Route exact path="/" component={Auth(MainPage)} />
+          <Route exact path="/login" component={Auth(LoginPage, false)} />
+          <Route path="/ranking" component={Auth(RankPage)} />
+          <Route path="/signup" component={Auth(SignupPage, false)} />
         </Switch>
       </main>
     </BrowserRouter>

@@ -2,12 +2,10 @@ import axios from "axios";
 //액션
 const LOGIN_USER = "LOGIN_USER";
 const SIGNUP_USER = "SIGNUP_USER";
+const AUTH_USER = "AUTH_USER";
 
 //액션 생성 함수
-export const loginHandler = (id, password, history) => async (
-  dispatch,
-  getState
-) => {
+export const loginHandler = (id, password, history) => async (dispatch) => {
   const data = await axios
     .post("/api/users/login", { id: id, password: password })
     .then((res) => res.data)
@@ -24,8 +22,7 @@ export const loginHandler = (id, password, history) => async (
 };
 
 export const signupHandler = (email, id, password, nickname, history) => async (
-  dispatch,
-  getState
+  dispatch
 ) => {
   const data = await axios
     .post("/api/users/signup", {
@@ -49,6 +46,46 @@ export const signupHandler = (email, id, password, nickname, history) => async (
   }
 };
 
+export const authHandler = (option, history) => async (dispatch) => {
+  //페이지간 권한인증
+  const data = await axios
+    .get("/api/users/auth")
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+  //console.log(data);
+  dispatch({
+    type: AUTH_USER,
+    payload: data,
+  });
+  console.log("4");
+  if (data.isAuth === false) {
+    alert(data.error); //토큰이 일치하지 않을때
+    history.push("/");
+  } else if (data.isAuth === null) {
+    //로그인 안되어 있을때
+
+    if (option) {
+      alert(data.error);
+      history.push("/login");
+    } else if (option === false) {
+      return;
+    } else {
+      return;
+    }
+  } else if (data.isAuth === true) {
+    //로그인 되어있을때
+    if (option) {
+      return;
+    } else if (option === false) {
+      console.log("철벽");
+      history.push("/"); //안된사람만 가능
+    } else {
+      console.log("받아줌");
+      return;
+    }
+  }
+};
+
 const initialState = {};
 export default function post(state = initialState, action) {
   switch (action.type) {
@@ -60,7 +97,12 @@ export default function post(state = initialState, action) {
     case SIGNUP_USER:
       return {
         ...state,
-        loginsuccess: action.payload,
+        result: action.payload, //로그인한 유저의 모든 정보
+      };
+    case AUTH_USER:
+      return {
+        ...state,
+        userData: action.payload,
       };
 
     default:
