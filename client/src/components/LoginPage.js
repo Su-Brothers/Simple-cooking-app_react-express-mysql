@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import "./styles/loginpage.scss";
 import logo from "../images/jabakLogo_v4.png";
 import { loginHandler } from "../modules/user";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 function LoginPage({ history }) {
+  console.log("2");
   const dispatch = useDispatch();
   const [userInfo, setUserInfo] = useState({
     userId: "",

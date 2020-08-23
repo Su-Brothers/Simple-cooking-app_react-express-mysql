@@ -4,8 +4,8 @@ const jwtKey = require("../config/jwt");
 const bcrypt = require("bcrypt");
 const rounds = 10; //암호 자릿수
 //커넥션 설정
-//const connection = mysql.createConnection(dbconfig);
 const pool = require("../config/pool"); //pool을 가져온다.
+const auth = require("../middleware/auth");
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
@@ -85,6 +85,17 @@ router.post("/signup", async (req, res) => {
   } catch (err) {
     throw err;
   }
+});
+
+router.get("/auth", auth, (req, res) => {
+  //페이지간 인증구현
+  //미들웨어에서 받아온 정보 전달
+
+  res.json({
+    _id: req.user.user_id,
+    _nickname: req.user.user_nickname,
+    isAuth: true, //로그인 되어 있는 상태를 같이 전달
+  });
 });
 
 module.exports = router;

@@ -3,13 +3,13 @@ $lgray: #ececec;
 html,
 body,
 #root {
-  min-height: 100%;
+  height: 100%;
   padding: 0;
   margin: 0;
+  background-color: $lgray;
 }
 
 #root {
-  background-color: $lgray;
   main {
     height: 100%;
   }
