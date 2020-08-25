@@ -7,6 +7,7 @@ import RankPage from "./components/RankPage";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import Auth from "./components/hoc/auth";
+import MyPage from "./components/MyPage";
 
 function App(props) {
   return (
@@ -18,6 +19,7 @@ function App(props) {
           <Route exact path="/login" component={Auth(LoginPage, false)} />
           <Route path="/ranking" component={Auth(RankPage)} />
           <Route path="/signup" component={Auth(SignupPage, false)} />
+          <Route path = "/mypage" component={Auth(MyPage, true)} />
         </Switch>
       </main>
     </BrowserRouter>

@@ -4,9 +4,9 @@
   width: 650px;
   height: 400px;
   border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 3px 3px 3px gray;
-  padding: 3px 3px 3px 3px;
+  border-radius: 8px;
+
+  padding: 7px 7px 7px 7px;
   background-color: white;
 
   .timeline-icons {
@@ -20,25 +20,37 @@
     height: 70px;
 
     .title_image {
-      width: 70px;
-      height: 70px;
-      border-radius: 70%;
+      width: 60px;
+      height: 60px;
+      border : 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgb(189, 189, 189);
       overflow: hidden;
     }
 
     .title_Name {
       text-align: center;
-      line-height: 70px;
+      font-weight: bold;
+      line-height: 60px;
+      font-size : 1.5rem;
+      margin-left: 8px;
     }
   }
+  .timeline_text{
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
 
   .timeline_conainer_bottom {
     display: flex;
     justify-content: space-between;
+    font-size: large;
+    opacity: 0.7;
   }
   .button_style {
-    border: 1px solid #323f6b;
+    border: 1px none #323f6b;
     border-radius: 4px;
-    padding: 2px 8px;
+    padding: 2px 15px;
   }
 }

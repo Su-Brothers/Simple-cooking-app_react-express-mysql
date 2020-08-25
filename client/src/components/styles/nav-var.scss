@@ -9,7 +9,7 @@ header {
   width: 100%;
   background-color: $orange;
   box-shadow: 0px -2px 10px $ygray;
-  position: absolute;
+  position: sticky;
   display: flex;
   justify-content: space-between;
   align-items: center;
