@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import Cooking from "../icons/cooking.svg";
+import React, { useState } from "react";
 import "./styles/rankpage.scss";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import MiniTimeline from "./MiniTimeline";
+import korea from '../icons/korea.svg'
+import japan from '../icons/japan.svg'
+import italy from '../icons/italy.svg'
+import china from '../icons/china.svg'
 
 const TOTAL_SLIDES = 3;
 
@@ -45,8 +48,18 @@ function RankPage() {
   return (
     <div className="rank_container">
       <div className="rank_container_menu">
-        <div className="pictures">
-          <img src={Cooking} width="100px" heigh="100px" />
+        <div className = "picture_wrapper">
+        <div className="pictures_slides"
+             style={{
+                transition: `${transIdx}s ease-out`,
+                transform: `translateX(${currentIdx * -150 - 150}px)`
+              }}>
+          <img src = {italy} width = "150px" height = "150px"/>
+          <img src = {korea} width = "150px" height = "150px"/>
+          <img src = {china} width = "150px" height = "150px"/>
+          <img src = {japan} width = "150px" height = "150px"/>
+          <img src = {italy} width = "150px" height = "150px"/>
+        </div>
         </div>
         <div className="controls_box">
           <div className="controls">
@@ -63,7 +76,7 @@ function RankPage() {
             className="slides"
             style={{
               transition: `${transIdx}s ease-out`,
-              transform: `translateX(${currentIdx * -150 - 150}px)`,
+              transform: `translateX(${currentIdx * -150 - 150}px)`
             }}
           >
             <li>양식</li>
@@ -92,7 +105,8 @@ function RankPage() {
         </div>
       </div>
     </div>
-  );
+    )
+  
 }
 
 export default RankPage;

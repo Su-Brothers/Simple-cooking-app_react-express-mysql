@@ -34,7 +34,6 @@ function TimeLine() {
           김정수
         </div>
       </div>
-      <br />
       <div className="timeline_image">
         {" "}
         {/*메인 피드 이미지*/}
@@ -51,20 +50,20 @@ function TimeLine() {
         {/*하단부 좋아요 댓글 등등 영역*/}
         <div style={{ display: "flex" }}>
           <div>
-            <button className="button_style" onClick={likeButtonHandler}>
+            <a className="button_style" onClick={likeButtonHandler}>
               {" "}
               {like ? <FaRegHeart /> : <FaHeart />} 좋아요
-            </button>
+            </a>
           </div>
           <div>
-            <button className="button_style">
+            <a className="button_style">
               <FaRegComment /> 댓글 달기
-            </button>
+            </a>
           </div>
           <div>
-            <button className="button_style">
+            <a className="button_style">
               <FaExpandArrowsAlt /> 스크랩
-            </button>
+            </a>
           </div>
         </div>
         <div className="time">08.19</div>

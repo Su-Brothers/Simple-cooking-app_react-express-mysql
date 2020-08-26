@@ -2,6 +2,7 @@
 
 # database
 /server/config/database.js
+/server/config/jwt.js
 # dependencies
 /node_modules
 /.pnp

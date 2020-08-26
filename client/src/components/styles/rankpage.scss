@@ -9,13 +9,21 @@
   flex-direction: column;
   align-items: center;
 
-  .pictures {
-    top: 0;
-    left: 0;
-    height: 100%;
+  .picture_wrapper{
+    position: relative;
     margin-top: 20px;
-    text-align: center;
-  }
+    width: 150px;
+    height: 150px;
+    left: 50%;
+    margin-left: -75px;
+    overflow: hidden;
+
+    .pictures_slides {
+      display: flex;
+      width: 750px;
+      height: 100%;
+      }
+    }
 
   .slide_wrapper {
     position: relative;
