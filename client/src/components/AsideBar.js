@@ -33,7 +33,7 @@ function AsideBar({ location }) {
     <aside className="left-aside">
       <div className="left-aside-list">
         <div className="left-aside-item">
-          <Link to="/">
+          <Link to="/mypage">
             <FaUser />
             마이페이지
           </Link>
