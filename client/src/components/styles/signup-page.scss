@@ -10,8 +10,10 @@ $dorange: #ff7300;
   display: flex;
   align-items: center;
   justify-content: space-around;
-
-  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   .signup_container_logo {
     img {
       width: 300px;
