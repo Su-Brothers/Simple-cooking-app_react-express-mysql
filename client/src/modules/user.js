@@ -60,7 +60,7 @@ export const authHandler = (option, history) => async (dispatch) => {
   console.log("4");
   if (data.isAuth === false) {
     alert(data.error); //토큰이 일치하지 않을때
-    history.push("/");
+    history.push("/login");
   } else if (data.isAuth === null) {
     //로그인 안되어 있을때
 
@@ -70,6 +70,7 @@ export const authHandler = (option, history) => async (dispatch) => {
     } else if (option === false) {
       return;
     } else {
+      console.log("받아줌ㅋ");
       return;
     }
   } else if (data.isAuth === true) {
@@ -86,7 +87,13 @@ export const authHandler = (option, history) => async (dispatch) => {
   }
 };
 
-const initialState = {};
+const initialState = {
+  loginsuccess: {},
+  result: {},
+  userData: {
+    isAuth: null,
+  },
+};
 export default function post(state = initialState, action) {
   switch (action.type) {
     case LOGIN_USER:

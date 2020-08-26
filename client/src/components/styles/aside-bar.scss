@@ -1,0 +1,43 @@
+$black: #242424;
+$lgray: #dee0e4;
+.left-aside {
+  position: fixed;
+  display: flex;
+  padding-top: 75px;
+  .left-aside-list {
+    margin-left: 30px;
+    .left-aside-item {
+      margin-top: 30px;
+      a {
+        transition: all 0.1s ease-in-out;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: $black;
+        font-size: 1.4rem;
+        font-weight: 600;
+        .item-star,
+        .item-ranking {
+          color: #f4ff55;
+        }
+        .item-spoonfork {
+          color: #c0c0c0;
+        }
+        .icon-borderd {
+          stroke: $black; //아이콘 테두리
+          stroke-width: 3rem;
+        }
+        svg {
+          margin-right: 15px;
+        }
+        &:hover {
+          transition: all 0.1s ease-in-out;
+          font-size: 1.5rem;
+          background-color: $lgray;
+          padding: 7px;
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}

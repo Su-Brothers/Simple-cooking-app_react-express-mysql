@@ -9,10 +9,11 @@ header {
   width: 100%;
   background-color: $orange;
   box-shadow: 0px -2px 10px $ygray;
-  position: sticky;
+  position: fixed;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 10;
   .header-left-menu {
     width: 600px;
     height: 100%;
@@ -20,14 +21,13 @@ header {
     justify-content: space-between;
     align-items: center;
     .header-title-container {
-      font-size: 1.3rem;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
       margin-left: 25px;
-      color: white;
-      .header-title-icon {
-        width: 100px;
+      a {
+        display: flex;
+        align-items: center;
+        .header-title-icon {
+          width: 100px;
+        }
       }
     }
     .header-search {
@@ -62,5 +62,11 @@ header {
     align-items: center;
     justify-content: space-between;
     margin-right: 25px;
+
+    a {
+      color: black;
+      display: flex;
+      align-items: center;
+    }
   }
 }
