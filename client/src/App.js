@@ -7,11 +7,13 @@ import RankPage from "./components/RankPage";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import Auth from "./components/hoc/auth";
+import AsideBar from "./components/AsideBar";
 
 function App(props) {
   return (
     <BrowserRouter>
       <NavBar />
+      <AsideBar />
       <main>
         <Switch>
           <Route exact path="/" component={Auth(MainPage)} />

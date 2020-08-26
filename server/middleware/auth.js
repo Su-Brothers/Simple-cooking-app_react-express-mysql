@@ -13,13 +13,14 @@ const auth = (req, res, next) => {
   } else {
     //쿠키 복호화한후 그 유저가 있는지 db에서 찾고 찾으면 넘겨준다.
     jwt.verify(token, jwtKey.secret, async function (err, decoded) {
-      if (err) return res.json({ isAuth: false, error: "서버 오류" });
       try {
         const [result, fields] = await pool.query(sql, [decoded.userNo]);
         req.user = result[0]; //req에 넣어서 다음 미들웨어에게 전달
         next();
       } catch {
-        return res.json({ isAuth: false, error: "서버 오류" });
+        //쿠키가 일치하지 않거나 만료되었을때
+        res.clearCookie("user");
+        return res.json({ isAuth: false, error: "세션 만료" });
       }
     });
   }
