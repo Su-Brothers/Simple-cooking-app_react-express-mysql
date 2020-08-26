@@ -28,7 +28,7 @@ router.post("/login", async (req, res) => {
             },
             jwtKey.secret,
             {
-              expiresIn: "1h", //지속시간
+              expiresIn: "5h", //지속시간
             }
           );
           // 쿠키저장
@@ -46,6 +46,16 @@ router.post("/login", async (req, res) => {
     }
   } catch (err) {
     throw err;
+  }
+});
+
+router.get("/logout", (req, res) => {
+  if (req.cookies.user) {
+    //로그아웃하려는 쿠키가 있을때
+    res.clearCookie("user");
+    res.json({ success: true, message: "로그아웃 성공" });
+  } else {
+    res.json({ success: false, message: "로그아웃 에러" });
   }
 });
 
