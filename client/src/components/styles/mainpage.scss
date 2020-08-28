@@ -1,4 +1,115 @@
+$orange: #fdd835;
+$lorange: #ffff6b;
+$dorange: #ffae00;
+$gray: #e7e7e7;
+$lgray: #ececec;
+$ldgray: #d8d8d8;
+$dgray: #919191;
+
+@keyframes btnLotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes selectMenu {
+  0% {
+    border-radius: 50%;
+  }
+
+  100% {
+    border-radius: 25px;
+  }
+}
+
 .main-container {
+  width: 680px;
+  margin-top: 30px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  .timeline_container {
+    margin-top: 20px;
+  }
+  .main-category {
+    width: 70%;
+    display: flex;
+    align-self: flex-start;
+    border-radius: 25px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid $gray;
+    .main-category-item {
+      width: 20%;
+      height: 50px;
+      font-size: 1.4rem;
+      line-height: 50px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .active {
+      font-weight: bold;
+      background-color: $dorange;
+      border-radius: 25px;
+      color: white;
+      animation-name: selectMenu;
+      animation-duration: 0.2s;
+    }
+  }
+  .main-write-feed {
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    border: 1px solid $gray;
+    border-radius: 15px;
+    margin-top: 20px;
+    color: black;
+    text-decoration: none;
+    .main-write-box {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+      img {
+        border-radius: 50%;
+        width: 8%;
+        padding: 2px;
+        border: 2px solid $dgray;
+      }
+      .main-write-input {
+        height: 50px;
+        width: 70%;
+        background-color: $lgray;
+        border-radius: 15px;
+        padding-left: 10px;
+        line-height: 50px;
+        border: 1px solid $gray;
+        color: $dgray;
+      }
+      .main-write-feed-btn {
+        width: 50px;
+        height: 50px;
+
+        border-radius: 50%;
+        background-color: $dorange;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        color: white;
+      }
+    }
+    &:hover {
+      animation-name: btnLotate;
+      animation-duration: 0.2s;
+      background-color: $ldgray;
+    }
+  }
 }

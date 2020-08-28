@@ -9,20 +9,21 @@ import SignupPage from "./components/SignupPage";
 import Auth from "./components/hoc/auth";
 import MyPage from "./components/MyPage";
 import AsideBar from "./components/AsideBar";
-
+import AsideChef from "./components/AsideChef";
 
 function App(props) {
   return (
     <BrowserRouter>
       <NavBar />
       <AsideBar />
+      <AsideChef />
       <main>
         <Switch>
           <Route exact path="/" component={Auth(MainPage)} />
           <Route exact path="/login" component={Auth(LoginPage, false)} />
           <Route path="/ranking" component={Auth(RankPage)} />
           <Route path="/signup" component={Auth(SignupPage, false)} />
-          <Route path = "/mypage" component={Auth(MyPage, true)} />
+          <Route path="/mypage" component={Auth(MyPage, true)} />
         </Switch>
       </main>
     </BrowserRouter>

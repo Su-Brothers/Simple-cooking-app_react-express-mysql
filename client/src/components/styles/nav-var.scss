@@ -5,7 +5,7 @@ $ywhite: #fffff7; //노란빛 흰색
 $ygray: #6e6906;
 $gray: #b3b3b3;
 header {
-  height: 75px;
+  height: 65px;
   width: 100%;
   background-color: $orange;
   box-shadow: 0px -2px 10px $ygray;
@@ -27,7 +27,7 @@ header {
         display: flex;
         align-items: center;
         .header-title-icon {
-          width: 100px;
+          width: 85px;
         }
       }
     }
