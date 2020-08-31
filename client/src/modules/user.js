@@ -94,7 +94,7 @@ const initialState = {
     isAuth: null,
   },
 };
-export default function post(state = initialState, action) {
+export default function user(state = initialState, action) {
   switch (action.type) {
     case LOGIN_USER:
       return {

@@ -1,9 +1,12 @@
 import React from "react";
 import { FaCrown } from "react-icons/fa";
 import "./styles/aside-chef.scss";
+import { withRouter } from "react-router-dom";
 
-function AsideChef() {
-  return (
+function AsideChef({ location }) {
+  return location.pathname !== "/login" &&
+    location.pathname !== "/signup" &&
+    location.pathname !== "/write" ? (
     <aside className="right-aside-chef">
       <div className="chef-list">
         <div className="chef-list-title">
@@ -65,7 +68,7 @@ function AsideChef() {
         </div>
       </div>
     </aside>
-  );
+  ) : null;
 }
 
-export default AsideChef;
+export default withRouter(AsideChef);

@@ -1,0 +1,64 @@
+$black: #363636;
+$lgray: #ececec;
+$dgray: #686868;
+$gray: #cecece;
+.write-container {
+  margin-top: 60px;
+  min-width: 1120px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $black;
+  font-size: 1.4rem;
+  font-weight: bold;
+  input,
+  textarea,
+  select {
+    background-color: $lgray;
+    border: 1px solid $gray;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: $black;
+  }
+  textarea {
+    font-size: 20px; //rem 안먹음
+  }
+  input,
+  textarea {
+    &::placeholder {
+      color: $dgray;
+      font-weight: 400;
+    }
+  }
+
+  .write-page-item {
+    margin-top: 20px;
+    border-radius: 5px;
+  }
+  .write-container-title {
+    align-self: flex-start;
+    font-size: 1.65rem;
+    font-weight: bold;
+  }
+  .write-container-btn-box {
+    margin: 20px 0px;
+    button {
+      width: 180px;
+      height: 60px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border: 1px solid #ff6c28;
+      border-radius: 5px;
+      background-color: #ff7231;
+      color: white;
+      cursor: pointer;
+    }
+    .submit-btn {
+      margin-right: 10px;
+      border: 1px solid #479b47;
+      background-color: #55aa55;
+    }
+  }
+}
