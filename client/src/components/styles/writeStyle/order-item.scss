@@ -1,0 +1,52 @@
+$gray: #cecece;
+$lgray: #ececec;
+$dgray: #686868;
+$dorange: #ff5100;
+.order-item-box {
+  width: 650px;
+  height: 160px;
+  align-self: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  .order-item-box-num {
+    font-size: 2rem;
+    color: #2d6e12;
+  }
+  textarea {
+    width: 320px;
+    height: 100%;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .order-item-drop-zone {
+    position: relative;
+    color: $dgray;
+    font-size: 3rem;
+    height: 100%;
+    width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $lgray;
+    border: 1px solid $gray;
+    border-radius: 5px;
+    img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+    }
+  }
+  button {
+    font-size: 1.6rem;
+    background-color: transparent;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    border: none;
+    color: $dorange;
+    outline: none;
+    cursor: pointer;
+  }
+}

@@ -29,7 +29,9 @@ function AsideBar({ location }) {
     }
   };
 
-  return location.pathname !== "/login" && location.pathname !== "/signup" ? (
+  return location.pathname !== "/login" &&
+    location.pathname !== "/signup" &&
+    location.pathname !== "/write" ? (
     <aside className="left-aside">
       <div className="left-aside-list">
         <div className="left-aside-item">
@@ -57,7 +59,7 @@ function AsideBar({ location }) {
           </Link>
         </div>
         <div className="left-aside-item">
-          <Link to="/">
+          <Link to="/write">
             <FaEdit />
             글쓰기
           </Link>

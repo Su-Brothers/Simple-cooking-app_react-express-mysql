@@ -3,7 +3,8 @@ const jwtKey = require("../config/jwt");
 const pool = require("../config/pool"); //pool을 가져온다.
 
 const auth = (req, res, next) => {
-  const sql = "SELECT user_id, user_nickname FROM user_info WHERE user_no = ?";
+  const sql =
+    "SELECT user_id, user_nickname, user_no FROM user_info WHERE user_no = ?";
   //클라이언트측에서 쿠키를 가져온다.
   const token = req.cookies.user;
   console.log(token);

@@ -1,0 +1,23 @@
+.tag-item {
+  position: relative;
+  padding: 10px;
+  margin-left: 10px;
+  background-color: #55aa55;
+  border-radius: 10px;
+  .tag-item-xmark {
+    position: absolute;
+    display: none;
+    font-size: 1.25rem;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  &:hover {
+    background-color: #308030;
+    color: #55aa55;
+    .tag-item-xmark {
+      display: block;
+      color: white;
+    }
+  }
+}
