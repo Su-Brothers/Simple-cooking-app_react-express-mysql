@@ -10,7 +10,9 @@ import Auth from "./components/hoc/auth";
 import MyPage from "./components/MyPage";
 import AsideBar from "./components/AsideBar";
 import AsideChef from "./components/AsideChef";
+import NewMyPage from "./components/NewMyPage";
 import WritePage from "./components/writes/WritePage";
+
 
 function App(props) {
   return (
@@ -25,6 +27,7 @@ function App(props) {
           <Route path="/ranking" component={Auth(RankPage)} />
           <Route path="/signup" component={Auth(SignupPage, false)} />
           <Route path="/mypage" component={Auth(MyPage, true)} />
+          <Route path="/newmypage" component={Auth(NewMyPage)} />        
           <Route path="/write" component={Auth(WritePage, true)} />
         </Switch>
       </main>

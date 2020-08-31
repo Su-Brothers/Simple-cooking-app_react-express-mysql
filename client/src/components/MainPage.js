@@ -15,6 +15,7 @@ function MainPage({ history }) {
     japan: false,
     western: false,
   });
+
   const { allFood, korea, china, japan, western } = foodCategory;
   const categoryHandler = (target) => () => {
     const result = Object.entries(foodCategory).reduce((obj, item, i) => {
