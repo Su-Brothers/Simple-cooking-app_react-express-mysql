@@ -89,7 +89,7 @@ router.post("/signup", async (req, res) => {
     //비밀번호 암호화
     bcrypt.hash(password, rounds, async function (err, hash) {
       const result = await pool.query(sqlCreate, [email, id, hash, nickname]);
-
+      console.log(result);
       return res.json({ success: true, result: result });
     });
   } catch (err) {
@@ -104,6 +104,7 @@ router.get("/auth", auth, (req, res) => {
   res.json({
     _id: req.user.user_id,
     _nickname: req.user.user_nickname,
+    _no: req.user.user_no,
     isAuth: true, //로그인 되어 있는 상태를 같이 전달
   });
 });

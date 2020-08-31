@@ -1,0 +1,26 @@
+$dorange: #ff7300;
+.ingre-item-box {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  .ingre-item-name {
+    width: 300px;
+    height: 45px;
+  }
+  .ingre-item-volume {
+    margin-left: 20px;
+    height: 45px;
+    width: 250px;
+  }
+  button {
+    font-size: 1.4rem;
+    background-color: transparent;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    border: none;
+    color: $dorange;
+    outline: none;
+    cursor: pointer;
+  }
+}
