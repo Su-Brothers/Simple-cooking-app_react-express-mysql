@@ -74,6 +74,8 @@ router.post("/upload/orderimg", cUpload.single("orderimg"), (req, res) => {
 });
 
 router.post("/upload/board", async (req, res) => {
+  const connection = await pool.getConnection();
+  await connection.beginTransaction();
   const {
     writer,
     title,
@@ -94,24 +96,17 @@ router.post("/upload/board", async (req, res) => {
     category.difficulty,
   ];
 
-  const sqlBoard = "INSERT INTO board values (null,?,?,?,?,?,?,?,now(),null)";
-  const sqlIngre = "INSERT INTO board_ingredient values (null,?,?,?,null)";
-  const sqlText = "INSERT INTO board_text values (null,?,?,?,null)";
-  const sqlTag = "INSERT INTO board_tag values (null,?,?,null)";
+  const sqlBoard = "INSERT INTO board values (null,?,?,?,?,?,?,?,now(),0)";
+  const sqlIngre = "INSERT INTO board_ingredient values (null,?,?,?,0)";
+  const sqlText = "INSERT INTO board_text values (null,?,?,?,0)";
+  const sqlTag = "INSERT INTO board_tag values (null,?,?,0)";
   try {
     //board테이블 컬럼추가
-    const board = await pool.query(sqlBoard, boardParams);
-    let boardNo; //추가에 성공하면 id값 할당
-    if (board[0].insertId) {
-      boardNo = board[0].insertId;
-      console.log(boardNo);
-    } else {
-      console.log(board[0]);
-      return res.json({ success: false, message: "추가 실패" });
-    }
+    const board = await connection.query(sqlBoard, boardParams);
+    let boardNo = board[0].insertId; //추가에 성공하면 id값 할당
     //board_no를 참조하여 ingre테이블 컬럼추가
     for (key in Ingredients) {
-      await pool.query(sqlIngre, [
+      await connection.query(sqlIngre, [
         boardNo,
         Ingredients[key].name,
         Ingredients[key].volume,
@@ -119,7 +114,7 @@ router.post("/upload/board", async (req, res) => {
     }
     //board_text 테이블 컬럼추가
     for (key in cookingOrder) {
-      await pool.query(sqlText, [
+      await connection.query(sqlText, [
         boardNo,
         cookingOrder[key].orderPhoto,
         cookingOrder[key].text,
@@ -128,12 +123,17 @@ router.post("/upload/board", async (req, res) => {
     //태그가 있으면 tag테이블 컬럼추가
     if (tag.length > 0) {
       for (key in tag) {
-        await pool.query(sqlTag, [boardNo, tag[key].tagName]);
+        await connection.query(sqlTag, [boardNo, tag[key].tagName]);
       }
     }
+    await connection.commit();
     res.json({ success: true, message: "게시글 업로드 완료." });
   } catch (err) {
-    throw err;
+    await connection.rollback(); //롤백
+    console.log(err);
+    return res.json({ success: false, message: "추가 실패" });
+  } finally {
+    connection.release();
   }
 });
 module.exports = router;
