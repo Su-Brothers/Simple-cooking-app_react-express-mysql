@@ -1,0 +1,13 @@
+.post-item {
+  .post-item-box {
+    .post-tag-title {
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    .post-tag-items {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+}

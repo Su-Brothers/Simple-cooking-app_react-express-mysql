@@ -32,7 +32,7 @@ function WriteIngredients() {
           ))}
 
           <a
-            href="#"
+            href="_blank"
             className="ingreAdd-box"
             type="button"
             onClick={ingreAddHandler}

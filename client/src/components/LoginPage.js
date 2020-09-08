@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./styles/loginpage.scss";
 import logo from "../images/jabakLogo_v4.png";
 import { loginHandler } from "../modules/user";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 function LoginPage({ history }) {
   console.log("2");
   const dispatch = useDispatch();
