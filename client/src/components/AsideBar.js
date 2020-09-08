@@ -66,7 +66,7 @@ function AsideBar({ location }) {
         </div>
         <div className="left-aside-item">
           {userState ? (
-            <a href="#" onClick={logoutHandler}>
+            <a href="_blank" onClick={logoutHandler}>
               <FaSignOutAlt />
               로그아웃
             </a>

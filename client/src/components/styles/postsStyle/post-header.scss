@@ -1,0 +1,94 @@
+@import "../global-color.scss";
+.post-header {
+  width: 100%;
+  color: $black;
+  .header-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .post-date {
+      align-self: flex-end;
+      color: $dgray;
+      font-weight: bold;
+      font-size: 0.8rem;
+      font-style: italic;
+      margin-bottom: 10px; //공통
+    }
+    .post-header-middle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      width: 60%;
+
+      .header-food-img {
+        width: 100%;
+        height: 300px;
+        border-radius: 5px;
+        box-shadow: 1px 1px 10px $dgray;
+      }
+      .post-views {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        padding: 5px;
+        bottom: 5px;
+        right: 5px;
+        border-radius: 5px;
+        height: 18px;
+        opacity: 0.7;
+        background-color: $black;
+        color: $gray;
+        svg {
+          margin-right: 3px;
+        }
+      }
+      .header-profile-img {
+        position: absolute;
+        bottom: 0;
+        height: 120px;
+        transform: translateY(50%);
+        padding: 0;
+        margin: 0;
+        border: 7px solid $orange;
+        border-radius: 40%;
+      }
+    }
+    .title {
+      margin-top: 80px;
+      font-size: 1.5rem;
+      color: $black;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .post-description {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: $dgray;
+      width: 100%;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      span {
+        margin: 10px 0px;
+        font-weight: bold;
+      }
+    }
+    .post-category {
+      display: flex;
+      justify-content: space-between;
+      width: 70%;
+      color: $dgray;
+      font-weight: bold;
+      .post-category-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        svg {
+          font-size: 1.6rem;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import MainPage from "./components/MainPage";
 import NavBar from "./components/NavBar";
@@ -12,7 +12,7 @@ import AsideBar from "./components/AsideBar";
 import AsideChef from "./components/AsideChef";
 import NewMyPage from "./components/NewMyPage";
 import WritePage from "./components/writes/WritePage";
-
+import Post from "./components/posts/Post";
 
 function App(props) {
   return (
@@ -27,8 +27,9 @@ function App(props) {
           <Route path="/ranking" component={Auth(RankPage)} />
           <Route path="/signup" component={Auth(SignupPage, false)} />
           <Route path="/mypage" component={Auth(MyPage, true)} />
-          <Route path="/newmypage" component={Auth(NewMyPage)} />        
+          <Route path="/newmypage" component={Auth(NewMyPage)} />
           <Route path="/write" component={Auth(WritePage, true)} />
+          <Route path="/post/:postId" component={Auth(Post)} />
         </Switch>
       </main>
     </BrowserRouter>

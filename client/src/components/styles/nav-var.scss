@@ -38,19 +38,20 @@ header {
       margin-right: 25px;
       .header-search-icon {
         position: absolute;
-        vertical-align: middle;
-        font-size: 1rem;
+        font-size: 0.9rem;
         height: 100%;
         margin-left: 10px;
         color: $gray;
       }
       input {
+        font-size: 0.9rem;
+
         height: 100%;
-        width: 220px;
+        width: 250px;
         border: none;
         border-radius: 20px;
         outline: none;
-        padding-left: 40px;
+        text-indent: 38px;
       }
     }
   }

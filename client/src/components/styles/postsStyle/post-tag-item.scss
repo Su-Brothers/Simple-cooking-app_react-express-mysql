@@ -1,0 +1,15 @@
+@import "../global-color.scss";
+.post-tag-item {
+  margin-right: 10px;
+  padding: 10px;
+  font-size: 1.1rem;
+  border: 1px solid $bgray;
+  border-radius: 5px;
+  color: $dgray;
+  white-space: nowrap;
+  margin-top: 10px;
+  &:hover {
+    border: 1px solid $orange;
+    color: $orange;
+  }
+}

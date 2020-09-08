@@ -3,6 +3,8 @@
 const express = require("express");
 const userRouter = require("./routes/user");
 const writeRouter = require("./routes/write");
+const postRouter = require("./routes/post");
+const commentRouter = require("./routes/comment");
 const cookieParser = require("cookie-parser");
 const app = express();
 const port = 5000;
@@ -11,6 +13,8 @@ app.use(cookieParser());
 //라우트 분리
 app.use("/api/users", userRouter);
 app.use("/api/write", writeRouter);
+app.use("/api/post", postRouter);
+app.use("/api/comment", commentRouter);
 
 app.use("/uploads", express.static("uploads"));
 app.get("/", (req, res) => res.send("hi express!!!!"));
