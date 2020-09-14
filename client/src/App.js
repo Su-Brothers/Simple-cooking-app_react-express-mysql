@@ -13,6 +13,7 @@ import AsideChef from "./components/AsideChef";
 import NewMyPage from "./components/NewMyPage";
 import WritePage from "./components/writes/WritePage";
 import Post from "./components/posts/Post";
+import EditPage from "./components/posts/edits/EditPage";
 
 function App(props) {
   return (
@@ -29,7 +30,8 @@ function App(props) {
           <Route path="/mypage" component={Auth(MyPage, true)} />
           <Route path="/newmypage" component={Auth(NewMyPage)} />
           <Route path="/write" component={Auth(WritePage, true)} />
-          <Route path="/post/:postId" component={Auth(Post)} />
+          <Route exact path="/post/:postId" component={Auth(Post)} />
+          <Route path="/post/:postId/edit" component={Auth(EditPage, true)} />
         </Switch>
       </main>
     </BrowserRouter>

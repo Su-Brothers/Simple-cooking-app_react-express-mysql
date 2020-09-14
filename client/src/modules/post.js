@@ -1,5 +1,6 @@
 import axios from "axios";
 //패치값 재사용을 위해 리덕스 사용
+const LOADING_POST = "LOADING_POST";
 const READ_POSTS = "READ_POSTS";
 const READ_POST = "READ_POST"; //포스트 상세정보
 
@@ -22,6 +23,9 @@ export const readHandler = () => async (dispatch) => {
 };
 
 export const readDetail = (id) => async (dispatch) => {
+  dispatch({
+    type: LOADING_POST,
+  });
   const data = await axios //포스트 디테일페이지 로드
     .get(`/api/post/${id}`)
     .then((res) => res.data)
@@ -55,6 +59,8 @@ const initialState = {
   posts: [],
   post: {
     header: {
+      board_no: "",
+      user_no: "",
       board_img: "",
       cook_diff: "",
       cook_time: "",
@@ -67,12 +73,23 @@ const initialState = {
     recipe: [],
     tag: [],
     comment: [],
+    likes: [],
+    isLoading: true,
   },
 };
 
 export default function post(state = initialState, action) {
   const { payload } = action;
   switch (action.type) {
+    case LOADING_POST:
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          isLoading: false,
+        },
+      };
+
     case READ_POSTS:
       return {
         ...state,

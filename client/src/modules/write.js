@@ -1,20 +1,20 @@
 import axios from "axios";
 //액션
-const H_INPUT_CHANGE = "H_INPUT_CHANGE"; //헤더 인풋
-const H_OPTION_CHANGE = "H_OPTION_CHANGE"; //헤더 옵션 (카테고리)
-const H_IMAGE_HANDLER = "H_IMAGE_HANDLER"; //헤더 이미지 추가
+const H_INPUT_CHANGE = "write/H_INPUT_CHANGE"; //헤더 인풋
+const H_OPTION_CHANGE = "write/H_OPTION_CHANGE"; //헤더 옵션 (카테고리)
+const H_IMAGE_HANDLER = "write/H_IMAGE_HANDLER"; //헤더 이미지 추가
 
-const INGRE_HANDLER = "INGRE_HANDLER"; //재료 수 추가
-const INGRE_REMOVE_HANDLER = "INGRE_REMOVE_HANDLER"; //재료 제거
-const INGRE_INPUT_HANDLER = "INGRE_INPUT_HANDLER"; //재료 인풋
+const INGRE_HANDLER = "write/INGRE_HANDLER"; //재료 수 추가
+const INGRE_REMOVE_HANDLER = "write/INGRE_REMOVE_HANDLER"; //재료 제거
+const INGRE_INPUT_HANDLER = "write/INGRE_INPUT_HANDLER"; //재료 인풋
 
-const ORDER_HANDLER = "ORDER_HANDLER"; //요리 순서 수 추가
-const ORDER_REMOVE_HANDLER = "ORDER_REMOVE_HANDLER"; //순서 제거
-const ORDER_INPUT_HANDLER = "ORDER_INPUT_HANDLER"; //순서 인풋
-const ORDER_IMAGE_HANDLER = "ORDER_IMAGE_HANDLER"; //순서 이미지 추가
+const ORDER_HANDLER = "write/ORDER_HANDLER"; //요리 순서 수 추가
+const ORDER_REMOVE_HANDLER = "write/ORDER_REMOVE_HANDLER"; //순서 제거
+const ORDER_INPUT_HANDLER = "write/ORDER_INPUT_HANDLER"; //순서 인풋
+const ORDER_IMAGE_HANDLER = "write/ORDER_IMAGE_HANDLER"; //순서 이미지 추가
 
-const TAG_HANDLER = "TAG_HANDLER"; //태그 추가
-const TAG_REMOVE_HANDLER = "TAG_REMOVE_HANDLER"; //태그 제거
+const TAG_HANDLER = "write/TAG_HANDLER"; //태그 추가
+const TAG_REMOVE_HANDLER = "write/TAG_REMOVE_HANDLER"; //태그 제거
 //액션 생성 함수
 
 export const hInputHandler = (target, value) => {
