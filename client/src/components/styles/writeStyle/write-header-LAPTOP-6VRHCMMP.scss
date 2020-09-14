@@ -1,0 +1,76 @@
+$gray: #cecece;
+$lgray: #ececec;
+$dgray: #686868;
+.write-header {
+  width: 100%;
+  background-color: white;
+  margin-top: 10px;
+  padding: 30px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  label {
+    vertical-align: top;
+  }
+  .write-header-top {
+    width: 90%;
+    height: 240px;
+    display: flex;
+    justify-content: space-between;
+    input,
+    textarea {
+      width: 500px;
+      height: 40px;
+      margin-left: 10px;
+    }
+    textarea {
+      height: 150px;
+      resize: none;
+    }
+    .drop-zone {
+      position: relative;
+      background-color: $lgray;
+      width: 270px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      border: 1px solid $gray;
+      font-size: 4.5rem;
+      color: $dgray;
+      cursor: pointer;
+      img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .header-top-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+  .write-header-bottom {
+    width: 90%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    .header-bottom-item {
+      line-height: 45px;
+      font-size: 1.3rem;
+      height: 100%;
+      label {
+        margin-left: 10px;
+        color: $dgray;
+      }
+      select {
+        margin-left: 5px;
+        height: 40px;
+        color: $dgray;
+      }
+    }
+  }
+}

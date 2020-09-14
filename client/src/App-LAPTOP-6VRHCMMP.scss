@@ -1,0 +1,22 @@
+//글로벌 스타일
+$lgray: #ececec;
+html,
+body,
+#root {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: $lgray;
+}
+* {
+  box-sizing: border-box;
+}
+#root {
+  main {
+    padding-top: 65px;
+    padding-left: 173px;
+    padding-right: 173px;
+    display: flex;
+    justify-content: center;
+  }
+}

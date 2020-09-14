@@ -1,0 +1,43 @@
+@import "../global-color.scss";
+.post-recipe-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .view-box {
+    padding: 0;
+    display: flex;
+    align-self: flex-end;
+    .view-btn {
+      display: flex;
+      padding: 7px;
+      border: 1px solid $lgray;
+      color: $gray;
+      margin-right: -1px;
+      &.active {
+        border: 1px solid $lorange;
+        color: $lorange;
+        z-index: 1;
+      }
+    }
+  }
+  .post-recipe-title {
+    align-self: flex-start;
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+  .post-recipe-item-container {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    &.large {
+      flex-direction: column;
+    }
+    &.middle {
+      flex-direction: row;
+    }
+    &.onlyText {
+      flex-direction: column;
+    }
+  }
+}

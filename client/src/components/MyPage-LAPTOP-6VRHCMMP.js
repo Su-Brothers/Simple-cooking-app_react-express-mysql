@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import "./styles/newmypage.scss";
+import "./styles/mypage.scss";
 import { FaQuoteLeft, FaQuoteRight, FaWhmcs } from "react-icons/fa";
 import ModalPortal from "../ModalPortal";
 import ProfileSetting from "./ProfileSetting";
+import { useSelector } from "react-redux";
 
-function NewMyPage() {
+function MyPage() {
+  const user = useSelector((state) => state.user);
+
   const [category, setcategory] = useState({
     noticeList: true,
     myPost: false,
@@ -49,9 +52,10 @@ function NewMyPage() {
               src="https://placeimg.com/100/100/any"
               width="100%"
               height="100%"
+              alt="프로필사진"
             />
           </div>
-          <div className="name">김정수</div>
+          <div className="name">{user.nickname}</div>
           <div className="follower"> 팔로워 : 0명</div>
           <div className="introduce_container">
             <div className="l_q">
@@ -101,4 +105,4 @@ function NewMyPage() {
   );
 }
 
-export default NewMyPage;
+export default MyPage;

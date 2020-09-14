@@ -1,0 +1,12 @@
+@import "../global-color.scss";
+.post-ingre-item {
+  display: flex;
+  height: 50px;
+  width: 55%;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $lgray;
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: $ldgray;
+}
