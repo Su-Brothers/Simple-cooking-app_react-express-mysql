@@ -14,6 +14,8 @@ import NewMyPage from "./components/NewMyPage";
 import WritePage from "./components/writes/WritePage";
 import Post from "./components/posts/Post";
 import EditPage from "./components/posts/edits/EditPage";
+import TagPage from "./components/posts/TagPage";
+import SearchPage from "./components/SearchPage";
 
 function App(props) {
   return (
@@ -32,6 +34,8 @@ function App(props) {
           <Route path="/write" component={Auth(WritePage, true)} />
           <Route exact path="/post/:postId" component={Auth(Post)} />
           <Route path="/post/:postId/edit" component={Auth(EditPage, true)} />
+          <Route path="/post/tag/:name" component={Auth(TagPage)} />
+          <Route path="/search/:name" component={Auth(SearchPage)} />
         </Switch>
       </main>
     </BrowserRouter>

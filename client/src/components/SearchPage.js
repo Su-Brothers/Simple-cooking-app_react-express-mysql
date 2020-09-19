@@ -1,11 +1,11 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import TimeLine from "../TimeLine";
-import "../styles/postsStyle/tag-page.scss";
-import { useState } from "react";
-import { useEffect } from "react";
 import Axios from "axios";
-function TagPage({ match }) {
+import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import "./styles/postsStyle/tag-page.scss";
+import TimeLine from "./TimeLine";
+function SearchPage({ match }) {
   const [sort, setSort] = useState("popular");
   const [postList, setList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ function TagPage({ match }) {
   const getPosts = (target) => {
     console.log(match.params.name);
     setLoading(false);
-    Axios.get(`/api/post/tag/${match.params.name}/${target}`)
+    Axios.get(`/api/post/search/${match.params.name}/${target}`)
       .then((res) => {
         if (res.data.success) {
           setList(res.data.result);
@@ -56,7 +56,7 @@ function TagPage({ match }) {
     <div className="tag-page-container">
       <div className="tag-page-title">
         <span className="tag-page-title-tag">{`"${match.params.name}"`}</span>
-        <span>에 대한 레시피가 </span>
+        <span>에 대한 검색결과가 </span>
         <span className="tag-page-title-index">{postList.length}</span>
         <span>개 있습니다.</span>
       </div>
@@ -82,4 +82,4 @@ function TagPage({ match }) {
   );
 }
 
-export default TagPage;
+export default SearchPage;

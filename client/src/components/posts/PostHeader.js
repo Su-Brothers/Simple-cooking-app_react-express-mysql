@@ -10,6 +10,12 @@ import "../styles/postsStyle/post-header.scss";
 import { RiEarthLine } from "react-icons/ri";
 import PostLike from "./PostLike";
 import Axios from "axios";
+import Views from "./Views";
+import {
+  pGenderTime,
+  pGenderDiff,
+  pGenderType,
+} from "../../custom-module/typeGender";
 function PostHeader({
   title,
   board_img,
@@ -21,7 +27,9 @@ function PostHeader({
   history,
   user,
   postId,
+  userNo,
 }) {
+  console.log("dd");
   const onDelete = async () => {
     const result = window.confirm(
       "정말로 삭제하시겠습니까? (삭제한 내용은 복구할 수 없습니다.)"
@@ -40,6 +48,7 @@ function PostHeader({
       return;
     }
   };
+
   return (
     <div className="post-item post-header">
       <div className="header-box post-item-box">
@@ -74,7 +83,7 @@ function PostHeader({
           />
           <div className="post-views">
             <FaEye />
-            <span>241</span>
+            <Views />
           </div>
         </div>
         <span className="title">{title}</span>
@@ -86,17 +95,17 @@ function PostHeader({
         <div className="post-category">
           <div className="post-category-item time">
             <FaRegClock />
-            <span>{cook_time}</span>
+            <span>{pGenderTime(cook_time)}</span>
           </div>
           <div className="post-category-item diff">
             <FaFireAlt />
-            <span>{cook_diff}</span>
+            <span>{pGenderDiff(cook_diff)}</span>
           </div>
           <div className="post-category-item">
             <RiEarthLine />
-            {food_type}
+            {pGenderType(food_type)}
           </div>
-          <PostLike user={user} postId={postId} />
+          <PostLike user={userNo} postId={postId} />
         </div>
       </div>
     </div>

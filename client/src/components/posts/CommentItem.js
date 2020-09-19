@@ -6,19 +6,19 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { readComment } from "../../modules/post";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useRef } from "react";
 function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
   const userState = useSelector((state) => state.user.userData, shallowEqual);
   const dispatch = useDispatch();
-  const [like, setLike] = useState({
-    isLike: "", //좋아요 정보
-    isUnlike: "", //싫어요 정보
-    isUser: {
-      is_like: "", //db에 정보가 있다면 이 데이터가 들어옴.
-      user_no: "",
-    }, //로그인 된 유저가 눌렀는지
+  const [isLike, setIsLike] = useState(0);
+  const [isUnlike, setIsUnlike] = useState(0);
+  const [isUser, setIsUser] = useState({
+    is_like: "", //db에 정보가 있다면 이 데이터가 들어옴.
+    user_no: "",
   });
-  const { isLike, isUnlike, isUser } = like;
-  let mounted; //마운트 확인
+
+  //let mounted = true;
+  let isMounted = useRef(null); //마운트 확인
   const onDeleteHandler = async () => {
     const data = await Axios.delete(`/api/comment/${coNo}`)
       .then((res) => res.data)
@@ -39,17 +39,11 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
       const userData = //현재 로그인 된 사용자가 이 코멘트의 좋아요와 연관이 있는지 확인
         //유저가 일치하면 데이터가 있을 것이고 일치 하지 않으면 없을 것이다.
         result && result.filter((item) => item.user_no === userState._no)[0];
-      if (mounted) {
-        setLike({
-          ...like,
-          isLike: result
-            ? result.filter((item) => item.is_like === 1).length
-            : 0,
-          isUnlike: result
-            ? result.filter((item) => item.is_like === 2).length
-            : 0,
-          isUser: userData ? userData : { ...isUser },
-        });
+      console.log("Dd");
+      if (isMounted.current) {
+        setIsLike(result.filter((item) => item.is_like === 1).length);
+        setIsUnlike(result.filter((item) => item.is_like === 2).length);
+        setIsUser(userData ? userData : { ...isUser });
       }
     } else {
       alert(data.message);
@@ -122,11 +116,10 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
   };
 
   useEffect(() => {
-    mounted = true; //마운트 를 true로 바꾼다.
+    isMounted.current = true;
     getLike(); //좋아요 정보를 가져온다.
-    return () => (mounted = false); //누수 방지
+    return () => (isMounted.current = false); //누수 방지
   }, []);
-  console.log(like);
   return (
     <div className="comment-item">
       <div className="comment-left">
