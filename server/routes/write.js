@@ -96,7 +96,7 @@ router.post("/upload/board", async (req, res) => {
     category.difficulty,
   ];
 
-  const sqlBoard = "INSERT INTO board values (null,?,?,?,?,?,?,?,now(),0)";
+  const sqlBoard = "INSERT INTO board values (null,?,?,?,?,?,?,?,0,now(),0)";
   const sqlIngre = "INSERT INTO board_ingredient values (null,?,?,?,0)";
   const sqlText = "INSERT INTO board_text values (null,?,?,?,0)";
   const sqlTag = "INSERT INTO board_tag values (null,?,?,0)";

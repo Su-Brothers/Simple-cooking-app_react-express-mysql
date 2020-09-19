@@ -109,4 +109,24 @@ router.get("/auth", auth, (req, res) => {
   });
 });
 
+router.get("/ranking", async (req, res) => {
+  //최근순
+  const sql = `select ui.user_no,ui.user_nickname nick, count(bl.is_like) as likes
+  from board b left join board_like bl on bl.board_no = b.board_no
+  left join user_info ui on ui.user_no = b.user_no
+  where bl.is_like = 1 group by user_no
+  order by likes desc limit 10`;
+  try {
+    const [result] = await pool.query(sql);
+    if (result.length > 0) {
+      return res.json({ success: true, result: result });
+    } else {
+      return res.json({ success: true, result: [] });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
+  }
+});
+
 module.exports = router;

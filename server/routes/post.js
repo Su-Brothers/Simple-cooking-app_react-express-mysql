@@ -3,18 +3,38 @@ const express = require("express");
 const pool = require("../config/pool"); //pool을 가져온다.
 const router = express.Router();
 
-router.get("/getposts", async (req, res) => {
-  const sql = `select board.board_no,board.title, user_info.user_nickname as writer,board.board_img,date_format(board.created_date,'%Y-%m-%d') as date from board
-   left join user_info on board.user_no = user_info.user_no
-   where board.isdeleted = 0`;
+router.get("/getposts/:type", async (req, res) => {
+  const sql = `select b.board_no,b.title,ui.user_nickname writer ,b.board_img,b.description,b.food_type,b.board_views,count(distinct c.co_no) co,count(distinct bl.like_no) likes, date_format(b.created_date,'%Y-%m-%d') date
+  from board b left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  left join user_info ui on b.user_no = ui.user_no
+  left join board_like bl on b.board_no = bl.board_no and bl.is_like = 1
+  where b.isdeleted = 0 and b.food_type = ? group by board_no order by board_no desc`;
+
+  const allSql = `select b.board_no,b.title,ui.user_nickname writer ,b.board_img,b.description,b.food_type,b.board_views,count(distinct c.co_no) co,count(distinct bl.like_no) likes, date_format(b.created_date,'%Y-%m-%d') date
+  from board b left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  left join user_info ui on b.user_no = ui.user_no
+  left join board_like bl on b.board_no = bl.board_no and bl.is_like = 1
+  where b.isdeleted = 0 group by board_no order by board_no desc`;
 
   try {
-    const [result, fields] = await pool.query(sql);
-    if (result.length > 0) {
-      console.log(result);
-      return res.json({ success: true, posts: result });
+    if (req.params.type === "typeAll") {
+      //전체일때
+      const [result] = await pool.query(allSql);
+      if (result.length > 0) {
+        console.log(result);
+        return res.json({ success: true, posts: result });
+      } else {
+        return res.json({ success: true, posts: [] });
+      }
     } else {
-      return res.json({ success: false, message: "포스트가 없습니다." });
+      //다른 메뉴일때
+      const [result] = await pool.query(sql, [req.params.type]);
+      if (result.length > 0) {
+        console.log(result);
+        return res.json({ success: true, posts: result });
+      } else {
+        return res.json({ success: true, posts: [] });
+      }
     }
   } catch (err) {
     console.log(err);
@@ -229,7 +249,7 @@ router.delete("/:postId/delete", async (req, res) => {
 router.get("/:postId", async (req, res) => {
   const connection = await pool.getConnection();
   await connection.beginTransaction();
-  const headerSql = `select board_no,user_no,title,board_img, description, cook_time,cook_diff,food_type,date_format(created_date,'%Y-%m-%d') as created_date 
+  const headerSql = `select board_no,user_no,title,board_img, description, cook_time,cook_diff,food_type,board_views,date_format(created_date,'%Y-%m-%d') as created_date 
    from board where board_no = ? and isdeleted = 0`; //헤더
   const ingreSql = `select ingre_no,ingre_name,ingre_volume from board_ingredient where board_no = ? and isdeleted = 0`; //재료
   const recipeSql = `select text_no, main_text,img_file from board_text where board_no = ? and isdeleted = 0`; //레시피
@@ -239,10 +259,12 @@ router.get("/:postId", async (req, res) => {
    left join user_info user on comment.user_no = user.user_no 
    where comment.board_no = ? and comment.isdeleted = 0`; //댓글
 
-  const likeSql = `select user_no,is_like from board_like where board_no = ? and is_like = 1`;
+  const viewSql = `update board set board_views = board_views + 1 where board_no = ? and isdeleted = 0`;
 
   try {
     let obj = {}; //담아서 보내줄 것 이다.
+    console.log("요청");
+    await pool.query(viewSql, [req.params.postId]); //조회수 증가
     const [header] = await connection.query(headerSql, [req.params.postId]);
     if (header.length > 0) {
       console.log(header);
@@ -268,18 +290,11 @@ router.get("/:postId", async (req, res) => {
       console.log(co);
       obj = { ...obj, comment: co };
     }
-    const [likes] = await connection.query(likeSql, [req.params.postId]);
-    if (likes.length > 0) {
-      console.log(likes);
-      obj = { ...obj, likes: likes };
-    } else {
-      obj = { ...obj, likes: [] };
-    }
+
     obj = {
       ...obj,
       isLoading: true, //로딩 해제
     };
-    console.log(obj);
     await connection.commit();
     res.json({ success: true, result: obj });
   } catch (err) {
@@ -302,13 +317,14 @@ router.get("/getcomments/:postId", async (req, res) => {
       console.log(result);
       return res.json({ success: true, result: result });
     } else {
-      return res.json({ success: false, message: "댓글이 없습니다." });
+      return res.json({ success: true, result: [] });
     }
   } catch (err) {
     console.log(err);
     return res.json({ success: false, message: "오류 발생" });
   }
 });
+
 //좋아요 읽기
 router.get("/:postId/likes", async (req, res) => {
   const sql = `select user_no,is_like from board_like where board_no = ? and is_like = 1`;
@@ -370,6 +386,209 @@ router.post("/unlike", async (req, res) => {
     const [result] = await pool.query(sql, [boNo, user]);
     if (result.affectedRows > 0) {
       res.json({ success: true });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
+  }
+});
+
+//태그
+router.get("/tag/:name/popular", async (req, res) => {
+  //인기순
+  const sql = `select b.board_no,b.title,ui.user_nickname writer ,b.board_img,b.description,b.food_type,b.board_views,
+  count(distinct bl.like_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
+  left join board_tag bt on b.board_no = bt.board_no 
+  left join board_like bl on bl.board_no = b.board_no and bl.is_like = 1 
+  left join user_info ui on b.user_no = ui.user_no 
+  left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  where tag_name = ?
+  group by board_no order by likes desc`; //인기순
+  console.log(req.params.name);
+  try {
+    const [result] = await pool.query(sql, [req.params.name]);
+    if (result.length > 0) {
+      console.log("ㅇㅇ");
+      console.log(result);
+      return res.json({ success: true, result: result });
+    } else {
+      return res.json({ success: true, result: [] });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
+  }
+});
+
+router.get("/tag/:name/latest", async (req, res) => {
+  //최근순
+  const sql = `select b.board_no,b.title,ui.user_nickname writer ,b.board_img,b.description,b.food_type,b.board_views,
+  count(distinct bl.like_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
+  left join board_tag bt on b.board_no = bt.board_no 
+  left join board_like bl on bl.board_no = b.board_no and bl.is_like = 1 
+  left join user_info ui on b.user_no = ui.user_no 
+  left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  where tag_name = ?
+  group by board_no order by board_no desc`;
+  console.log(req.params.name);
+  try {
+    const [result] = await pool.query(sql, [req.params.name]);
+    if (result.length > 0) {
+      console.log("ㅇㅇ");
+      console.log(result);
+      return res.json({ success: true, result: result });
+    } else {
+      return res.json({ success: true, result: [] });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
+  }
+});
+
+router.get("/tag/:name/views", async (req, res) => {
+  //조회순
+  const sql = `select b.board_no,b.title,ui.user_nickname writer ,b.board_img,b.description,b.food_type,b.board_views,
+  count(distinct bl.like_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
+  left join board_tag bt on b.board_no = bt.board_no 
+  left join board_like bl on bl.board_no = b.board_no and bl.is_like = 1 
+  left join user_info ui on b.user_no = ui.user_no 
+  left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  where tag_name = ?
+  group by board_no order by board_views desc`; //인기순
+  console.log(req.params.name);
+  try {
+    const [result] = await pool.query(sql, [req.params.name]);
+    if (result.length > 0) {
+      console.log("ㅇㅇ");
+      console.log(result);
+      return res.json({ success: true, result: result });
+    } else {
+      return res.json({ success: true, result: [] });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
+  }
+});
+
+//디테일 조회수
+router.get("/:postId/views", async (req, res) => {
+  const sql = `select board_views from board where board_no = ? and isdeleted = 0`;
+
+  try {
+    const [result] = await pool.query(sql, [req.params.postId]);
+    if (result.length > 0) {
+      console.log(result[0].board_views);
+      return res.json({ success: true, result: result[0].board_views });
+    } else {
+      return res.json({ success: true, result: 0 });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
+  }
+});
+//조회수 증가
+router.post("/:postId/views", async (req, res) => {
+  const sql = `update board set board_views = board_views + 1 where board_no = ? and isdeleted = 0`;
+
+  try {
+    const [result] = await pool.query(sql, [req.params.postId]);
+    console.log("asdasdsda");
+    console.log(result);
+    if (result.affectedRows > 0) {
+      return res.json({ success: true, result: result });
+    } else {
+      return res.json({ success: false, message: "조회실패" });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
+  }
+});
+
+router.get("/search/:name/:sort", async (req, res) => {
+  //조회순
+  const { name, sort } = req.params;
+  const isType = () => {
+    //검색어가 요리종류일 경우
+    if (name === "한식") {
+      return "typeKo";
+    } else if (name === "중식") {
+      return "typeChin";
+    } else if (name === "일식") {
+      return "typeJa";
+    } else if (name === "양식") {
+      return "typeWest";
+    } else {
+      return name;
+    }
+  };
+  //sql
+  const popSql = `select distinct b.board_no,b.title,ui.user_nickname writer,b.description ,b.board_img,b.board_views,b.food_type,
+  count(distinct bl.like_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
+  left join board_tag bt on b.board_no = bt.board_no
+  left join user_info ui on b.user_no = ui.user_no
+  left join board_ingredient bi on b.board_no = bi.board_no
+  left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  left join board_like bl on b.board_no = bl.board_no and bl.is_like = 1
+  where (tag_name = ? or title like ? or ingre_name = ? or food_type = ?) and b.isdeleted = 0
+  group by board_no,ingre_name,tag_name
+  order by likes desc`; //인기순
+
+  const latSql = `select distinct b.board_no,b.title,ui.user_nickname writer,b.description ,b.board_img,b.board_views,b.food_type,
+  count(distinct bl.like_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
+  left join board_tag bt on b.board_no = bt.board_no
+  left join user_info ui on b.user_no = ui.user_no
+  left join board_ingredient bi on b.board_no = bi.board_no
+  left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  left join board_like bl on b.board_no = bl.board_no and bl.is_like = 1
+  where (tag_name = ? or title like ? or ingre_name = ? or food_type = ?) and b.isdeleted = 0
+  group by board_no,ingre_name,tag_name
+  order by board_no desc`; //최신순
+
+  const viewSql = `select distinct b.board_no,b.title,ui.user_nickname writer,b.description ,b.board_img,b.board_views,b.food_type,
+  count(distinct bl.like_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
+  left join board_tag bt on b.board_no = bt.board_no
+  left join user_info ui on b.user_no = ui.user_no
+  left join board_ingredient bi on b.board_no = bi.board_no
+  left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  left join board_like bl on b.board_no = bl.board_no and bl.is_like = 1
+  where (tag_name = ? or title like ? or ingre_name = ? or food_type = ?) and b.isdeleted = 0
+  group by board_no,ingre_name,tag_name
+  order by board_views desc`; //조회순
+  const params = [name, "%" + name + "%", name, isType()]; //태그,제목,재료
+
+  //transaction
+  try {
+    if (sort === "popular") {
+      const [result] = await pool.query(popSql, params);
+      if (result.length > 0) {
+        console.log("인기");
+        console.log(result);
+        return res.json({ success: true, result: result });
+      } else {
+        return res.json({ success: true, result: [] });
+      }
+    } else if (sort === "latest") {
+      const [result] = await pool.query(latSql, params);
+      if (result.length > 0) {
+        console.log("최신");
+        console.log(result);
+        return res.json({ success: true, result: result });
+      } else {
+        return res.json({ success: true, result: [] });
+      }
+    } else {
+      const [result] = await pool.query(viewSql, params);
+      if (result.length > 0) {
+        console.log("조회");
+        console.log(result);
+        return res.json({ success: true, result: result });
+      } else {
+        return res.json({ success: true, result: [] });
+      }
     }
   } catch (err) {
     console.log(err);

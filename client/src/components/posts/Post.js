@@ -7,8 +7,9 @@ import PostTag from "./PostTag";
 import Comment from "./Comment";
 import { useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { readDetail } from "../../modules/post";
+import { readDetail, readViews } from "../../modules/post";
 import Loading from "../Loading";
+import Axios from "axios";
 
 function Post({ match, history }) {
   const { postId } = match.params;
@@ -17,9 +18,21 @@ function Post({ match, history }) {
   const user = useSelector((state) => state.user.userData, shallowEqual);
   const isLoading = useSelector((state) => state.post.post.isLoading); //로딩
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (header.board_no != postId) {
-      window.scrollTo(0, 0);
       dispatch(readDetail(postId));
+    } else {
+      //조회수 증가
+      Axios.post(`/api/post/${postId}/views`)
+        .then((res) => {
+          if (res.data.success) {
+            //리로드
+            dispatch(readViews(postId));
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => console.log(err));
     }
   }, [postId]);
   return (
@@ -41,6 +54,7 @@ function Post({ match, history }) {
                 : null /*작성한 유저가 맞으면 보냄*/
             }
             postId={match.params.postId}
+            userNo={user.isAuth ? user._no : ""}
           />
           <PostInre />
           <PostRecipe />
