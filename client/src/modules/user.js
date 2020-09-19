@@ -3,6 +3,26 @@ import axios from "axios";
 const LOGIN_USER = "LOGIN_USER";
 const SIGNUP_USER = "SIGNUP_USER";
 const AUTH_USER = "AUTH_USER";
+const SEARCH_USER = "SEARCH_USER";
+
+/*
+export const changeHandler = (userid, usernickname, useremail) => async (
+  dispatch
+) => {
+  const data = await axios
+    .post("/api/users/update", {
+      userid: userid,
+      usernickname: usernickname,
+      useremail: useremail,
+    })
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+
+  if (data.success) {
+  }
+};
+
+*/
 
 //액션 생성 함수
 export const loginHandler = (id, password, history) => async (dispatch) => {

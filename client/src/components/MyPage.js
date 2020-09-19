@@ -1,60 +1,109 @@
-import React from 'react'
-import {FaUserCog, FaStar, FaListAlt, FaBell, FaCog, FaSignOutAlt, FaQuoteLeft, FaQuoteRight} from 'react-icons/fa'
-import TimeLine from './TimeLine'
-import './styles/mypage.scss'
+import React, { useState } from "react";
+import "./styles/mypage.scss";
+import { FaQuoteLeft, FaQuoteRight, FaWhmcs } from "react-icons/fa";
+import ModalPortal from "../ModalPortal";
+import ProfileSetting from "./ProfileSetting";
+import { useSelector } from "react-redux";
 
 function MyPage() {
-    return (
-        <div className = "mypage_container">
-            <div className = "mypage">
-                <div className = "mypage_bar">MY PAGE</div>
-                <div className = "mypage_top">
-                    <div className = "mypage_picture">
-                    <img 
-                        src = "https://placeimg.com/100/100/any"
-                        width="100%"
-                        height="100%"
-                    />
-                    </div>
-                </div>
-                <div className = "user_name"> 김정수 </div>
+  const user = useSelector((state) => state.user.userData);
+  console.log(user);
 
-                <div className = "mypage_middle">
-                    <table
-                    frame = "void"
-                    style = {{border: "0px solid #999", width : "100%", height : "200px", margin : "auto", textAlign :"center"}}>                
-                        <tr>
-                            <td style = {{border : "1px solid #E2E2E2",  width : "150px", borderLeft : "none"}}><FaUserCog/><br/>회원정보 수정</td>
-                            <td style = {{border : "1px solid #E2E2E2", width : "150px", borderLeft : "none"}}><FaStar/><br/>찜목록</td>
-                            <td style = {{border : "1px solid #E2E2E2", width : "150px", borderLeft : "none", borderRight : "none"}}><FaListAlt/><br/>공지사항</td>
-                        </tr>
-                        <tr>
-                            <td style = {{border : "1px solid #E2E2E2",  width : "150px", borderLeft : "none", borderTop : "none"}}><FaBell/><br/>알림</td>
-                            <td style = {{border : "1px solid #E2E2E2", width : "150px", borderLeft : "none", borderTop : "none"}}><FaCog/><br/>설정</td>
-                            <td style = {{border : "1px solid #E2E2E2", width : "150px", borderLeft : "none", borderRight : "none", borderTop : "none"}}><FaSignOutAlt/><br/>로그아웃</td>
-                        </tr>
-                    </table>
-                    <div className = "middle_post">게시물 : 3개</div>
-                </div>
+  const [category, setcategory] = useState({
+    noticeList: true,
+    myPost: false,
+    like: false,
+    notification: false,
+  });
 
-                <div className ="mypage_bottom">
-                    <div><FaQuoteLeft/></div>
-                    <div className = "introduction">회원 정보가 없습니다.</div>
-                    <div><FaQuoteRight/></div>
+  const { noticeList, myPost, like, notification } = category;
+  const categoryHandler = (target) => () => {
+    const result = Object.entries(category).reduce((obj, item, i) => {
+      obj[item[0]] = item[0] === target ? true : false;
+      return obj;
+    }, {});
+    setcategory(result);
+  };
 
-                </div>
-            
-            </div>
-            <div className = "outer">
-                <div className = "my_timeline">
-                    <div className = "timeline_position"><TimeLine/></div>
-                    <div className = "timeline_position"><TimeLine/></div>
-                    <div className = "timeline_position"><TimeLine/></div>
-                    <div className = "timeline_position"><TimeLine/></div>
-                </div>
-            </div>
+  const [modal, setmodal] = useState(false);
+
+  const OpenModalHandler = () => {
+    setmodal(true);
+  };
+
+  const CloseModalHandler = () => {
+    setmodal(false);
+  };
+
+  return (
+    <div className="mypage_container">
+      <div className="mypage_top">
+        <div className="setting">
+          <FaWhmcs size="40px" onClick={OpenModalHandler} />
+          {modal && (
+            <ModalPortal>
+              <ProfileSetting onClose={CloseModalHandler} />
+            </ModalPortal>
+          )}{" "}
+          {""}
         </div>
-    )
+        <div className="picture_line">
+          <div className="mypage_picture">
+            <img
+              src="https://placeimg.com/100/100/any"
+              width="100%"
+              height="100%"
+              alt="프로필사진"
+            />
+          </div>
+          <div className="name">{user._nickname}</div>
+          <div className="follower"> 팔로워 : 0명</div>
+          <div className="introduce_container">
+            <div className="l_q">
+              <FaQuoteLeft />
+            </div>
+            <div className="introduction">회원 정보가 없습니다.</div>
+            <div className="r_q">
+              <FaQuoteRight />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mypage_middle">
+        <div className="inner">
+          <ul className="category">
+            <li
+              className={`category-item ${noticeList ? "active" : ""}`}
+              onClick={categoryHandler("noticeList")}
+            >
+              공지사항
+            </li>
+            <li
+              className={`category-item ${myPost ? "active" : ""}`}
+              onClick={categoryHandler("myPost")}
+            >
+              나의 글
+            </li>
+            <li
+              className={`category-item ${like ? "active" : ""}`}
+              onClick={categoryHandler("like")}
+            >
+              나의 찜 목록
+            </li>
+            <li
+              className={`category-item ${notification ? "active" : ""}`}
+              onClick={categoryHandler("notification")}
+            >
+              알림
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="mypage_bottom">
+        <div className="main">이곳에는 메인 글이 올라와요</div>
+      </div>
+    </div>
+  );
 }
 
-export default MyPage
+export default MyPage;
