@@ -1,0 +1,156 @@
+@import "./global-color.scss";
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+@keyframes opacityUp {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.cook-modal-background {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation-name: opacityUp;
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+}
+.cook-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  z-index: 11;
+  transform: translate(-50%, -50%);
+  animation-name: slideUp;
+  animation-duration: 0.4s;
+  animation-delay: 0.1s;
+  animation-fill-mode: both;
+  display: flex;
+  flex-direction: column;
+  background-color: $dyellow;
+  width: 720px;
+  height: 470px;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: space-evenly;
+
+  .cook-modal-exit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    font-size: 2rem;
+    color: white;
+    opacity: 0.6;
+    &:hover {
+      transition: opacity 0.4s ease-in-out;
+      opacity: 0.8;
+    }
+  }
+
+  .cook-title {
+    font-size: 2.4rem;
+    text-shadow: -1px 0 $black, 0 1px $black, 1px 0 $black, 0 -1px $black;
+    font-family: "Black Han Sans", sans-serif;
+    color: $lgreen;
+  }
+  .cook-inner-box {
+    width: 90%;
+    height: 80%;
+    display: flex;
+    justify-content: space-between;
+    .cook-inner-left {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .cook-search-box {
+        width: 100%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        input {
+          width: 100%;
+          height: 40px;
+          margin-right: -1px;
+          border: 1px solid $vdyellow;
+          border-radius: 5px;
+
+          text-indent: 5px;
+          background-color: $lgray;
+        }
+        button {
+          position: absolute;
+          width: 18%;
+          height: 40px;
+          left: 100%;
+          transform: translateX(-100%);
+          border: none;
+          background-color: transparent;
+          color: $gray;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      .search-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 5px 0px;
+        height: 314px;
+        background-color: $lgray;
+        border: 1px solid $vdyellow;
+
+        border-radius: 5px 0px 0px 5px;
+        overflow-y: scroll;
+      }
+    }
+    .cook-inner-right {
+      width: 300px;
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background-color: $lgray;
+      border-radius: 5px;
+      border: 1px solid $vdyellow;
+
+      .ingre-result-list {
+        padding: 5px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      button {
+        height: 40px;
+        background-color: $lgray;
+        border: 1px solid $green;
+        border-radius: 5px;
+        color: $green;
+        &:hover {
+          background-color: $green;
+          color: white;
+        }
+      }
+    }
+  }
+}

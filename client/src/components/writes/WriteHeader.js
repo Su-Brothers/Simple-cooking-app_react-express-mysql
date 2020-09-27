@@ -9,7 +9,7 @@ import {
   hImgHandelr,
 } from "../../modules/write";
 function WriteHeader() {
-  const { title, description, mainPhoto, category } = useSelector(
+  const { title, description, mainPhoto } = useSelector(
     (state) => state.write,
     shallowEqual //비구조할당(매 번 새로운 객체를 생성하므로 얕은복사)
   );

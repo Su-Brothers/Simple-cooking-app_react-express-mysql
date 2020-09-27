@@ -2,6 +2,7 @@ import React from "react";
 import PostTagItem from "./PostTagItem";
 import "../styles/postsStyle/post-tag.scss";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 function PostTag() {
   const tag = useSelector((state) => state.post.post.tag);
   return (
@@ -10,7 +11,9 @@ function PostTag() {
         <div className="post-tag-title">태그</div>
         <div className="post-tag-items">
           {tag.map((item, index) => (
-            <PostTagItem tag={item.tag_name} key={item.tag_no} />
+            <Link to={`/post/tag/${item.tag_name}`} key={item.tag_no}>
+              <PostTagItem tag={item.tag_name} />
+            </Link>
           ))}
         </div>
       </div>

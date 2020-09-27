@@ -3,6 +3,7 @@ import DropZone from "react-dropzone";
 import { FaCamera, FaTimesCircle } from "react-icons/fa";
 import "../styles/writeStyle/order-item.scss";
 import { useDispatch } from "react-redux";
+import PropTypes from "prop-types";
 import {
   orderInputHandler,
   orderRemoveHandler,
@@ -19,7 +20,7 @@ function OrderItem({ id, text, order, orderPhoto }) {
   const imageUpload = (file) => {
     dispatch(orderImgHandelr(id, file));
   };
-
+  console.log(orderPhoto);
   return (
     <div className="order-item-box">
       <div className="order-item-box-num">{order}</div>
@@ -41,5 +42,11 @@ function OrderItem({ id, text, order, orderPhoto }) {
     </div>
   );
 }
+OrderItem.propTypes = {
+  id: PropTypes.number.isRequired,
+  text: PropTypes.string.isRequired,
+  order: PropTypes.number.isRequired,
+  orderPhoto: PropTypes.string,
+};
 
 export default OrderItem;

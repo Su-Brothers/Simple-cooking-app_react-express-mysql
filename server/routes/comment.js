@@ -57,7 +57,7 @@ router.get("/getLike/:id", async (req, res) => {
       return res.json({ success: true, result: result });
     } else {
       return res.json({
-        success: true,
+        success: true, //없을때
         result: [],
       });
     }
@@ -134,6 +134,22 @@ router.post("/unlike", async (req, res) => {
     return res.json({ success: false, message: "오류 발생" });
   } finally {
     connection.release();
+  }
+});
+
+router.post("/refreshlike", async (req, res) => {
+  //이미 눌러져 있을때
+  const sql = `update comment_like set is_like = 0 where co_no = ? and user_no = ?`; //있을때
+  const { user, coNo } = req.body; //코멘트 넘버와 유저넘버
+
+  try {
+    const [result] = await pool.query(sql, [coNo, user]);
+    if (result.affectedRows > 0) {
+      res.json({ success: true });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
   }
 });
 module.exports = router;

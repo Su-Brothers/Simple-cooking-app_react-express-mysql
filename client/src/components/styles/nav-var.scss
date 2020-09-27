@@ -32,25 +32,35 @@ header {
       }
     }
     .header-search {
-      height: 2rem;
-      font-size: 0px;
       position: relative;
       margin-right: 25px;
-      .header-search-icon {
-        position: absolute;
-        vertical-align: middle;
-        font-size: 1rem;
-        height: 100%;
-        margin-left: 10px;
-        color: $gray;
-      }
-      input {
-        height: 100%;
-        width: 220px;
-        border: none;
-        border-radius: 20px;
-        outline: none;
-        padding-left: 40px;
+      form {
+        button {
+          font-size: 0;
+          position: absolute;
+          padding: 0;
+          margin-left: 10px;
+          height: 100%;
+          outline: none;
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+          .header-search-icon {
+            font-size: 0.9rem;
+            color: $gray;
+          }
+        }
+
+        input {
+          font-size: 0.9rem;
+          height: 2rem;
+          width: 250px;
+          border: none;
+          border-radius: 20px;
+          outline: none;
+          text-indent: 38px;
+          line-height: 32px;
+        }
       }
     }
   }

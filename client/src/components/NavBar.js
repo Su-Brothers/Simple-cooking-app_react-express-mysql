@@ -3,8 +3,18 @@ import "./styles/nav-var.scss";
 import { FaSearch, FaUserAlt, FaUtensils, FaCog } from "react-icons/fa";
 import logo from "../images/jabakLogo_v4.png";
 import { withRouter, Link } from "react-router-dom";
+import { useState } from "react";
 
-function NavBar({ location }) {
+function NavBar({ location, history }) {
+  const [search, setSearch] = useState("");
+
+  const onSearchHandler = (e) => {
+    setSearch(e.target.value);
+  };
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    history.push(`/search/${search}`);
+  };
   return location.pathname !== "/login" && location.pathname !== "/signup" ? (
     <header>
       <div className="header-left-menu">
@@ -14,9 +24,17 @@ function NavBar({ location }) {
           </Link>
         </div>
         <div className="header-search">
-          <FaSearch className="header-search-icon" />
-
-          <input type="text" placeholder="레시피를 입력하세요..." />
+          <form type="submit" onSubmit={onSubmitHandler}>
+            <button type="submit" onClick={onSubmitHandler}>
+              <FaSearch className="header-search-icon" />
+            </button>
+            <input
+              type="text"
+              placeholder="레시피를 입력하세요..."
+              value={search}
+              onChange={onSearchHandler}
+            />
+          </form>
         </div>
       </div>
 

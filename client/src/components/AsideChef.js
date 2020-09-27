@@ -2,8 +2,37 @@ import React from "react";
 import { FaCrown } from "react-icons/fa";
 import "./styles/aside-chef.scss";
 import { withRouter } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserRanking } from "../modules/post";
 
 function AsideChef({ location }) {
+  const userRanking = useSelector((state) => state.post.userRanking);
+  const userLoading = useSelector((state) => state.post.userLoading);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUserRanking());
+  }, []);
+  const ranking = () => {
+    //데이터 있을시 넣어줌
+    if (userLoading) {
+      if (userRanking.length) {
+        return userRanking.map((item, index) => (
+          <div className="chef-list-item" key={item.user_no}>
+            <div className="chef-list-item-index">{index + 1}</div>
+            <div className="chef-content">
+              <span className="chef-name">{item.nick}</span>
+              <span className="chef-likes">{`+${item.likes}`}</span>
+            </div>
+          </div>
+        ));
+      } else {
+        return "순위 없음";
+      }
+    } else {
+      return "loading...";
+    }
+  };
   return location.pathname !== "/login" &&
     location.pathname !== "/signup" &&
     location.pathname !== "/write" ? (
@@ -16,56 +45,7 @@ function AsideChef({ location }) {
           </div>
           <hr />
         </div>
-
-        <div className="chef-list-item">
-          <div className="chef-list-item-index">1</div>
-          <div className="chef-content">
-            <span className="chef-name">쉐프덩</span>
-            <span className="chef-likes">+913</span>
-          </div>
-        </div>
-        <div className="chef-list-item">
-          <div className="chef-list-item-index">2</div>
-          <div className="chef-content">
-            <span className="chef-name">내 이름은 김메시</span>
-            <span className="chef-likes">+820</span>
-          </div>
-        </div>
-        <div className="chef-list-item">
-          <div className="chef-list-item-index">3</div>
-          <div className="chef-content"> 
-            <span className="chef-name">내 이름은 요리왕</span>
-            <span className="chef-likes">+541</span>
-          </div>
-        </div>
-        <div className="chef-list-item">
-          <div className="chef-list-item-index">4</div>
-          <div className="chef-content">
-            <span className="chef-name">짜파게티잘끓이는남자</span>
-            <span className="chef-likes">+401</span>
-          </div>
-        </div>
-        <div className="chef-list-item">
-          <div className="chef-list-item-index">5</div>
-          <div className="chef-content">
-            <span className="chef-name">레식에선요리왕</span>
-            <span className="chef-likes">+243</span>
-          </div>
-        </div>
-        <div className="chef-list-item">
-          <div className="chef-list-item-index">6</div>
-          <div className="chef-content">
-            <span className="chef-name">레식에선요리왕2</span>
-            <span className="chef-likes">+243</span>
-          </div>
-        </div>
-        <div className="chef-list-item">
-          <div className="chef-list-item-index">7</div>
-          <div className="chef-content">
-            <span className="chef-name">요리왕</span>
-            <span className="chef-likes">+243</span>
-          </div>
-        </div>
+        {ranking()}
       </div>
     </aside>
   ) : null;

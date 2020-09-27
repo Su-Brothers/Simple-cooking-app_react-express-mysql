@@ -1,0 +1,12 @@
+@import "./global-color.scss";
+.cook-result-item {
+  background-color: $green;
+  font-size: 0.9rem;
+  padding: 5px;
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-top: 5px;
+  a {
+    color: white;
+  }
+}

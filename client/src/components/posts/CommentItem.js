@@ -6,18 +6,18 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { readComment } from "../../modules/post";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useRef } from "react";
 function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
   const userState = useSelector((state) => state.user.userData, shallowEqual);
   const dispatch = useDispatch();
-  const [like, setLike] = useState({
-    isLike: "", //좋아요 정보
-    isUnlike: "", //싫어요 정보
-    isUser: {
-      is_like: "", //db에 정보가 있다면 이 데이터가 들어옴.
-      user_no: "",
-    }, //로그인 된 유저가 눌렀는지
+  const [isLike, setIsLike] = useState(0);
+  const [isUnlike, setIsUnlike] = useState(0);
+  const [isUser, setIsUser] = useState({
+    is_like: "", //db에 정보가 있다면 이 데이터가 들어옴.
+    user_no: "",
   });
-  console.log(coNo);
+  //let mounted = true;
+  let isMounted = useRef(null); //마운트 확인
   const onDeleteHandler = async () => {
     const data = await Axios.delete(`/api/comment/${coNo}`)
       .then((res) => res.data)
@@ -35,34 +35,46 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
       .catch((err) => console.log(err));
     if (data.success) {
       const { result } = data;
-      const userData =
+      const userData = //현재 로그인 된 사용자가 이 코멘트의 좋아요와 연관이 있는지 확인
+        //유저가 일치하면 데이터가 있을 것이고 일치 하지 않으면 없을 것이다.
         result && result.filter((item) => item.user_no === userState._no)[0];
-
-      setLike({
-        ...like,
-        isLike: result ? result.filter((item) => item.is_like === 1).length : 0,
-        isUnlike: result
-          ? result.filter((item) => item.is_like === 2).length
-          : 0,
-        isUser: userData ? userData : { ...like.isUser },
-      });
+      console.log("Dd");
+      if (isMounted.current) {
+        setIsLike(result.filter((item) => item.is_like === 1).length);
+        setIsUnlike(result.filter((item) => item.is_like === 2).length);
+        setIsUser(userData ? userData : { ...isUser });
+      }
     } else {
       alert(data.message);
     }
   };
   const onLikeHandler = async () => {
     if (userState.isAuth) {
-      const data = await Axios.post(`/api/comment/like`, {
-        user: userState._no,
-        coNo: coNo,
-        boNo: postId,
-      })
-        .then((res) => res.data)
-        .catch((err) => console.log(err));
-      if (data.success) {
-        getLike(); //리로드
+      if (isUser.is_like === 1) {
+        const data = await Axios.post(`/api/comment/refreshlike`, {
+          user: userState._no,
+          coNo: coNo,
+        })
+          .then((res) => res.data)
+          .catch((err) => console.log(err));
+        if (data.success) {
+          getLike(); //리로드
+        } else {
+          alert(data.message);
+        }
       } else {
-        alert(data.message);
+        const data = await Axios.post(`/api/comment/like`, {
+          user: userState._no,
+          coNo: coNo,
+          boNo: postId,
+        })
+          .then((res) => res.data)
+          .catch((err) => console.log(err));
+        if (data.success) {
+          getLike(); //리로드
+        } else {
+          alert(data.message);
+        }
       }
     } else {
       alert("로그인이 필요한 서비스입니다.");
@@ -71,17 +83,31 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
 
   const onUnlikeHandler = async () => {
     if (userState.isAuth) {
-      const data = await Axios.post(`/api/comment/unlike`, {
-        user: userState._no,
-        coNo: coNo,
-        boNo: postId,
-      })
-        .then((res) => res.data)
-        .catch((err) => console.log(err));
-      if (data.success) {
-        getLike(); //리로드
+      if (isUser.is_like === 2) {
+        const data = await Axios.post(`/api/comment/refreshlike`, {
+          user: userState._no,
+          coNo: coNo,
+        })
+          .then((res) => res.data)
+          .catch((err) => console.log(err));
+        if (data.success) {
+          getLike(); //리로드
+        } else {
+          alert(data.message);
+        }
       } else {
-        alert(data.message);
+        const data = await Axios.post(`/api/comment/unlike`, {
+          user: userState._no,
+          coNo: coNo,
+          boNo: postId,
+        })
+          .then((res) => res.data)
+          .catch((err) => console.log(err));
+        if (data.success) {
+          getLike(); //리로드
+        } else {
+          alert(data.message);
+        }
       }
     } else {
       alert("로그인이 필요한 서비스입니다.");
@@ -89,9 +115,10 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
   };
 
   useEffect(() => {
+    isMounted.current = true;
     getLike(); //좋아요 정보를 가져온다.
+    return () => (isMounted.current = false); //누수 방지
   }, []);
-  console.log(like);
   return (
     <div className="comment-item">
       <div className="comment-left">
@@ -109,16 +136,16 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
           <button
             type="button"
             onClick={onLikeHandler}
-            className={like.isUser.is_like === 1 ? "active" : ""}
+            className={isUser.is_like === 1 ? "active" : ""}
           >
-            <FaThumbsUp /> {like.isLike}
+            <FaThumbsUp /> {isLike}
           </button>
           <button
             type="button"
             onClick={onUnlikeHandler}
-            className={like.isUser.is_like === 2 ? "active" : ""}
+            className={isUser.is_like === 2 ? "active" : ""}
           >
-            <FaThumbsDown /> {like.isUnlike}
+            <FaThumbsDown /> {isUnlike}
           </button>
           {deleteAuth ? (
             <>

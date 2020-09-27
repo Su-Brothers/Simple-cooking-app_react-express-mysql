@@ -30,7 +30,7 @@ function WriteOrder() {
           />
         ))}
         <a
-          href="#"
+          href="_blank"
           className="orderAdd-box"
           type="button"
           onClick={orderAddHandler}
