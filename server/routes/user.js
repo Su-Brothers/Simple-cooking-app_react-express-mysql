@@ -7,6 +7,20 @@ const rounds = 10; //암호 자릿수
 const pool = require("../config/pool"); //pool을 가져온다.
 const auth = require("../middleware/auth");
 const router = express.Router();
+/*
+router.post("/update", async (req, res) => {
+  //정보수정
+  const sql = "UPDATE user_info SET user_email =? user_id = ? user_password = ?  user_nickname =? WHERE user_no = ?";
+  const {userid, usernickname, useremail} = req.body;
+  const result =  pool.query(sql, [userid, usernickname, useremail]);
+  if(result == true ){
+ 
+  res.json({success : true, message : "수정이 완료 되었습니다."})
+} else {
+  res.json({success : false, message : "수정에 실패 하였습니다."})
+}
+  
+*/
 
 router.post("/login", async (req, res) => {
   //로그인

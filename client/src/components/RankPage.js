@@ -56,19 +56,19 @@ function RankPage() {
               transform: `translateX(${currentIdx * -150 - 150}px)`,
             }}
           >
-            <img src={italy} width="150px" height="150px" />
-            <img src={korea} width="150px" height="150px" />
-            <img src={china} width="150px" height="150px" />
-            <img src={japan} width="150px" height="150px" />
-            <img src={italy} width="150px" height="150px" />
+            <img alt="양식" src={italy} width="150px" height="150px" />
+            <img alt="한식" src={korea} width="150px" height="150px" />
+            <img alt="중식" src={china} width="150px" height="150px" />
+            <img alt="일식" src={japan} width="150px" height="150px" />
+            <img alt="양식" src={italy} width="150px" height="150px" />
           </div>
         </div>
         <div className="controls_box">
           <div className="controls">
-            <a className="prev" onClick={prevBtn}>
+            <a href="/#" className="prev" onClick={prevBtn}>
               <FaAngleLeft />
             </a>
-            <a className="next" onClick={nextBtn}>
+            <a href="/#" className="next" onClick={nextBtn}>
               <FaAngleRight />
             </a>
           </div>

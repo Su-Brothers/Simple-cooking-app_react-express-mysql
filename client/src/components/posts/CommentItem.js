@@ -16,7 +16,6 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
     is_like: "", //db에 정보가 있다면 이 데이터가 들어옴.
     user_no: "",
   });
-
   //let mounted = true;
   let isMounted = useRef(null); //마운트 확인
   const onDeleteHandler = async () => {

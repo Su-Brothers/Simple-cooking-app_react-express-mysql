@@ -45,7 +45,6 @@ function AsideChef({ location }) {
           </div>
           <hr />
         </div>
-
         {ranking()}
       </div>
     </aside>
