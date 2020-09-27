@@ -1,25 +1,29 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import TimeLine from "../TimeLine";
-import "../styles/postsStyle/tag-page.scss";
-import { useState } from "react";
+import qs from "qs";
 import { useEffect } from "react";
+import { useState } from "react";
+import "./styles/postsStyle/tag-page.scss";
+import TimeLine from "./TimeLine";
 import Axios from "axios";
 import { useRef } from "react";
 import { useCallback } from "react";
-function TagPage({ match }) {
-  const [sort, setSort] = useState("popular");
+function CookPage({ location }) {
+  const ingres = qs.parse(location.search, {
+    ignoreQueryPrefix: true, //?뺴고 파싱
+  });
+  const [sort, setSort] = useState("exact");
   const [postList, setList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isEnd, setIsEnd] = useState(false); //더 이상 가져올 수 있는 데이터가 있는지
   const [isFirst, setisFirst] = useState(true);
+  const [prevName, setPrevName] = useState("");
 
   const limitItem = useRef(0); //페이징 처리용 리미트
   const sortList = [
     //정렬 리스트
-    { name: "popular", koName: "인기순" },
+    { name: "exact", koName: "정확순" },
     { name: "latest", koName: "최신순" },
-    { name: "views", koName: "조회순" },
+    { name: "popular", koName: "인기순" },
   ];
   const onSortChange = (target) => () => {
     setSort(target);
@@ -69,11 +73,10 @@ function TagPage({ match }) {
 
   const getPosts = (target) => {
     limitItem.current = 0; //0으로 초기화
-    console.log(match.params.name);
     setLoading(false);
     setIsEnd(false);
     Axios.get(
-      `/api/post/tag/${match.params.name}/${target}/${limitItem.current}`
+      `/api/post/cook/getposts/${ingres.names}/${target}/${limitItem.current}`
     )
       .then((res) => {
         if (res.data.success) {
@@ -91,14 +94,13 @@ function TagPage({ match }) {
       })
       .catch((err) => console.log(err));
   };
-
   const loadPosts = (target) => {
     console.log(target);
     console.log(postList);
     if (!isEnd) {
       console.log(isEnd);
       Axios.get(
-        `/api/post/tag/${match.params.name}/${target}/${limitItem.current}`
+        `/api/post/cook/getposts/${ingres.names}/${target}/${limitItem.current}`
       )
         .then((res) => {
           if (res.data.success) {
@@ -127,35 +129,35 @@ function TagPage({ match }) {
       document.documentElement.scrollHeight || document.body.scrollHeight;
     //document.documentElement만 참조는 위험'
     console.log(sort);
-    if (
-      scrollTop + clientHeight === scrollHeight &&
-      clientHeight !== scrollHeight
-    ) {
+    if (scrollTop + clientHeight === scrollHeight) {
       console.log("맨끝");
-      console.log(scrollTop);
-      console.log(clientHeight);
-      console.log(scrollHeight);
       loadPosts(sort);
     }
-
-    //deps를 넣어줘야 최신 상태를 유지할 수 있다.
+    //postList의 길이를 넣어준 이유는 중첩객체이기 때문에 항상 다른값으로 인식한다.
+    //deps를 넣어줘야 최신 상태를 유지할 수 있다. 이벤트리스너에 등록하는경우 props나 state를 따르지 않는다.
   }, [postList.length, isEnd, sort]);
 
   useEffect(() => {
     if (isFirst) {
       console.log("??");
-      getPosts("popular");
+      getPosts("exact");
       setisFirst(false);
+      setPrevName(ingres.names);
+    } else if (prevName !== ingres.names) {
+      console.log("성공");
+      getPosts("exact");
+      setSort("exact");
+      setPrevName(ingres.names);
     }
     window.addEventListener("scroll", onScrollHandler);
     return () => window.removeEventListener("scroll", onScrollHandler);
-  }, [onScrollHandler]);
+  }, [onScrollHandler, ingres.names]);
 
   return (
     <div className="tag-page-container">
       <div className="tag-page-title">
-        <span className="tag-page-title-tag">{`"${match.params.name}"`}</span>
-        <span>에 대한 레시피가 </span>
+        <span className="tag-page-title-tag">{`"${ingres.names}"`}</span>
+        <span>에 대한 검색결과가 </span>
         <span className="tag-page-title-index">{postList.length}</span>
         <span>개 있습니다.</span>
       </div>
@@ -165,4 +167,4 @@ function TagPage({ match }) {
   );
 }
 
-export default TagPage;
+export default CookPage;
