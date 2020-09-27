@@ -16,6 +16,7 @@ import Post from "./components/posts/Post";
 import EditPage from "./components/posts/edits/EditPage";
 import TagPage from "./components/posts/TagPage";
 import SearchPage from "./components/SearchPage";
+import CookPage from "./components/CookPage"; //재료추천 페이지
 
 function App(props) {
   return (
@@ -32,6 +33,7 @@ function App(props) {
           <Route path="/mypage" component={Auth(MyPage, true)} />
           <Route path="/newmypage" component={Auth(NewMyPage)} />
           <Route path="/write" component={Auth(WritePage, true)} />
+          <Route path="/cook" component={Auth(CookPage)} />
           <Route exact path="/post/:postId" component={Auth(Post)} />
           <Route path="/post/:postId/edit" component={Auth(EditPage, true)} />
           <Route path="/post/tag/:name" component={Auth(TagPage)} />

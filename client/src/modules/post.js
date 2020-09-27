@@ -2,6 +2,8 @@ import axios from "axios";
 //패치값 재사용을 위해 리덕스 사용
 const LOADING_POST = "LOADING_POST";
 const LOADING_POSTS = "LOADING_POSTS";
+const READ_MORE_POSTS = "READ_MORE_POSTS";
+
 const READ_POSTS = "READ_POSTS";
 const READ_POST = "READ_POST"; //포스트 상세정보
 
@@ -12,19 +14,42 @@ const READ_VIEWS = "READ_VIEWS"; //조회수 리로드
 const READ_USER_RANKING = "READ_USER_RANKING"; //금주의 요리사 랭킹
 const READ_USER_LOADING = "READ_USER_LOADING";
 
-export const readHandler = (type) => async (dispatch) => {
+export const readHandler = (type, limit, isEnd) => async (dispatch) => {
   const foodType = typeGender(type);
   dispatch({
     type: LOADING_POSTS,
   });
   const data = await axios
-    .get(`/api/post/getposts/${foodType}`)
+    .get(`/api/post/getposts/${foodType}/${limit}`)
     .then((res) => res.data)
     .catch((err) => console.log(err));
 
   if (data.success) {
+    if (data.posts.length < 10) {
+      isEnd();
+    }
     dispatch({
       type: READ_POSTS,
+      payload: data.posts,
+    });
+  } else {
+    alert(data.message);
+  }
+};
+
+export const readMoreHandler = (type, limit, isEnd) => async (dispatch) => {
+  const foodType = typeGender(type);
+  const data = await axios
+    .get(`/api/post/getposts/${foodType}/${limit}`)
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+  console.log(data);
+  if (data.success) {
+    if (data.posts.length < 10) {
+      isEnd();
+    }
+    dispatch({
+      type: READ_MORE_POSTS,
       payload: data.posts,
     });
   } else {
@@ -164,6 +189,12 @@ export default function post(state = initialState, action) {
         ...state,
         posts: payload,
         postsLoading: true,
+      };
+
+    case READ_MORE_POSTS:
+      return {
+        ...state,
+        posts: [...state.posts, ...action.payload],
       };
 
     case READ_POST:

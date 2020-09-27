@@ -5,13 +5,20 @@ import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import TimeLine from "./TimeLine";
 import { useEffect } from "react";
-import { readHandler } from "../modules/post";
-function MainPage() {
+import { readHandler, readMoreHandler } from "../modules/post";
+import { useRef } from "react";
+import { useCallback } from "react";
+function MainPage({ history }) {
   //셀렉터 주의 : 같은 값을 디스패치해도 리액트에서는 다른 값으로본다.(ref가 다르다.) 가져올때 따로 가져오거나 shallowEqual를 사용
   const state = useSelector((state) => state.user.userData, shallowEqual); //얕은 복사
   const posts = useSelector((state) => state.post.posts);
   const isLoading = useSelector((state) => state.post.postsLoading); //로딩창
   const [sort, setSort] = useState("allFood");
+  const [isEnd, setIsEnd] = useState(false); //더 이상 가져올 수 있는 데이터가 있는지
+  const [isFirst, setIsFirst] = useState(true); //처음렌더링인지 확인
+
+  const limitItem = useRef(0); //페이징 처리용 리미트
+
   const dispatch = useDispatch();
   const sortList = [
     //정렬 리스트
@@ -23,7 +30,10 @@ function MainPage() {
   ];
   const onSortChange = (target) => () => {
     setSort(target);
-    dispatch(readHandler(target));
+    limitItem.current = 0;
+    setIsEnd(false);
+    dispatch(readHandler(target, limitItem.current, onEndHandler));
+    limitItem.current += 10;
   };
 
   const sortItem = sortList.map((item, index) => (
@@ -37,6 +47,7 @@ function MainPage() {
       {item.koName}
     </div>
   ));
+
   const postsData = () => {
     //렌더링 될 포스트 데이터
     if (isLoading) {
@@ -66,9 +77,42 @@ function MainPage() {
     }
   };
 
+  const onScrollHandler = useCallback(() => {
+    const { clientHeight } = document.documentElement; //요소 높이
+    const scrollTop = //남은 높이
+      document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollHeight = //총 높이
+      document.documentElement.scrollHeight || document.body.scrollHeight;
+    //document.documentElement만 참조는 위험'
+    console.log(sort);
+    if (scrollTop + clientHeight === scrollHeight) {
+      console.log("맨끝");
+      //loadPosts(sort);
+      if (!isEnd) {
+        console.log(posts.length);
+        console.log(limitItem.current);
+        dispatch(readMoreHandler(sort, limitItem.current, onEndHandler));
+        limitItem.current += 10;
+      } else {
+        console.log("데이터가 없습니다.");
+      }
+    }
+    //이벤트리스너에 등록하는경우 props나 state를 따르지 않는다.
+  }, [posts.length, isEnd, sort]);
+  const onEndHandler = () => {
+    setIsEnd(true);
+  };
   useEffect(() => {
-    dispatch(readHandler("allFood")); //2번째 인자에 빈배열을 넣어줌으로서 마운트될때 한 번만 실행되도록함.
-  }, []);
+    if (isFirst) {
+      console.log("처음");
+      dispatch(readHandler("allFood", limitItem.current, onEndHandler));
+      limitItem.current += 10;
+      setIsFirst(false);
+    }
+    window.addEventListener("scroll", onScrollHandler);
+    return () => window.removeEventListener("scroll", onScrollHandler);
+  }, [onScrollHandler]);
+
   return (
     <div className="main-container">
       <div className="main-category">{sortItem}</div>
