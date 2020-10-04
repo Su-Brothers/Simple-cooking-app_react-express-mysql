@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./styles/mypage.scss";
 import { FaQuoteLeft, FaQuoteRight, FaCog } from "react-icons/fa";
-import ProfileSetting from "./ProfileSetting";
 import { shallowEqual, useSelector } from "react-redux";
 import { useEffect } from "react";
 import TimeLine from "./TimeLine";
@@ -9,21 +8,25 @@ import Axios from "axios";
 import { useCallback } from "react";
 import { useRef } from "react";
 
-function MyPage() {
-  const user = useSelector((state) => state.user.userData, shallowEqual);
-  console.log(user);
+function ChefPage({ match }) {
+  //다른 유저들의 페이지
   const [sort, setSort] = useState("mypost");
-  const [modal, setmodal] = useState(false);
   const [postList, setList] = useState([]);
+  const [userInfo, setUserInfo] = useState({
+    user_nickname: "",
+    user_description: "",
+    user_img: "",
+  });
   const [loading, setLoading] = useState(false);
   const [isEnd, setIsEnd] = useState(false); //더 이상 가져올 수 있는 데이터가 있는지
   const [isFirst, setisFirst] = useState(true);
-
+  const [prevName, setPrevName] = useState(""); //라우트로 이동시 전페이지의 값과 비교하기 위해 사용
   const limitItem = useRef(0); //페이징 처리용 리미트
 
+  const { user_nickname, user_description, user_img } = userInfo;
   const sortList = [
     //정렬 리스트
-    { name: "mypost", koName: "내가 쓴 글" },
+    { name: "mypost", koName: "레시피" },
     { name: "scrap", koName: "스크랩" },
   ];
   const onSortChange = (target) => () => {
@@ -43,8 +46,16 @@ function MyPage() {
     </button>
   ));
 
-  const onModalHandler = () => {
-    setmodal(!modal); //모달 핸들러
+  const getUser = () => {
+    Axios.get(`/api/users/profile/${match.params.no}`)
+      .then((res) => {
+        if (res.data.success) {
+          setUserInfo(res.data.result);
+        } else {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const postsData = () => {
@@ -76,14 +87,15 @@ function MyPage() {
       return "loading...";
     }
   };
-
+  console.log(match.params.no);
   const getPosts = (target) => {
     limitItem.current = 0; //0으로 초기화
     setLoading(false);
     setIsEnd(false);
-    Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
+    Axios.get(
+      `/api/users/posts/${match.params.no}/${target}/${limitItem.current}`
+    )
       .then((res) => {
-        console.log(res);
         if (res.data.success) {
           setList(res.data.result);
           if (res.data.result.length < 10) {
@@ -104,7 +116,9 @@ function MyPage() {
     console.log(target);
     if (!isEnd) {
       console.log(isEnd);
-      Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
+      Axios.get(
+        `/api/users/posts/${match.params.no}/${target}/${limitItem.current}`
+      )
         .then((res) => {
           if (res.data.success) {
             setList([...postList, ...res.data.result]);
@@ -144,35 +158,35 @@ function MyPage() {
     }
 
     //deps를 넣어줘야 최신 상태를 유지할 수 있다.
-  }, [postList.length, isEnd, sort, user.isAuth]);
+  }, [postList.length, isEnd, sort]);
   useEffect(() => {
     console.log("asdsad");
-    if (isFirst && user.isAuth) {
+    if (isFirst) {
       getPosts("mypost");
+      getUser();
       setisFirst(false);
+      setPrevName(match.params.no);
+    } else if (prevName !== match.params.no) {
+      console.log("성공");
+      getPosts("mypost");
+      getUser();
+      setSort("mypost");
+      setPrevName(match.params.no);
     }
     window.addEventListener("scroll", onScrollHandler);
     return () => window.removeEventListener("scroll", onScrollHandler);
-  }, [onScrollHandler]);
+  }, [onScrollHandler, match.params.no, user_nickname]);
 
   return (
     <>
       <div className="mypage-container">
         <div className="my-top">
           <div className="my-top-description-box">
-            <button
-              type="button"
-              className="setting-btn"
-              onClick={onModalHandler}
-            >
-              <FaCog />
-              <span> 프로필 설정</span>
-            </button>
             <div className="description-text">
               <FaQuoteLeft className="quote-left" />
               <span>
-                {user._description
-                  ? user._description
+                {user_description
+                  ? user_description
                   : "등록된 자기소개가 없습니다."}
               </span>
               <FaQuoteRight className="quote-right" />
@@ -180,9 +194,9 @@ function MyPage() {
           </div>
           <div className="my-top-sort-box">
             <div className="my-img-box">
-              {user._imgFile ? (
+              {user_img ? (
                 <img
-                  src={`http://localhost:5000/${user._imgFile}`}
+                  src={`http://localhost:5000/${user_img}`}
                   alt="프로필사진"
                 />
               ) : (
@@ -193,23 +207,13 @@ function MyPage() {
               )}
             </div>
             {sortItem}
-            <div className="user-name">{user._nickname}</div>
+            <div className="user-name">{user_nickname}</div>
           </div>
         </div>
         {postsData()}
       </div>
-      {modal && (
-        <ProfileSetting
-          onClose={onModalHandler}
-          emailData={user._email}
-          imgData={user._imgFile}
-          nickData={user._nickname}
-          desData={user._description}
-          noData={user._no}
-        />
-      )}
     </>
   );
 }
 
-export default MyPage;
+export default ChefPage;

@@ -14,9 +14,12 @@ import {
 import Axios from "axios";
 import CookModal from "./CookModal";
 import { useState } from "react";
-function AsideBar({ location, history }) {
+import { useRef } from "react";
+import { useEffect } from "react";
+function AsideBar({ location, history, match }) {
   const userState = useSelector((state) => state.user.userData.isAuth);
   const [isModal, setIsModal] = useState(false);
+  const scrollPos = useRef(0);
   const logoutHandler = async (e) => {
     e.preventDefault();
     const data = await Axios.get("/api/users/logout")
@@ -31,11 +34,35 @@ function AsideBar({ location, history }) {
     }
   };
   const onModalHandler = (e) => {
+    //isChange는 주소가 변경되었을시에 true가 온다.
     if (e) {
+      //aside에 있는 cook은 a태그임으로 전파를 막아줘야한다.
       e.preventDefault();
+    }
+    //모달창 띄웠을때 body의 스크롤 이벤트를 막는다.
+    if (!isModal) {
+      //위치를 기억해놨다가 close할때 그 위치로 이동시킨다.
+      scrollPos.current =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      document.body.className = "modal";
+      document.body.style.top = `-${scrollPos.current}px`;
+    } else {
+      document.body.className = "";
+      document.body.style.removeProperty("top");
+      window.scrollTo(0, scrollPos.current);
     }
     setIsModal(!isModal);
   };
+  useEffect(() => {
+    return () => {
+      document.body.className = "";
+      document.body.style.removeProperty("top");
+      window.scrollTo(
+        0,
+        document.documentElement.scrollTop || document.body.scrollTop
+      );
+    };
+  }, []);
 
   return location.pathname !== "/login" &&
     location.pathname !== "/signup" &&

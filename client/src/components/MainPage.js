@@ -57,6 +57,8 @@ function MainPage({ history }) {
           <TimeLine
             title={item.title}
             writer={item.writer}
+            writerNo={item.user_no}
+            profile={item.user_img}
             photo={item.board_img}
             date={item.date}
             url={item.board_no}
@@ -85,7 +87,10 @@ function MainPage({ history }) {
       document.documentElement.scrollHeight || document.body.scrollHeight;
     //document.documentElement만 참조는 위험'
     console.log(sort);
-    if (scrollTop + clientHeight === scrollHeight) {
+    if (
+      Math.round(scrollTop) + clientHeight === scrollHeight &&
+      clientHeight !== scrollHeight
+    ) {
       console.log("맨끝");
       //loadPosts(sort);
       if (!isEnd) {
@@ -118,7 +123,17 @@ function MainPage({ history }) {
       <div className="main-category">{sortItem}</div>
       <Link to="/" className="main-write-feed">
         <div className="main-write-box">
-          <img src="https://placeimg.com/100/100/any" alt="프로필 이미지" />
+          {state.isAuth && state._imgFile ? (
+            <img
+              src={`http://localhost:5000/${state._imgFile}`}
+              alt="프로필사진"
+            />
+          ) : (
+            <img
+              src={`http://localhost:5000/uploads/normal-profile.png`}
+              alt="프로필사진"
+            />
+          )}
           <div className="main-write-input">
             {state.isAuth ? `${state._nickname}님` : "어서오세요"}, 당신만의
             자취사전을 등록해주세요!

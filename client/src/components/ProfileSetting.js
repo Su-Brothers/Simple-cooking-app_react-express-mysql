@@ -1,135 +1,282 @@
 import React, { useState } from "react";
 import "./styles/profile-setting.scss";
-import { FaTimes, FaCamera } from "react-icons/fa";
-import { useSelector } from "react-redux";
-import { changeHandler } from "../modules/user";
-
-function ProfileSetting(props) {
-  const user = useSelector((state) => state.user.userData);
-
-  const [changeinfo, setchangeinfo] = useState({
+import { FaTimes, FaCamera, FaIgloo } from "react-icons/fa";
+import DropZone from "react-dropzone";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { changeHandler, reloadUser } from "../modules/user";
+import { useEffect } from "react";
+import Axios from "axios";
+function ProfileSetting({
+  onClose,
+  imgData,
+  nickData,
+  desData,
+  emailData,
+  noData,
+}) {
+  const [info, setInfo] = useState({
+    imgFile: "",
     email: "",
-    userId: "",
+    userNickname: "",
+    description: "",
     password: "",
     newPassword: "",
-    newPasswordCheck: "",
-    userNickname: "",
-    file: null,
-    fileName: "",
+    passwordCheck: "",
   });
+  const dispatch = useDispatch();
+
+  const [nickBool, setNickBool] = useState(""); //닉네임 체크
+  const [emailBool, setEmailBool] = useState(""); //이메일 체크
+
+  const [nowPsBool, setNowPsBool] = useState(""); //현재 비밀번호 체크
+  const [psCheckBool, setPsCheckBool] = useState(""); //비밀번호 체크
+  const [psBool, setPsBool] = useState(""); //비밀번호 확인체크
 
   const {
+    imgFile,
     email,
-    userId,
+    userNickname,
+    description,
     password,
     newPassword,
-    newPasswordCheck,
-    userNickname,
-    file,
-    fileName,
-  } = changeinfo;
-
-  const update = (e) => {
-    e.preventDefault();
-    dispatchEvent(changeHandler(email, userId, userNickname));
-  };
+    passwordCheck,
+  } = info;
 
   const onInputHandler = (e) => {
-    //입력값으로 value값 변경시키는 함수
-    setchangeinfo({
-      ...changeinfo,
+    //인풋핸들러
+    console.log(info);
+    setInfo({
+      ...info,
       [e.target.name]: e.target.value,
     });
   };
 
+  const imageUpload = async (file) => {
+    console.log(file);
+    let formData = new FormData(); //파일 데이터 형식을 받기 위해 사용
+    formData.append("profile", file[0]);
+    const config = {
+      header: { "content-type": "multipart/form-data" }, //파일 형식을 서버에 보내려면 타입을 명시해줘야함
+    };
+    try {
+      const result = await Axios.post(
+        "/api/users/upload/profile",
+        formData,
+        config
+      ).then((res) => res.data);
+
+      if (result.success) {
+        setInfo({
+          ...info,
+          imgFile: result.url,
+        });
+      } else {
+        alert("업로드 실패");
+      }
+    } catch (err) {
+      alert("서버에 오류가 발생했습니다.");
+    }
+  };
+
+  const onSubmitHandler = () => {
+    //한 번만 시도를 하지 않았을경우 틀린 것만 보여줘야하므로 처음에 초기화
+    setEmailBool("");
+    setNickBool("");
+    setNowPsBool("");
+    setPsBool("");
+    setPsCheckBool("");
+    //닉네임 체크
+    if (!userNickname) {
+      return setNickBool("닉네임을 입력해주십시오.");
+    }
+    //이메일 체크
+    const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; //정규식 사용
+    if (email.length === 0) {
+      return setEmailBool("이메일을 입력해주십시오.");
+    } else {
+      if (!reg_email.test(email)) {
+        return setEmailBool("이메일 형식에 알맞지 않습니다.");
+      }
+    }
+    //비밀번호 체크
+    if (password || newPassword || passwordCheck) {
+      //세 인풋값이 전부 있을경우
+      if (password && newPassword && passwordCheck) {
+        if (newPassword !== passwordCheck) {
+          //비밀번호확인과 비밀번호가 맞는지 체크한다
+          return setPsCheckBool("비밀번호를 확인해주세요.");
+        } else {
+          //맞으면 8자리 이상인지 확인
+          if (newPassword.length < 8) {
+            return setPsBool("비밀번호는 8자리 이상입니다.");
+          }
+          //여기까지 통과되었으면 성공
+          if (noData) {
+            console.log(noData);
+            Axios.post(`/api/users/edit`, {
+              userNo: noData,
+              imgFile: imgFile,
+              email: email,
+              nickname: userNickname,
+              description: description,
+              password: password,
+              newPassword: newPassword,
+            }).then((res) => {
+              if (res.data.success) {
+                alert(res.data.message);
+                dispatch(reloadUser());
+                onClose();
+              } else {
+                alert(res.data.message);
+              }
+            });
+          }
+        }
+      } else {
+        if (!password) {
+          return setNowPsBool("현재 비밀번호를 입력해주세요.");
+        }
+        if (newPassword.length < 8) {
+          return setPsBool("비밀번호는 8자리 이상입니다.");
+        }
+        if (passwordCheck.length < 8) {
+          return setPsCheckBool("비밀번호 확인을 정확히 입력해주세요.");
+        }
+      }
+    } else {
+      if (nickData) {
+        console.log(noData);
+        Axios.post(`/api/users/edit`, {
+          userNo: noData,
+          imgFile: imgFile,
+          email: email,
+          nickname: userNickname,
+          description: description,
+          password: null,
+          newPassword: null,
+        }).then((res) => {
+          if (res.data.success) {
+            alert(res.data.message);
+            dispatch(reloadUser());
+            onClose();
+          } else {
+            alert(res.data.message);
+          }
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    setInfo({
+      ...info,
+      imgFile: imgData || "",
+      email: emailData || "",
+      userNickname: nickData || "",
+      description: desData || "",
+      noData: noData || "",
+    });
+  }, [noData]);
   return (
-    <div className="outter">
-      <div className="setting_container animation_inner">
-        <div className="x_box">
-          <FaTimes onClick={props.onClose} />
-        </div>
+    <>
+      <div className="outter-box"></div>
+      <div className="setting-modal">
         <div className="profile">
-          <div className="title_image">
-            <img
-              src="https://placeimg.com/100/100/any"
-              width="100%"
-              height="100%"
-              alt="프로필사진"
-            />
-          </div>
-          <div className="camera">
-            <FaCamera
-              style={{ width: "30px", height: "30px", overflow: "hidden" }}
-            />
-          </div>
-          <div className="title_Name">{user._nickname}</div>
+          <DropZone onDrop={imageUpload} multiple={false} maxSize={1000000}>
+            {({ getRootProps, getInputProps }) => (
+              <div className="title_image" {...getRootProps()}>
+                <input {...getInputProps()} />
+                {imgFile ? (
+                  <img
+                    src={`http://localhost:5000/${imgFile}`}
+                    alt="프로필사진"
+                  />
+                ) : (
+                  <img
+                    src={`http://localhost:5000/uploads/normal-profile.png`}
+                    alt="프로필사진"
+                  />
+                )}
+                <div className="camera-box">
+                  <FaCamera />
+                </div>
+              </div>
+            )}
+          </DropZone>
+          <div className="user-name">덩파이</div>
         </div>
         <div className="modify_container">
-          <div className="profile_picture item">
-            <div className="block">사진변경</div>
+          <div className="input-box">
+            이메일
             <input
               type="text"
-              name="file"
-              accept="image/*"
-              file={changeinfo.file}
-              value={changeinfo.fileName}
+              name="email"
+              value={email}
+              onChange={onInputHandler}
             />
           </div>
-          <div className="text">
-            사진을 변경하시려면 위 프로필 사진을 눌러서 변경해주세요.
-          </div>
-          <div className="nicName item">
-            <div className="block">닉네임</div>
+          <div className="bool-box">{emailBool}</div>
+          <div className="input-box">
+            닉네임
             <input
               type="text"
-              name="userNicname"
-              value={changeinfo.userNickname}
-              placeholder={user._nickname}
+              name="userNickname"
+              value={userNickname}
+              onChange={onInputHandler}
             />
           </div>
-          <div className="introduce item">
-            <div className="block" style={{ marginBottom: "5px" }}>
-              자기소개
-            </div>
-            <textarea type="text" name="intro" />
+          <div className="bool-box">{nickBool}</div>
+          <div className="input-box-vertical-top">
+            자기소개
+            <textarea
+              type="text"
+              name="description"
+              value={description}
+              onChange={onInputHandler}
+            />
           </div>
-          <div className="current_password item">
-            <div className="block">현재 비밀번호</div>
+          <div className="input-box">
+            현재 비밀번호
             <input
               type="password"
               name="password"
-              value={changeinfo.password}
+              value={password}
+              onChange={onInputHandler}
             />
           </div>
-          <div className="new_password item">
-            <div className="block">새 비밀번호</div>
+          <div className="bool-box">{nowPsBool}</div>
+          <div className="input-box">
+            새 비밀번호
             <input
               type="password"
               name="newPassword"
-              value={changeinfo.newPassword}
+              value={newPassword}
+              onChange={onInputHandler}
             />
           </div>
-          <div className="new_password item">
-            <div className="block">비밀번호 확인</div>
+          <div className="bool-box">{psBool}</div>
+          <div className="input-box">
+            비밀번호 확인
             <input
               type="password"
-              name="newPasswordCheck"
-              value={changeinfo.newPasswordCheck}
+              name="passwordCheck"
+              value={passwordCheck}
+              onChange={onInputHandler}
             />
           </div>
+          <div className="bool-box">{psCheckBool}</div>
         </div>
-        <div className="btn_location">
-          <button type="submit" className="save_btn">
-            {" "}
+        <div className="btn-location">
+          <button type="button" className="save-btn" onClick={onSubmitHandler}>
             저장
           </button>
-          <button type="button" className="close_btn" onClick={props.onClose}>
+          <button type="button" className="close-btn" onClick={onClose}>
             취소
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
-export default ProfileSetting;
+export default React.memo(ProfileSetting);

@@ -47,6 +47,8 @@ function TagPage({ match }) {
           <TimeLine
             title={item.title}
             writer={item.writer}
+            writerNo={item.user_no}
+            profile={item.user_img}
             photo={item.board_img}
             date={item.date}
             url={item.board_no}
@@ -128,7 +130,7 @@ function TagPage({ match }) {
     //document.documentElement만 참조는 위험'
     console.log(sort);
     if (
-      scrollTop + clientHeight === scrollHeight &&
+      Math.round(scrollTop) + clientHeight === scrollHeight &&
       clientHeight !== scrollHeight
     ) {
       console.log("맨끝");

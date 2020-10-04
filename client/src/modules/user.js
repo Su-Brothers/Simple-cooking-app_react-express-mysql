@@ -66,6 +66,19 @@ export const signupHandler = (email, id, password, nickname, history) => async (
   }
 };
 
+export const reloadUser = () => async (dispatch) => {
+  //회원정보 수정 후 리로드
+  const data = await axios
+    .get("/api/users/auth")
+    .then((res) => res.data)
+    .catch((err) => console.log(err));
+  //console.log(data);
+  console.log(data);
+  dispatch({
+    type: AUTH_USER,
+    payload: data,
+  });
+};
 export const authHandler = (option, history) => async (dispatch) => {
   //페이지간 권한인증
   const data = await axios

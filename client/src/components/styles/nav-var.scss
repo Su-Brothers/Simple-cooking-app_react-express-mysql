@@ -1,13 +1,8 @@
-$orange: #fdd835;
-$lorange: #ffff6b;
-$dorange: #ff7300;
-$ywhite: #fffff7; //노란빛 흰색
-$ygray: #6e6906;
-$gray: #b3b3b3;
+@import "./global-color.scss";
 header {
   height: 65px;
   width: 100%;
-  background-color: $orange;
+  background-color: $horange;
   box-shadow: 0px -2px 10px $ygray;
   position: fixed;
   top: 0;
@@ -73,11 +68,47 @@ header {
     align-items: center;
     justify-content: space-between;
     margin-right: 25px;
+    .right-menu-item-link {
+      color: $black;
+      svg {
+        display: block; //인라인 인식 때문에 block으로 바꿔줌
+      }
+    }
 
-    a {
-      color: black;
-      display: flex;
-      align-items: center;
+    .item-user {
+      position: relative;
+      .user-box {
+        width: 130px;
+        position: absolute;
+        background-color: white;
+        border-radius: 5px;
+        border: 1px solid $lgray;
+        right: 0px;
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 1rem;
+        display: none;
+        a {
+          color: $dgray;
+          width: 100%;
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          &:hover {
+            background-color: $vlgray;
+          }
+        }
+        &.active {
+          display: block;
+        }
+      }
+    }
+    .item-rank {
+      position: relative;
     }
   }
 }

@@ -8,6 +8,13 @@ body,
   margin: 0;
   background-color: $lgray;
 }
+body {
+  &.modal {
+    overflow-y: scroll;
+    position: fixed;
+    width: 100%;
+  }
+}
 * {
   box-sizing: border-box;
 }
