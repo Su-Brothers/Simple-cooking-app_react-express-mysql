@@ -68,15 +68,41 @@
           margin-right: 3px;
         }
       }
-      .header-profile-img {
+      a {
+        color: $bgray;
         position: absolute;
         bottom: 0;
-        height: 120px;
         transform: translateY(50%);
-        padding: 0;
-        margin: 0;
-        border: 7px solid $orange;
-        border-radius: 40%;
+        height: 120px;
+        .header-profile-img {
+          height: 100%;
+          border: 7px solid $orange;
+          border-radius: 40%;
+        }
+        .profile-background {
+          opacity: 0;
+          transition: opacity 0.2s ease-in-out;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 40%;
+          border: 7px solid $orange;
+          background-color: rgba(0, 0, 0, 0.7);
+          .profile-name {
+            font-size: 0.8rem;
+            height: 100%;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+          }
+        }
+        &:hover {
+          .profile-background {
+            opacity: 1;
+          }
+        }
       }
     }
     .title {

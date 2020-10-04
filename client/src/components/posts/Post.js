@@ -55,6 +55,9 @@ function Post({ match, history }) {
             }
             postId={match.params.postId}
             userNo={user.isAuth ? user._no : ""}
+            writerNo={header.user_no}
+            writer={header.user_nickname}
+            profile={header.user_img}
           />
           <PostInre />
           <PostRecipe />

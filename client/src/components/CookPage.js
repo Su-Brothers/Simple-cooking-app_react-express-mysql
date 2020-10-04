@@ -51,6 +51,8 @@ function CookPage({ location }) {
           <TimeLine
             title={item.title}
             writer={item.writer}
+            writerNo={item.user_no}
+            profile={item.user_img}
             photo={item.board_img}
             date={item.date}
             url={item.board_no}
@@ -129,7 +131,10 @@ function CookPage({ location }) {
       document.documentElement.scrollHeight || document.body.scrollHeight;
     //document.documentElement만 참조는 위험'
     console.log(sort);
-    if (scrollTop + clientHeight === scrollHeight) {
+    if (
+      Math.round(scrollTop) + clientHeight === scrollHeight &&
+      clientHeight !== scrollHeight
+    ) {
       console.log("맨끝");
       loadPosts(sort);
     }
@@ -139,11 +144,12 @@ function CookPage({ location }) {
 
   useEffect(() => {
     if (isFirst) {
-      console.log("??");
+      window.scrollTo(0, 0);
       getPosts("exact");
       setisFirst(false);
       setPrevName(ingres.names);
     } else if (prevName !== ingres.names) {
+      window.scrollTo(0, 0);
       console.log("성공");
       getPosts("exact");
       setSort("exact");

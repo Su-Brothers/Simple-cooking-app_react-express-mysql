@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
 const jwtKey = require("../config/jwt");
 const bcrypt = require("bcrypt");
 const rounds = 10; //암호 자릿수
@@ -21,6 +22,38 @@ router.post("/update", async (req, res) => {
 }
   
 */
+const storage = multer.diskStorage({
+  //파일 저장 환경설정
+  destination: (req, file, cb) => {
+    cb(null, "uploads/profile/");
+  },
+  filename: (req, file, cb) => {
+    //저장할때는 날짜 + 파일명
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    //파일 형식 이미지만
+    if (
+      file.mimetype === "image/png" ||
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error("이미지 파일만 올 수 있습니다"));
+    }
+  },
+});
+
+router.post("/upload/profile", upload.single("profile"), (req, res) => {
+  //미들웨어를 거쳤으므로 통과
+  res.json({ success: true, url: req.file.path });
+});
 
 router.post("/login", async (req, res) => {
   //로그인
@@ -32,6 +65,7 @@ router.post("/login", async (req, res) => {
 
     if (result.length > 0) {
       //비밀번호 복호화
+      console.log(result);
       bcrypt.compare(password, result[0].user_password, function (err, match) {
         console.log(match);
         if (match) {
@@ -119,13 +153,16 @@ router.get("/auth", auth, (req, res) => {
     _id: req.user.user_id,
     _nickname: req.user.user_nickname,
     _no: req.user.user_no,
+    _email: req.user.user_email,
+    _imgFile: req.user.user_img,
+    _description: req.user.user_description,
     isAuth: true, //로그인 되어 있는 상태를 같이 전달
   });
 });
-
+//금주의 요리사
 router.get("/ranking", async (req, res) => {
   //최근순
-  const sql = `select ui.user_no,ui.user_nickname nick, count(bl.is_like) as likes
+  const sql = `select ui.user_no,ui.user_nickname nick, count(bl.like_no) as likes
   from board b left join board_like bl on bl.board_no = b.board_no
   left join user_info ui on ui.user_no = b.user_no
   where bl.is_like = 1 group by user_no
@@ -136,6 +173,180 @@ router.get("/ranking", async (req, res) => {
       return res.json({ success: true, result: result });
     } else {
       return res.json({ success: true, result: [] });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
+  }
+});
+//회원정보수정
+router.post("/edit", async (req, res) => {
+  const connection = await pool.getConnection();
+  await connection.beginTransaction();
+  const {
+    userNo,
+    imgFile,
+    email,
+    nickname,
+    description,
+    password,
+    newPassword,
+  } = req.body;
+  console.log(userNo);
+  const sql = `update user_info set user_img = ?,
+  user_email = ?,user_nickname = ?,user_description = ?,user_password = ?
+  where user_no = ?`;
+
+  const userSql = `SELECT user_password,user_email,user_id, user_nickname,user_img,user_description 
+    FROM user_info WHERE user_no = ?`;
+
+  const emailSql = `SELECT user_no FROM user_info WHERE user_email = ?`;
+  const nicknameSql = `SELECT user_no FROM user_info WHERE user_nickname = ?`;
+  try {
+    //유저 정보를 찾는다.
+    const userData = await connection.query(userSql, [userNo]); //유저 정보를 받아온다.
+    if (userData[0][0].user_email !== email) {
+      console.log(userData[0][0]);
+      console.log(userData[0].length);
+      console.log(userData[0].user_email);
+      console.log(email);
+      console.log("이메일 변경");
+      //db 이메일과 body의 이메일이 같지 않으면 변경된 것으로 간주
+      const emailData = await connection.query(emailSql, [email]);
+      if (emailData[0].length > 0) {
+        return res.json({ success: false, message: "중복된 이메일 입니다." });
+      }
+    }
+    console.log("이메일 통과");
+    if (userData[0][0].user_nickname !== nickname) {
+      console.log("닉네임변경");
+      const nicknameData = await connection.query(nicknameSql, [nickname]);
+      console.log(nicknameData);
+      if (nicknameData[0].length > 0) {
+        return res.json({ success: false, message: "중복된 닉네임 입니다." });
+      }
+    }
+    console.log("닉네임 통과");
+    if (password && newPassword) {
+      console.log("비밀번호 변경");
+      console.log(password);
+      //패스워드가 있을때는 현재 패스워드가 일치하는지 비교후 변경
+      const match = await bcrypt.compare(
+        password,
+        userData[0][0].user_password
+      );
+
+      if (match) {
+        //맞으면 변경
+        console.log("비밀번호 확인");
+        //비밀번호 암호화
+        bcrypt.hash(newPassword, rounds, async function (err, hash) {
+          console.log(hash);
+          const data = await connection.query(sql, [
+            imgFile,
+            email,
+            nickname,
+            description,
+            hash,
+            userNo,
+          ]);
+          if (data[0].affectedRows > 0) {
+            await connection.commit();
+            res.json({ success: true, message: "수정 완료!" });
+          }
+        });
+      } else {
+        res.json({
+          success: false,
+          message: "현재 비밀번호가 일치하지 않습니다.",
+        });
+      }
+    } else {
+      //변경할 패스워드가 없을때
+      console.log("바꿀거없음");
+      const data = await connection.query(sql, [
+        imgFile,
+        email,
+        nickname,
+        description,
+        userData[0][0].user_password,
+        userNo,
+      ]);
+      if (data[0].affectedRows > 0) {
+        await connection.commit();
+        res.json({ success: true, message: "수정 완료!" });
+      }
+    }
+  } catch (err) {
+    await connection.rollback(); //롤백
+    console.log(err);
+    return res.json({ success: false, message: "서버에 오류가 발생했습니다." });
+  } finally {
+    connection.release();
+  }
+});
+
+router.get("/posts/:no/:type/:limit", async (req, res) => {
+  //마이 페이지 포스트 불러오기 or 유저페이지 풀러오기
+  const { no, type, limit } = req.params;
+  //내가 쓴글
+  const sql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,count(distinct c.co_no) co,count(distinct bl.like_no) likes, 
+  date_format(b.created_date,'%Y-%m-%d') date from board b 
+  left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  left join user_info ui on b.user_no = ui.user_no
+  left join board_like bl on b.board_no = bl.board_no and bl.is_like = 1
+  where b.isdeleted = 0 and b.user_no = ? group by board_no order by board_no desc
+  limit 10 offset ?`;
+  //스크랩한 게시물
+  //count에 조건을 걸어 가져온다. 중복된 컬럼을 제거하고 가져왔으므로
+  //좋아요를 눌렀다면 무조건 1이 나오게 된다.
+  const likeSql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,count(distinct c.co_no) co,count(distinct bl.like_no) likes, 
+  count(distinct case when bl.user_no = ? then 1 end) liked, date_format(b.created_date,'%Y-%m-%d') date from board b 
+  left join comment c on b.board_no = c.board_no and c.isdeleted = 0
+  left join user_info ui on b.user_no = ui.user_no
+  left join board_like bl on b.board_no = bl.board_no and (bl.is_like = 1)
+  where b.isdeleted = 0 group by board_no having liked > 0 order by board_no desc
+  limit 10 offset ?`;
+
+  try {
+    if (type === "mypost") {
+      //내가쓴글
+      const [result] = await pool.query(sql, [no, parseInt(limit)]);
+      if (result.length > 0) {
+        console.log(result);
+        return res.json({ success: true, result: result });
+      } else {
+        return res.json({ success: true, result: [] });
+      }
+    } else {
+      //스크랩
+      const [result] = await pool.query(likeSql, [no, parseInt(limit)]);
+      if (result.length > 0) {
+        console.log(result);
+        //liked컬럼이 0이 아니면 자기가 좋아요한 포스트
+        return res.json({ success: true, result: result });
+      } else {
+        return res.json({ success: true, result: [] });
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, message: "오류 발생" });
+  }
+});
+
+router.get("/profile/:no", async (req, res) => {
+  //유저페이지 유저정보
+  const { no } = req.params;
+  //내가 쓴글
+  const sql = `select user_nickname,user_description,user_img from user_info where user_no = ?`;
+  try {
+    const [result] = await pool.query(sql, [no]);
+    if (result.length > 0) {
+      console.log(result);
+      return res.json({ success: true, result: result[0] });
+    } else {
+      return res.json({ success: true, result: false });
     }
   } catch (err) {
     console.log(err);

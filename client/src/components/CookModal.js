@@ -270,6 +270,7 @@ function CookModal({ history, onExit }) {
     console.log(ingreResult);
     const data = ingreResult.map((item) => item.ingre);
     console.log(data);
+    onExit();
     history.push(`/cook/ingridents?names=${data}`);
   };
 

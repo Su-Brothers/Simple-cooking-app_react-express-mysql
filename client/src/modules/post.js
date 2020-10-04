@@ -148,6 +148,8 @@ const initialState = {
     header: {
       board_no: "",
       user_no: "",
+      user_nickname: "",
+      user_img: "",
       title: "",
       description: "",
       cook_time: "",

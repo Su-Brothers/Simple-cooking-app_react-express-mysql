@@ -1,112 +1,138 @@
 @import "./global-color.scss";
-.timeline-link {
-  color: $dgray;
-  margin-top: 20px;
-  .timeline-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 678px;
-    height: 500px;
-    border: 1px solid $bgray;
-    border-radius: 7px;
-    background-color: white;
-    .timeline-top {
-      display: flex;
-      align-items: center;
-      height: 12%;
-      width: 95%;
 
-      img {
-        height: 35px;
-        border-radius: 50%;
-        border: 1px solid $gray;
-      }
-      .writer {
-        margin-left: 5px;
-        font-size: 1.3rem;
-        color: $dgray;
-      }
-      span {
-        color: $gray;
-        font-size: 0.8rem;
-      }
+.timeline-box {
+  margin-top: 20px;
+  position: relative;
+  .writer-link-box {
+    position: absolute;
+    z-index: 1;
+    height: 12%;
+    width: 95%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    .writer-link {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 35px;
+      width: 35px;
+      border-radius: 50%;
     }
-    .timeline-middle {
-      width: 95%;
-      height: 77%;
-      position: relative;
-      img {
-        display: block;
-        width: 100%;
-        height: 90%;
-        border-radius: 5px;
-      }
-      .timeline-title {
+    .post-link {
+      height: 100%;
+      width: 100%;
+      padding-left: 35px;
+    }
+  }
+  .timeline-link {
+    color: $dgray;
+    .timeline-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 678px;
+      height: 500px;
+      border: 1px solid $bgray;
+      border-radius: 7px;
+      background-color: white;
+      .timeline-top {
         display: flex;
         align-items: center;
-        height: 10%;
-        font-size: 1.4rem;
-        font-weight: bold;
-      }
-      &:hover .des-box {
-        visibility: visible;
-        opacity: 1;
-      }
-      .des-box {
-        visibility: hidden;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-        position: absolute;
-        width: 100%;
-        height: 90%;
-        background-color: rgba(0, 0, 0, 0.7);
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        color: $gray;
-        .des {
-          width: 60%;
-          max-height: 60%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
+        height: 12%;
+        width: 95%;
+
+        img {
+          height: 35px;
+          border-radius: 50%;
+          border: 1px solid $gray;
+        }
+        .writer {
+          margin-left: 5px;
+          font-size: 1.3rem;
+          color: $dgray;
         }
         span {
-          overflow: hidden;
-          white-space: normal;
-          max-height: 4.7em;
-        }
-        & svg:nth-child(1) {
-          align-self: flex-start;
-        }
-        & svg:nth-child(3) {
-          align-self: flex-end;
+          color: $gray;
+          font-size: 0.8rem;
         }
       }
-    }
-    .timeline-bottom {
-      width: 95%;
-      height: 11%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid $lgray;
-      color: $ldgray;
-      font-size: 1rem;
-      .timeline-bottom-left {
-        display: flex;
-        align-items: center;
-        svg {
-          margin-right: 1px;
+      .timeline-middle {
+        width: 95%;
+        height: 77%;
+        position: relative;
+        img {
+          display: block;
+          width: 100%;
+          height: 90%;
+          border-radius: 5px;
         }
-        div {
+        .timeline-title {
           display: flex;
           align-items: center;
-          margin-right: 5px;
+          height: 10%;
+          font-size: 1.4rem;
+          font-weight: bold;
+        }
+        &:hover .des-box {
+          visibility: visible;
+          opacity: 1;
+        }
+        .des-box {
+          visibility: hidden;
+          opacity: 0;
+          transition: opacity 0.3s ease-in-out;
+          position: absolute;
+          width: 100%;
+          height: 90%;
+          background-color: rgba(0, 0, 0, 0.7);
+          border-radius: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2rem;
+          color: $gray;
+          .des {
+            width: 60%;
+            max-height: 60%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+          }
+          span {
+            overflow: hidden;
+            white-space: normal;
+            max-height: 4.7em;
+          }
+          & svg:nth-child(1) {
+            align-self: flex-start;
+          }
+          & svg:nth-child(3) {
+            align-self: flex-end;
+          }
+        }
+      }
+      .timeline-bottom {
+        width: 95%;
+        height: 11%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid $lgray;
+        color: $ldgray;
+        font-size: 1rem;
+        .timeline-bottom-left {
+          display: flex;
+          align-items: center;
+          svg {
+            margin-right: 1px;
+          }
+          div {
+            display: flex;
+            align-items: center;
+            margin-right: 5px;
+          }
         }
       }
     }

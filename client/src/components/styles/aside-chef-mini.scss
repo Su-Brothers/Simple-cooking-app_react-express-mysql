@@ -1,0 +1,71 @@
+@import "./global-color.scss";
+.mini-aside-chef {
+  position: absolute;
+  font-size: 0.9rem;
+  display: flex;
+  width: 200px;
+  right: 0px;
+  margin-top: 40px;
+  padding: 10px 10px 5px 10px;
+  background-color: white;
+  color: $dgray;
+  border-radius: 5px;
+  border: 1px solid $lgray;
+  .chef-list {
+    width: 100%;
+    .chef-list-title {
+      font-size: 1rem;
+      width: 100%;
+      padding-bottom: 10px;
+      border-bottom: 1px solid $bgray;
+      display: flex;
+      justify-content: center;
+      div {
+        display: flex;
+        align-items: center;
+      }
+      svg {
+        font-size: 1.2rem;
+      }
+    }
+    .m-chef-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 1px 5px 1px;
+      border-radius: 3px;
+      .chef-list-item-index {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        background-color: $horange;
+        color: white;
+      }
+      .chef-content {
+        width: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .chef-name {
+          width: 115px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .chef-likes {
+          text-align: end;
+          width: 25px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 0.7rem;
+          color: palevioletred;
+        }
+      }
+      &:hover {
+        background-color: $lgray;
+      }
+    }
+  }
+}

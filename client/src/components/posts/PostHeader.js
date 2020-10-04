@@ -6,6 +6,7 @@ import {
   FaQuoteLeft,
   FaFireAlt,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import "../styles/postsStyle/post-header.scss";
 import { RiEarthLine } from "react-icons/ri";
 import PostLike from "./PostLike";
@@ -28,6 +29,9 @@ function PostHeader({
   user,
   postId,
   userNo,
+  profile,
+  writerNo,
+  writer,
 }) {
   console.log("dd");
   const onDelete = async () => {
@@ -76,11 +80,29 @@ function PostHeader({
             alt="대표 이미지"
             className="header-food-img"
           />
-          <img
-            src="http://localhost:5000/uploads/normal-profile.png"
-            alt="대표 이미지"
-            className="header-profile-img"
-          />
+          <Link to={`/chef/${writerNo}`}>
+            <div className="profile-background">
+              <div className="profile-name">
+                {writer}
+                <br />
+                프로필보기
+              </div>
+            </div>
+            {profile ? (
+              <img
+                src={`http://localhost:5000/${profile}`}
+                alt="대표 이미지"
+                className="header-profile-img"
+              />
+            ) : (
+              <img
+                src="http://localhost:5000/uploads/normal-profile.png"
+                alt="대표 이미지"
+                className="header-profile-img"
+              />
+            )}
+          </Link>
+
           <div className="post-views">
             <FaEye />
             <Views />
