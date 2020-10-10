@@ -16,6 +16,7 @@ const READ_USER_LOADING = "READ_USER_LOADING";
 
 export const readHandler = (type, limit, isEnd) => async (dispatch) => {
   const foodType = typeGender(type);
+  window.scrollTo(0, 0);
   dispatch({
     type: LOADING_POSTS,
   });

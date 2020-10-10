@@ -1,4 +1,5 @@
 import axios from "axios";
+import { debounce } from "lodash";
 //액션
 const H_INPUT_CHANGE = "write/H_INPUT_CHANGE"; //헤더 인풋
 const H_OPTION_CHANGE = "write/H_OPTION_CHANGE"; //헤더 옵션 (카테고리)
@@ -144,7 +145,10 @@ export const tagRemoveHandler = (id) => {
   };
 };
 
-export const submitHandler = (history) => async (dispatch, getState) => {
+export const submitHandler = (history, onLoading, completeLoading) => async (
+  dispatch,
+  getState
+) => {
   let board = getState().write;
   const user = getState().user.userData._no;
   board = {
@@ -169,12 +173,17 @@ export const submitHandler = (history) => async (dispatch, getState) => {
         return;
       }
     }
+
+    if (!board.Ingredients.length)
+      return alert("재료 정보는 하나 이상 필요합니다.");
     for (let key in board.Ingredients) {
       if (!board.Ingredients[key].name || !board.Ingredients[key].volume) {
         alert("재료 정보를 모두 입력해주세요.");
         return;
       }
     }
+    if (!board.cookingOrder.length)
+      return alert("조리 순서는 하나 이상 필요합니다.");
     for (let key in board.cookingOrder) {
       if (!board.cookingOrder[key].text) {
         alert("조리 순서를 입력해주세요.");
@@ -182,7 +191,16 @@ export const submitHandler = (history) => async (dispatch, getState) => {
       }
     }
     //아니라면 서버 요청
+    console.log("시도!!");
+    onDebouncSubmit(board, history, onLoading, completeLoading);
+  }
+};
+
+const onDebouncSubmit = debounce(
+  async (board, history, onLoading, completeLoading) => {
+    console.log("제출");
     try {
+      onLoading();
       const data = await axios
         .post("/api/write/upload/board", board)
         .then((res) => res.data);
@@ -194,10 +212,15 @@ export const submitHandler = (history) => async (dispatch, getState) => {
       }
     } catch (err) {
       console.log(err);
+
       alert("서버에 오류가 발생했습니다.");
+    } finally {
+      completeLoading();
     }
-  }
-};
+  },
+  500,
+  { leading: true, trailing: false }
+);
 
 //초기 상태
 let iId = 3; //재료 순서 아이디

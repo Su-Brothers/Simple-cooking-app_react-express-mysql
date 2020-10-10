@@ -1,4 +1,5 @@
 @import "../global-color.scss";
+@import "../media/media.scss";
 .tag-page-container {
   display: flex;
   flex-direction: column;
@@ -48,13 +49,46 @@
       }
     }
   }
-  .timeline-box {
-    width: 100%;
-    .timeline-link {
-      width: 100%;
-      .timeline-container {
-        width: 100%;
-        height: 550px;
+
+  @include mobile {
+    width: 95%;
+    .tag-page-title {
+      span {
+        font-size: 1.2rem;
+      }
+      .tag-page-title-tag {
+        font-size: 1.4rem;
+      }
+      .tag-page-title-index {
+        font-size: 1.4rem;
+      }
+    }
+    .sort-box {
+      button {
+        width: 70px;
+        height: 30px;
+        font-size: 0.7rem;
+      }
+    }
+  }
+  @include mobileSmall {
+    width: 98%;
+    .tag-page-title {
+      span {
+        font-size: 1.1rem;
+      }
+      .tag-page-title-tag {
+        font-size: 1.3rem;
+      }
+      .tag-page-title-index {
+        font-size: 1.3rem;
+      }
+    }
+    .sort-box {
+      button {
+        width: 60px;
+        height: 27px;
+        font-size: 0.6rem;
       }
     }
   }

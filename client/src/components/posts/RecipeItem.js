@@ -7,19 +7,21 @@ function RecipeItem({ view, img, text, order }) {
       <div className="order">{`step ${order}`}</div>
       <div className="recipe-content">
         <div className="img-order">{order}</div>
-        {img ? (
-          <img
-            src={`http://localhost:5000/${img}`}
-            alt="요리 사진"
-            className="recipe-img"
-          />
-        ) : (
-          <img
-            src={`http://localhost:5000/uploads/jabakLogo_v4.png`}
-            alt="요리 사진"
-            className="recipe-img"
-          />
-        )}
+        <div className="recipe-img-box">
+          {img ? (
+            <img
+              src={`http://localhost:5000/${img}`}
+              alt="요리 사진"
+              className="recipe-img"
+            />
+          ) : (
+            <img
+              src={`http://localhost:5000/uploads/jabakLogo_v4.png`}
+              alt="요리 사진"
+              className="recipe-img"
+            />
+          )}
+        </div>
 
         <div className="recipe-text">{text}</div>
       </div>

@@ -1,5 +1,7 @@
 @import "../global-color.scss";
+@import "../media/media.scss";
 .post-box {
+  color: $dgray;
   width: 960px;
   flex-shrink: 0; //축소 x
   margin-top: 30px;
@@ -13,6 +15,40 @@
     border-radius: 5px;
     .post-item-box {
       width: 90%;
+    }
+  }
+  @include ipad {
+    width: 98%;
+    margin-top: 20px;
+    .post-item {
+      padding: 20px 0px;
+      margin-bottom: 10px;
+      .post-item-box {
+        width: 95%;
+      }
+    }
+  }
+  @include mobile {
+    width: 98%;
+    margin-top: 15px;
+    .post-item {
+      padding: 20px 0px;
+      margin-bottom: 10px;
+      .post-item-box {
+        width: 95%;
+      }
+    }
+  }
+  @include mobileSmall {
+    width: 100%;
+    margin-top: 0px;
+    overflow-x: hidden;
+    .post-item {
+      padding: 15px 0px;
+      border-radius: 0px;
+      .post-item-box {
+        width: 97%;
+      }
     }
   }
 }

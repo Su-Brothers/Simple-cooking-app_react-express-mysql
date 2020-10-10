@@ -1,3 +1,4 @@
+@import "../media/media.scss";
 .post-item {
   .post-item-box {
     .post-tag-title {
@@ -8,6 +9,23 @@
       margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
+    }
+  }
+  @include mobile {
+    .post-item-box {
+      .post-tag-title {
+        font-size: 1.2rem;
+      }
+    }
+  }
+  @include mobileSmall {
+    .post-item-box {
+      .post-tag-title {
+        font-size: 1.15rem;
+      }
+      .post-tag-items {
+        margin-top: 10px;
+      }
     }
   }
 }

@@ -162,10 +162,11 @@ router.get("/auth", auth, (req, res) => {
 //금주의 요리사
 router.get("/ranking", async (req, res) => {
   //최근순
-  const sql = `select ui.user_no,ui.user_nickname nick, count(bl.like_no) as likes
-  from board b left join board_like bl on bl.board_no = b.board_no
+  const sql = `select ui.user_no,ui.user_nickname nick, count(distinct bl.board_no,bl.user_no) as likes
+  from board b left join board_like bl on bl.board_no = b.board_no and bl.is_like = 1
   left join user_info ui on ui.user_no = b.user_no
-  where bl.is_like = 1 group by user_no
+  group by user_no
+  having likes > 0
   order by likes desc limit 10`;
   try {
     const [result] = await pool.query(sql);
@@ -290,7 +291,7 @@ router.get("/posts/:no/:type/:limit", async (req, res) => {
   //마이 페이지 포스트 불러오기 or 유저페이지 풀러오기
   const { no, type, limit } = req.params;
   //내가 쓴글
-  const sql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,count(distinct c.co_no) co,count(distinct bl.like_no) likes, 
+  const sql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,count(distinct c.co_no) co,count(distinct bl.user_no) likes, 
   date_format(b.created_date,'%Y-%m-%d') date from board b 
   left join comment c on b.board_no = c.board_no and c.isdeleted = 0
   left join user_info ui on b.user_no = ui.user_no
@@ -300,7 +301,7 @@ router.get("/posts/:no/:type/:limit", async (req, res) => {
   //스크랩한 게시물
   //count에 조건을 걸어 가져온다. 중복된 컬럼을 제거하고 가져왔으므로
   //좋아요를 눌렀다면 무조건 1이 나오게 된다.
-  const likeSql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,count(distinct c.co_no) co,count(distinct bl.like_no) likes, 
+  const likeSql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,count(distinct c.co_no) co,count(distinct bl.user_no) likes, 
   count(distinct case when bl.user_no = ? then 1 end) liked, date_format(b.created_date,'%Y-%m-%d') date from board b 
   left join comment c on b.board_no = c.board_no and c.isdeleted = 0
   left join user_info ui on b.user_no = ui.user_no

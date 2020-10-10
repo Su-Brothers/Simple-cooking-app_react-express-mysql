@@ -1,4 +1,5 @@
 @import "../global-color.scss";
+@import "../media/media.scss";
 .post-ingre-item {
   display: flex;
   height: 50px;
@@ -9,4 +10,19 @@
   font-weight: bold;
   font-size: 1.3rem;
   color: $ldgray;
+  @include mobile {
+    height: 45px;
+    width: 65%;
+    font-size: 1.2rem;
+  }
+  @include mobileSmall {
+    height: 40px;
+    width: 65%;
+    font-size: 1.1rem;
+  }
+  @include smartPhone {
+    height: 35px;
+    width: 80%;
+    font-size: 1rem;
+  }
 }

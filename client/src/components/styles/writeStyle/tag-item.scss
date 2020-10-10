@@ -1,3 +1,4 @@
+@import "../media/media.scss";
 .tag-item {
   position: relative;
   padding: 10px;
@@ -19,5 +20,9 @@
       display: block;
       color: white;
     }
+  }
+  @include mobileSmall {
+    padding: 5px;
+    border-radius: 5px;
   }
 }

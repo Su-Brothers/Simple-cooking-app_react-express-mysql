@@ -7,8 +7,10 @@ import EditIngredients from "./EditIngredients";
 import EditOrder from "./EditOrder";
 import EditTag from "./EditTag";
 import "../../styles/writeStyle/writepage.scss";
+import LoadingSpinner from "../../loadingCompo/LoadingSpinner";
 function EditPage({ history, match }) {
   const edit = useSelector((state) => state.edit.post);
+  const loading = useSelector((state) => state.edit.loading);
   const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
 
@@ -17,7 +19,7 @@ function EditPage({ history, match }) {
   }, [user.isAuth]);
   return (
     <div className="write-container">
-      <div className="write-container-title">레시피 만들기</div>
+      <div className="write-container-title">레시피 수정</div>
       <EditHeader
         title={edit.title}
         description={edit.description}
@@ -30,6 +32,11 @@ function EditPage({ history, match }) {
       <EditOrder />
       <EditTag />
       <div className="write-container-btn-box">
+        {loading && (
+          <div className="loading-box">
+            <LoadingSpinner />
+          </div>
+        )}
         <button
           type="button"
           className="submit-btn"
@@ -37,7 +44,9 @@ function EditPage({ history, match }) {
         >
           등록하기
         </button>
-        <button type="button">취소하기</button>
+        <button type="button" onClick={() => history.goBack()}>
+          취소하기
+        </button>
       </div>
     </div>
   );

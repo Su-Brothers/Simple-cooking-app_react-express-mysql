@@ -4,8 +4,11 @@ import { useRef } from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { debounce } from "lodash";
+import SkeletonLoading from "./loadingCompo/SkeletonLoading";
 import "./styles/postsStyle/tag-page.scss";
 import TimeLine from "./TimeLine";
+import NotFound from "./NotFound";
 function SearchPage({ match }) {
   const [sort, setSort] = useState("popular");
   const [postList, setList] = useState([]);
@@ -15,6 +18,7 @@ function SearchPage({ match }) {
   const [prevName, setPrevName] = useState(""); //라우트로 이동시 전페이지의 값과 비교하기 위해 사용
 
   const limitItem = useRef(0); //페이징 처리용 리미트
+  const isMounted = useRef(null);
   const sortList = [
     //정렬 리스트
     { name: "popular", koName: "인기순" },
@@ -22,8 +26,11 @@ function SearchPage({ match }) {
     { name: "views", koName: "조회순" },
   ];
   const onSortChange = (target) => () => {
-    setSort(target);
-    getPosts(target);
+    //데이터가 중첩되지 않도록 방지한다.
+    if (loading) {
+      setSort(target);
+      getPosts(target);
+    }
   };
 
   const sortItem = sortList.map((item, index) => (
@@ -62,57 +69,63 @@ function SearchPage({ match }) {
         ));
       } else {
         //로딩이 다되었음에도 불구하고 length 가 0이면 결과가 없는것이다.
-        return "조건에 맞는 데이터가 없습니다.";
+        return <NotFound item={"검색결과"} />;
       }
     } else {
-      return "loading...";
+      return null;
     }
   };
 
-  const getPosts = (target) => {
+  const getPosts = (target, params = match.params.name) => {
+    window.scrollTo(0, 0);
     limitItem.current = 0; //0으로 초기화
-    console.log(match.params.name);
+    console.log("겟");
+    console.log(params);
     setLoading(false);
     setIsEnd(false);
-    Axios.get(
-      `/api/post/search/${match.params.name}/${target}/${limitItem.current}`
-    )
+    Axios.get(`/api/post/search/${params}/${target}/${limitItem.current}`)
       .then((res) => {
-        if (res.data.success) {
-          setList(res.data.result);
-          if (res.data.result.length < 10) {
-            console.log("isEnd");
-            setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+        if (isMounted.current) {
+          if (res.data.success) {
+            setList(res.data.result);
+            if (res.data.result.length < 10) {
+              console.log("isEnd");
+              setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+            } else {
+              if (limitItem.current === 0) {
+                //중복 방지
+                limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              }
+            }
+            setLoading(true);
           } else {
-            limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+            alert(res.data.message);
           }
-          setLoading(true);
-        } else {
-          alert(res.data.message);
         }
       })
       .catch((err) => console.log(err));
   };
 
   const loadPosts = (target) => {
-    console.log(target);
-    console.log(postList);
-    if (!isEnd) {
-      console.log(isEnd);
+    console.log("로드");
+    if (!isEnd && prevName === match.params.name) {
+      console.log(limitItem.current);
       Axios.get(
         `/api/post/search/${match.params.name}/${target}/${limitItem.current}`
       )
         .then((res) => {
-          if (res.data.success) {
-            setList([...postList, ...res.data.result]);
-            if (res.data.result.length < 10) {
-              console.log("isEnd");
-              setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+          if (isMounted.current) {
+            if (res.data.success) {
+              setList([...postList, ...res.data.result]);
+              if (res.data.result.length < 10) {
+                console.log("isEnd");
+                setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+              } else {
+                limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              }
             } else {
-              limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              alert(res.data.message);
             }
-          } else {
-            alert(res.data.message);
           }
         })
         .catch((err) => console.log(err));
@@ -120,6 +133,25 @@ function SearchPage({ match }) {
       console.log("데이터가 없습니다.");
     }
   };
+  const onChangeRoute = useCallback(
+    debounce(
+      (params) => {
+        //뒤로가기나 앞으로가기를 과도하게 누를 경우 데이터가 손실,변경될 수 있으므로 디바운스처리
+        //라우트가 과도하게 변경될때에 대한 디바운스처리로, match를 deps에 넣으면 무조건 바뀌므로 인자로 받아온다.
+        if (prevName && prevName !== params) {
+          setPrevName(params);
+          console.log("성공");
+          console.log(prevName);
+          console.log(params);
+          getPosts("popular", params);
+          setSort("popular");
+        }
+      },
+      300,
+      { leading: true }
+    ),
+    [prevName]
+  );
 
   const onScrollHandler = useCallback(() => {
     const { clientHeight } = document.documentElement; //요소 높이
@@ -131,7 +163,8 @@ function SearchPage({ match }) {
     console.log(sort);
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
-      clientHeight !== scrollHeight
+      clientHeight !== scrollHeight &&
+      loading
     ) {
       console.log("맨끝");
       console.log(scrollTop);
@@ -141,22 +174,23 @@ function SearchPage({ match }) {
     }
 
     //deps를 넣어줘야 최신 상태를 유지할 수 있다.
-  }, [postList.length, isEnd, sort]);
+  }, [postList, isEnd, sort, loading]);
 
   useEffect(() => {
+    isMounted.current = true;
     if (isFirst) {
       console.log("??");
       getPosts("popular");
       setisFirst(false);
       setPrevName(match.params.name);
-    } else if (prevName !== match.params.name) {
-      console.log("성공");
-      getPosts("popular");
-      setSort("popular");
-      setPrevName(match.params.name);
     }
+    onChangeRoute(match.params.name);
+
     window.addEventListener("scroll", onScrollHandler);
-    return () => window.removeEventListener("scroll", onScrollHandler);
+    return () => {
+      window.removeEventListener("scroll", onScrollHandler);
+      isMounted.current = false;
+    };
   }, [onScrollHandler, match.params.name]);
 
   return (
@@ -168,6 +202,7 @@ function SearchPage({ match }) {
         <span>개 있습니다.</span>
       </div>
       <div className="sort-box">{sortItem}</div>
+      <SkeletonLoading limit={5} active={loading} />
       {postsData()}
     </div>
   );

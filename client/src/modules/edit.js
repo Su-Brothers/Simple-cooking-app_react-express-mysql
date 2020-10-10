@@ -1,4 +1,6 @@
 import axios from "axios";
+import { debounce } from "lodash";
+import { GiChipsBag } from "react-icons/gi";
 //액션
 const READ_POST = "edit/READ_POST"; //수정할 포스트  데이터 가져옴
 const READ_POST_SERVER = "edit/READ_POST_SERVER"; //수정할 포스트  데이터 서버에서 가져옴
@@ -18,6 +20,9 @@ const ORDER_IMAGE_HANDLER = "edit/ORDER_IMAGE_HANDLER"; //순서 이미지 추�
 
 const TAG_HANDLER = "edit/TAG_HANDLER"; //태그 추가
 const TAG_REMOVE_HANDLER = "edit/TAG_REMOVE_HANDLER"; //태그 제거
+
+const START_LOADING = "edit/START_LOADING"; //로딩 시작
+const COMPLETE_LOADING = "edit/COMPLETE_LOADING"; //로딩 완료
 //액션 생성 함수
 
 export const getPostData = (user, history, match) => async (
@@ -210,6 +215,7 @@ export const tagRemoveHandler = (id) => {
 export const submitHandler = (history, id) => async (dispatch, getState) => {
   let board = getState().edit;
   console.log(board);
+  console.log(history);
   //모든 항목이 비지 않았는지 확인
   if (!board.post.title) {
     alert("제목을 입력해주세요.");
@@ -227,6 +233,8 @@ export const submitHandler = (history, id) => async (dispatch, getState) => {
         return;
       }
     }
+    if (!board.post.Ingredients.length)
+      return alert("재료 정보는 하나 이상 필요합니다.");
     for (let key in board.post.Ingredients) {
       if (
         !board.post.Ingredients[key].ingre_name ||
@@ -236,29 +244,49 @@ export const submitHandler = (history, id) => async (dispatch, getState) => {
         return;
       }
     }
+    if (!board.post.cookingOrder.length)
+      return alert("조리 순서는 하나 이상 필요합니다.");
     for (let key in board.post.cookingOrder) {
+      console.log(board.post.cookingOrder);
       if (!board.post.cookingOrder[key].main_text) {
         alert("조리 순서를 입력해주세요.");
         return;
       }
     }
     //아니라면 서버 요청
+    console.log("시도");
+    onDebounceSubmit(board, history, id, dispatch);
+  }
+};
+const onDebounceSubmit = debounce(
+  async (board, history, id, dispatch) => {
     try {
+      console.log("제출");
+      dispatch({
+        type: START_LOADING,
+      });
+
       const data = await axios
         .post(`/api/post/${id}/edit`, board)
         .then((res) => res.data);
       if (data.success) {
         alert(data.message);
-        history.push("/");
+        window.location.href = `/post/${id}`;
       } else {
         alert(data.message);
       }
     } catch (err) {
       console.log(err);
       alert("서버에 오류가 발생했습니다.");
+    } finally {
+      dispatch({
+        type: COMPLETE_LOADING,
+      });
     }
-  }
-};
+  },
+  500,
+  { leading: true, trailing: false }
+);
 
 //초기 상태
 let iId = 0; //재료 순서 아이디
@@ -279,6 +307,7 @@ const initialState = {
   deleteIngre: [], //삭제할 데이터들이 들어감.
   deleteOrder: [],
   deleteTag: [],
+  loading: false, //버튼 클릭시 loading spinner
 };
 
 //리듀서
@@ -392,7 +421,7 @@ export default function edit(state = initialState, action) {
         (item) => (item.cId ? item.cId : item.text_no) === action.payload
       );
       console.log(oDeleteData);
-
+      console.log(state.post.cookingOrder);
       return {
         ...state,
         post: {
@@ -440,7 +469,9 @@ export default function edit(state = initialState, action) {
         ...state,
         post: {
           ...state.post,
-          tag: [...state.post.tag, action.payload],
+          tag: state.post.tag
+            ? [...state.post.tag, action.payload]
+            : [action.payload],
         },
       };
 
@@ -460,6 +491,17 @@ export default function edit(state = initialState, action) {
           ),
         },
         deleteTag: [...state.deleteTag, tDeleteData],
+      };
+
+    case START_LOADING: //로딩 시작
+      return {
+        ...state,
+        loading: true,
+      };
+    case COMPLETE_LOADING: //로딩 완료
+      return {
+        ...state,
+        loading: false,
       };
 
     default:

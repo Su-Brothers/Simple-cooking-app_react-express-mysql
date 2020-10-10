@@ -1,6 +1,6 @@
 import React from "react";
-import logo from "../images/jabakLogo_v3.png";
-import "./styles/loading.scss";
+import logo from "../../images/jabakLogo_v3.png";
+import "../styles/skeleton/loading.scss";
 function Loading() {
   return (
     <div className="loading">

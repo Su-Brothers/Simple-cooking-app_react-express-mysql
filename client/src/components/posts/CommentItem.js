@@ -3,31 +3,52 @@ import "../styles/postsStyle/comment-item.scss";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import Axios from "axios";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { debounce } from "lodash";
 import { readComment } from "../../modules/post";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
-function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
+import { Link } from "react-router-dom";
+import { useCallback } from "react";
+import LoadingSpinner from "../loadingCompo/LoadingSpinner";
+function CommentItem({
+  writer,
+  writerNo,
+  date,
+  co,
+  deleteAuth,
+  postId,
+  coNo,
+  profile,
+}) {
   const userState = useSelector((state) => state.user.userData, shallowEqual);
   const dispatch = useDispatch();
+  const [isDeleted, setIsDeleted] = useState(false); //삭제 했을때 나오는 로딩 스피너
   const [isLike, setIsLike] = useState(0);
   const [isUnlike, setIsUnlike] = useState(0);
   const [isUser, setIsUser] = useState({
     is_like: "", //db에 정보가 있다면 이 데이터가 들어옴.
     user_no: "",
   });
+
   //let mounted = true;
   let isMounted = useRef(null); //마운트 확인
-  const onDeleteHandler = async () => {
-    const data = await Axios.delete(`/api/comment/${coNo}`)
-      .then((res) => res.data)
-      .catch((err) => console.log(err));
-    if (data.success) {
-      dispatch(readComment(postId));
-    } else {
-      alert(data.message);
-    }
-  };
+  const onDeleteHandler = debounce(
+    async () => {
+      console.log("삭제");
+      setIsDeleted(true);
+      const data = await Axios.delete(`/api/comment/${coNo}`)
+        .then((res) => res.data)
+        .catch((err) => console.log(err));
+      if (data.success) {
+        dispatch(readComment(postId));
+      } else {
+        alert(data.message);
+      }
+    },
+    300,
+    { leading: true, trailing: false }
+  );
 
   const getLike = async () => {
     const data = await Axios.get(`/api/comment/getLike/${coNo}`)
@@ -40,6 +61,7 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
         result && result.filter((item) => item.user_no === userState._no)[0];
       console.log("Dd");
       if (isMounted.current) {
+        console.log(result);
         setIsLike(result.filter((item) => item.is_like === 1).length);
         setIsUnlike(result.filter((item) => item.is_like === 2).length);
         setIsUser(userData ? userData : { ...isUser });
@@ -48,9 +70,16 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
       alert(data.message);
     }
   };
-  const onLikeHandler = async () => {
+
+  const onLikeHandler = debounce(async () => {
+    console.log("like");
     if (userState.isAuth) {
       if (isUser.is_like === 1) {
+        setIsLike(isLike - 1);
+        setIsUser({
+          is_like: 0,
+          user_no: userState._no,
+        });
         const data = await Axios.post(`/api/comment/refreshlike`, {
           user: userState._no,
           coNo: coNo,
@@ -63,6 +92,14 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
           alert(data.message);
         }
       } else {
+        setIsLike(isLike + 1);
+        setIsUser({
+          is_like: 1,
+          user_no: userState._no,
+        });
+        if (isUser.is_like === 2) {
+          setIsUnlike(isUnlike - 1);
+        }
         const data = await Axios.post(`/api/comment/like`, {
           user: userState._no,
           coNo: coNo,
@@ -79,11 +116,17 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
     } else {
       alert("로그인이 필요한 서비스입니다.");
     }
-  };
+  }, 300);
 
-  const onUnlikeHandler = async () => {
+  const onUnlikeHandler = debounce(async () => {
+    console.log("unlike");
     if (userState.isAuth) {
       if (isUser.is_like === 2) {
+        setIsUnlike(isUnlike - 1);
+        setIsUser({
+          is_like: 0,
+          user_no: userState._no,
+        });
         const data = await Axios.post(`/api/comment/refreshlike`, {
           user: userState._no,
           coNo: coNo,
@@ -96,6 +139,14 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
           alert(data.message);
         }
       } else {
+        setIsUnlike(isUnlike + 1);
+        setIsUser({
+          is_like: 2,
+          user_no: userState._no,
+        });
+        if (isUser.is_like === 1) {
+          setIsLike(isLike - 1);
+        }
         const data = await Axios.post(`/api/comment/unlike`, {
           user: userState._no,
           coNo: coNo,
@@ -112,7 +163,7 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
     } else {
       alert("로그인이 필요한 서비스입니다.");
     }
-  };
+  }, 300);
 
   useEffect(() => {
     isMounted.current = true;
@@ -122,11 +173,16 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
   return (
     <div className="comment-item">
       <div className="comment-left">
-        <img
-          src="https://placeimg.com/100/100/any"
-          alt="대표 이미지"
-          className="comment-profil-img"
-        />
+        <Link to={deleteAuth ? `/mypage` : `/chef/${writerNo}`}>
+          {profile ? (
+            <img src={`http://localhost:5000/${profile}`} alt="프로필사진" />
+          ) : (
+            <img
+              src={`http://localhost:5000/uploads/normal-profile.png`}
+              alt="프로필사진"
+            />
+          )}
+        </Link>
       </div>
 
       <div className="comment-content">
@@ -147,7 +203,7 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
           >
             <FaThumbsDown /> {isUnlike}
           </button>
-          {deleteAuth ? (
+          {deleteAuth && !isDeleted ? (
             <>
               <button
                 type="button"
@@ -158,6 +214,11 @@ function CommentItem({ writer, date, co, deleteAuth, postId, coNo }) {
               </button>
             </>
           ) : null}
+          {isDeleted && (
+            <div className="loading-box">
+              <LoadingSpinner size={"small"} />
+            </div>
+          )}
         </div>
         <div className="comment-text">{co}</div>
       </div>

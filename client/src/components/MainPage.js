@@ -8,6 +8,9 @@ import { useEffect } from "react";
 import { readHandler, readMoreHandler } from "../modules/post";
 import { useRef } from "react";
 import { useCallback } from "react";
+import SkeletonLoading from "./loadingCompo/SkeletonLoading";
+import NotFound from "./NotFound";
+import LoadingSpinner from "./loadingCompo/LoadingSpinner";
 function MainPage({ history }) {
   //셀렉터 주의 : 같은 값을 디스패치해도 리액트에서는 다른 값으로본다.(ref가 다르다.) 가져올때 따로 가져오거나 shallowEqual를 사용
   const state = useSelector((state) => state.user.userData, shallowEqual); //얕은 복사
@@ -18,6 +21,7 @@ function MainPage({ history }) {
   const [isFirst, setIsFirst] = useState(true); //처음렌더링인지 확인
 
   const limitItem = useRef(0); //페이징 처리용 리미트
+  const isMounted = useRef(null);
 
   const dispatch = useDispatch();
   const sortList = [
@@ -29,11 +33,17 @@ function MainPage({ history }) {
     { name: "western", koName: "양식" },
   ];
   const onSortChange = (target) => () => {
+    if (!isLoading) {
+      return;
+    }
     setSort(target);
     limitItem.current = 0;
     setIsEnd(false);
     dispatch(readHandler(target, limitItem.current, onEndHandler));
-    limitItem.current += 10;
+    if (limitItem.current === 0) {
+      limitItem.current += 10;
+    }
+    console.log(limitItem.current);
   };
 
   const sortItem = sortList.map((item, index) => (
@@ -72,10 +82,10 @@ function MainPage({ history }) {
         ));
       } else {
         //로딩이 다되었음에도 불구하고 length 가 0이면 결과가 없는것이다.
-        return "결과가 없습니다.";
+        return <NotFound item={"데이터"} />;
       }
     } else {
-      return "loading...";
+      return null;
     }
   };
 
@@ -105,9 +115,13 @@ function MainPage({ history }) {
     //이벤트리스너에 등록하는경우 props나 state를 따르지 않는다.
   }, [posts.length, isEnd, sort]);
   const onEndHandler = () => {
-    setIsEnd(true);
+    if (isMounted.current) {
+      //리덕스에서 이 함수를 사용하기 때문에 마운트가 되어 있을때만 되도록함
+      setIsEnd(true);
+    }
   };
   useEffect(() => {
+    isMounted.current = true;
     if (isFirst) {
       console.log("처음");
       dispatch(readHandler("allFood", limitItem.current, onEndHandler));
@@ -115,14 +129,18 @@ function MainPage({ history }) {
       setIsFirst(false);
     }
     window.addEventListener("scroll", onScrollHandler);
-    return () => window.removeEventListener("scroll", onScrollHandler);
+    return () => {
+      window.removeEventListener("scroll", onScrollHandler);
+      isMounted.current = false;
+    };
   }, [onScrollHandler]);
 
   return (
     <div className="main-container">
       <div className="main-category">{sortItem}</div>
-      <Link to="/" className="main-write-feed">
+      <Link to="/write" className="main-write-feed">
         <div className="main-write-box">
+          <div className="writer-img-box">
           {state.isAuth && state._imgFile ? (
             <img
               src={`http://localhost:5000/${state._imgFile}`}
@@ -134,6 +152,8 @@ function MainPage({ history }) {
               alt="프로필사진"
             />
           )}
+          </div>
+         
           <div className="main-write-input">
             {state.isAuth ? `${state._nickname}님` : "어서오세요"}, 당신만의
             자취사전을 등록해주세요!
@@ -143,6 +163,7 @@ function MainPage({ history }) {
           </div>
         </div>
       </Link>
+      <SkeletonLoading limit={5} active={isLoading} />
       {postsData()}
     </div>
   );

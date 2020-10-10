@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import Axios from "axios";
 import { useEffect } from "react";
+import { debounce } from "lodash";
 import { useRef } from "react";
 import CookModal from "./CookModal";
 import AsideChefMini from "./AsideChefMini";
@@ -35,21 +36,34 @@ function NavBar({ location, history }) {
   };
   const onSubmitHandler = (e) => {
     e.preventDefault();
+    if (search === "") {
+      return;
+    }
+    setSearch("");
     history.push(`/search/${search}`);
   };
 
-  const logoutHandler = async (e) => {
+  const logoutHandler = debounce(
+    async () => {
+      const data = await Axios.get("/api/users/logout")
+        .then((res) => res.data)
+        .catch((err) => console.log(err));
+      if (data.success) {
+        //삭제 되었으면 메인페이지로 이동.
+        //history.push 는 새로고침이 안됨.
+        window.location.href = "/";
+      } else {
+        alert(data.message);
+      }
+    },
+    300,
+    { leading: true, trailing: false }
+  );
+
+  const onDebounceLogOut = (e) => {
+    //디바운스 처리
     e.preventDefault();
-    const data = await Axios.get("/api/users/logout")
-      .then((res) => res.data)
-      .catch((err) => console.log(err));
-    if (data.success) {
-      //삭제 되었으면 메인페이지로 이동.
-      //history.push 는 새로고침이 안됨.
-      window.location.href = "/";
-    } else {
-      alert(data.message);
-    }
+    logoutHandler();
   };
 
   const onModalHandler = (e) => {
@@ -87,7 +101,16 @@ function NavBar({ location, history }) {
     setUserIcon(false);
     setCookModal(false);
   };
+
+  const routeHandler = () => {
+    //라우트 이동할때 모달창 닫는 용도
+    setUserRanking(false);
+    setUserIcon(false);
+    setCookModal(false);
+  };
+
   useEffect(() => {
+    routeHandler();
     return () => {
       document.body.className = "";
       document.body.style.removeProperty("top");
@@ -96,7 +119,7 @@ function NavBar({ location, history }) {
         document.documentElement.scrollTop || document.body.scrollTop
       );
     };
-  }, []);
+  }, [location.pathname]);
 
   return location.pathname !== "/login" && location.pathname !== "/signup" ? (
     <>
@@ -135,7 +158,7 @@ function NavBar({ location, history }) {
               {userState ? (
                 <a
                   href="_blank"
-                  onClick={logoutHandler}
+                  onClick={onDebounceLogOut}
                   className="right-menu-item-link"
                 >
                   <FaSignOutAlt />

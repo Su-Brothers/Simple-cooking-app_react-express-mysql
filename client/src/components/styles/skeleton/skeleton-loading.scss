@@ -1,0 +1,147 @@
+@import "../global-color.scss";
+@import "../media/media.scss";
+@keyframes skeleton {
+  0% {
+    transform: translateX(0%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+.skelecton-box {
+  display: none;
+  &.active {
+    display: block;
+  }
+  margin-top: 20px;
+  position: relative;
+  width: 100%;
+  padding-bottom: 72.5%;
+  overflow: hidden;
+  .bar {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation-name: skeleton;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in;
+    .indicator {
+      width: 0px;
+      height: 100%;
+      box-shadow: 0 0 100px 100px white;
+    }
+  }
+  .skelecton-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 7px;
+    background-color: white;
+    .skelecton-top {
+      display: flex;
+      align-items: center;
+      height: 12%;
+      width: 95%;
+
+      .img-box {
+        width: 5%;
+        padding-bottom: 5%;
+        position: relative;
+        .img-box-content {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background-color: $lgray;
+          border-radius: 50%;
+        }
+      }
+      .skelecton-writer {
+        height: 50%;
+        width: 100%;
+        margin-left: 5px;
+        display: flex;
+        align-items: center;
+        .writer-box {
+          height: 100%;
+          width: 20%;
+          background-color: $lgray;
+          border-radius: 7px;
+        }
+        .type-box {
+          height: 80%;
+          margin-left: 3px;
+          width: 7%;
+          background-color: $lgray;
+          border-radius: 7px;
+        }
+      }
+    }
+    .skelecton-middle {
+      width: 95%;
+      height: 77%;
+      position: relative;
+      .img-box {
+        width: 100%;
+        height: 90%;
+        background-color: $lgray;
+        border-radius: 5px;
+      }
+      .skelecton-title {
+        display: flex;
+        align-items: center;
+        height: 10%;
+        font-size: 1.4rem;
+        font-weight: bold;
+        .skelecton-title-box {
+          height: 80%;
+          width: 30%;
+          background-color: $lgray;
+          border-radius: 7px;
+        }
+      }
+    }
+    .skelecton-bottom {
+      width: 95%;
+      height: 11%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid $lgray;
+      color: $ldgray;
+      .skelecton-bottom-left {
+        display: flex;
+        align-items: center;
+        width: 30%;
+        height: 100%;
+        .svg-box {
+          height: 50%;
+          width: 20%;
+          margin-right: 5px;
+          background-color: $lgray;
+          border-radius: 7px;
+        }
+      }
+      .skelecton-bottom-right {
+        width: 20%;
+        height: 50%;
+        background-color: $lgray;
+        border-radius: 7px;
+      }
+    }
+  }
+}

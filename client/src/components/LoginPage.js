@@ -3,6 +3,7 @@ import "./styles/loginpage.scss";
 import logo from "../images/jabakLogo_v4.png";
 import { loginHandler } from "../modules/user";
 import { useDispatch } from "react-redux";
+import { debounce } from "lodash";
 function LoginPage({ history }) {
   console.log("2");
   const dispatch = useDispatch();
@@ -15,13 +16,21 @@ function LoginPage({ history }) {
     e.preventDefault();
     history.push("/signup");
   };
-  const onLogin = (e) => {
-    e.preventDefault();
-    if (userId !== "" && userPassword !== "") {
+  const onLogin = debounce(
+    () => {
+      console.log("성공");
       dispatch(loginHandler(userId, userPassword, history));
-    } else {
-      alert("정보를 모두 입력하세요.");
+    },
+    300,
+    { leading: true, trailing: false }
+  );
+  const onDebounceLogin = (e) => {
+    e.preventDefault();
+    console.log("시도");
+    if (userId === "" || userPassword === "") {
+      return alert("정보를 모두 입력하세요.");
     }
+    onLogin();
   };
   const onInputHandler = (e) => {
     setUserInfo({
@@ -48,13 +57,17 @@ function LoginPage({ history }) {
               onChange={onInputHandler}
             />
             <input
-              type="text"
+              type="password"
               name="userPassword"
               placeholder="비밀번호"
               value={userPassword}
               onChange={onInputHandler}
             />
-            <button type="submit" className="login_btn" onClick={onLogin}>
+            <button
+              type="submit"
+              className="login_btn"
+              onClick={onDebounceLogin}
+            >
               로그인
             </button>
             <div className="hr-text">계정이 없으신가요?</div>

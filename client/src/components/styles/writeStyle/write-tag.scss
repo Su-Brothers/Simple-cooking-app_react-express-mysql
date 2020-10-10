@@ -1,6 +1,7 @@
 $lgray: #ececec;
 $dgray: #686868;
 $gray: #cecece;
+@import "../media/media.scss";
 .write-tag {
   background-color: white;
   width: 100%;
@@ -29,6 +30,12 @@ $gray: #cecece;
         margin-top: 15px;
         width: 700px;
         height: 50px;
+        overflow-x: scroll;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+        &::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera*/
+        }
         background-color: $lgray;
         border: 1px solid $gray;
         border-radius: 5px;
@@ -36,6 +43,73 @@ $gray: #cecece;
         display: flex;
         //font-style: initial;
         align-items: center;
+      }
+    }
+  }
+  @include ipad {
+    .write-tag-box {
+      width: 95%;
+      display: flex;
+      flex-direction: column;
+      .write-tag-left {
+        margin-left: 0px;
+        margin-top: 10px;
+        .tag-area {
+          margin-top: 15px;
+          width: 100%;
+        }
+      }
+    }
+  }
+  @include mobile {
+    .write-tag-box {
+      width: 95%;
+      display: flex;
+      flex-direction: column;
+      .write-tag-left {
+        margin-left: 0px;
+        margin-top: 10px;
+
+        .write-tag-left-input {
+          display: flex;
+          flex-direction: column;
+          span {
+            font-size: 0.95rem;
+            margin: 10px 0px 0px 0px;
+          }
+          input {
+            height: 35px;
+            width: 70px;
+            font-size: 1rem;
+          }
+        }
+        .tag-area {
+          margin-top: 10px;
+          width: 100%;
+        }
+      }
+    }
+  }
+  @include mobileSmall {
+    .write-tag-box {
+      width: 100%;
+      padding: 0px 5px;
+
+      .write-tag-left {
+        .write-tag-left-input {
+          span {
+            font-size: 0.7rem;
+          }
+          input {
+            height: 30px;
+            width: 60px;
+            font-size: 0.9rem;
+          }
+        }
+        .tag-area {
+          height: 40px;
+          font-size: 0.8rem;
+        }
       }
     }
   }

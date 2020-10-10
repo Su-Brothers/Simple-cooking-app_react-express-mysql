@@ -1,4 +1,5 @@
 @import "../global-color.scss";
+@import "../media/media.scss";
 .post-ingre {
   .post-ingre-box {
     display: flex;
@@ -8,6 +9,20 @@
       align-self: flex-start;
       font-weight: bold;
       font-size: 1.3rem;
+    }
+  }
+  @include mobile {
+    .post-ingre-box {
+      .post-ingre-title {
+        font-size: 1.2rem;
+      }
+    }
+  }
+  @include mobileSmall {
+    .post-ingre-box {
+      .post-ingre-title {
+        font-size: 1.15rem;
+      }
     }
   }
 }

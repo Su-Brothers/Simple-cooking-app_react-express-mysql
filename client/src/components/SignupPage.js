@@ -3,6 +3,8 @@ import "./styles/signup-page.scss";
 import logo from "../images/jabakLogo_v4.png";
 import { useDispatch } from "react-redux";
 import { signupHandler } from "../modules/user";
+import { debounce } from "lodash";
+import LoadingSpinner from "./loadingCompo/LoadingSpinner";
 function SignupPage({ history }) {
   const [info, setInfo] = useState({
     email: "",
@@ -12,6 +14,7 @@ function SignupPage({ history }) {
     userNickname: "",
   });
 
+  const [clickLoading, setClickLoading] = useState(false);
   const [emailBool, setEmailBool] = useState(""); //이메일 일치 상태
   const [idBool, setIdBool] = useState(""); //id 일치 상태
   const [passwordBool, setpasswordBool] = useState(""); //비밀번호 일치 상태
@@ -47,10 +50,19 @@ function SignupPage({ history }) {
     }
   };
 
-  const onSignup = (e) => {
+  const onSignup = debounce(
+    () => {
+      console.log("성공!");
+      setClickLoading(true);
+      dispatch(signupHandler(email, userId, password, userNickname, history));
+    },
+    300,
+    { leading: true, trailing: false }
+  );
+  const onDebounceSignUp = (e) => {
     e.preventDefault();
+    console.log("시도");
     const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; //정규식 사용
-
     const checkInfo =
       Object.values(info).every((x) => x !== "") &&
       password.length > 7 &&
@@ -59,7 +71,7 @@ function SignupPage({ history }) {
     if (!checkInfo) {
       alert("입력하신 정보가 일치하지 않습니다.");
     } else {
-      dispatch(signupHandler(email, userId, password, userNickname, history));
+      onSignup();
     }
   };
   return (
@@ -93,7 +105,7 @@ function SignupPage({ history }) {
           />
           <div style={{ fontSize: "0.8rem", color: "red" }}>{idBool}</div>
           <input
-            type="text"
+            type="password"
             name="password"
             placeholder="비밀번호 (8자 이상)"
             value={password}
@@ -106,7 +118,7 @@ function SignupPage({ history }) {
           />
           <div style={{ fontSize: "0.8rem", color: "red" }}>{passwordBool}</div>
           <input
-            type="text"
+            type="password"
             name="passwordCheck"
             placeholder="비밀번호 확인"
             value={passwordCheck}
@@ -129,9 +141,18 @@ function SignupPage({ history }) {
             }
           />
           <div style={{ fontSize: "0.8rem", color: "red" }}>{nicknameBool}</div>
-          <button type="submit" className="singup_btn" onClick={onSignup}>
+          <button
+            type="submit"
+            className="singup_btn"
+            onClick={onDebounceSignUp}
+          >
             회원가입
           </button>
+          {clickLoading && (
+            <div className="loading-box">
+              <LoadingSpinner />
+            </div>
+          )}
         </form>
       </div>
     </div>

@@ -17,6 +17,7 @@ import SearchPage from "./components/SearchPage";
 import CookPage from "./components/CookPage"; //재료추천 페이지
 import MyPage from "./components/MyPage";
 import ChefPage from "./components/ChefPage";
+import NotFound from "./components/NotFound";
 function App(props) {
   return (
     <BrowserRouter>
@@ -27,7 +28,6 @@ function App(props) {
         <Switch>
           <Route exact path="/" component={Auth(MainPage)} />
           <Route exact path="/login" component={Auth(LoginPage, false)} />
-          <Route path="/ranking" component={Auth(RankPage)} />
           <Route path="/signup" component={Auth(SignupPage, false)} />
           <Route path="/mypage" component={Auth(MyPage, true)} />
           <Route path="/write" component={Auth(WritePage, true)} />
@@ -37,6 +37,7 @@ function App(props) {
           <Route path="/post/tag/:name" component={Auth(TagPage)} />
           <Route path="/search/:name" component={Auth(SearchPage)} />
           <Route path="/chef/:no" component={Auth(ChefPage)} />
+          <Route component={Auth(NotFound)} />
         </Switch>
       </main>
     </BrowserRouter>

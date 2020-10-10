@@ -31,14 +31,17 @@ function TimeLine({
       <Link to={`/post/${url}`} className="timeline-link">
         <div className="timeline-container">
           <div className="timeline-top">
-            {profile ? (
+            <div className="img-box">
+              {profile ? (
               <img src={`http://localhost:5000/${profile}`} alt="프로필사진" />
-            ) : (
-              <img
-                src={`http://localhost:5000/uploads/normal-profile.png`}
-                alt="프로필사진"
-              />
-            )}
+              ) : (
+                <img
+                  src={`http://localhost:5000/uploads/normal-profile.png`}
+                  alt="프로필사진"
+                />
+               )}
+            </div>
+            
             <div className="timeline-writer">
               <span className="writer"> {writer}</span>
               <span>{`·${pGenderType(type)}`}</span>
@@ -78,6 +81,7 @@ function TimeLine({
       <div className="writer-link-box">
         <Link
           to={user && user._no === writerNo ? `mypage` : `/chef/${writerNo}`}
+          className="link-box-writer"
         >
           <div className="writer-link"></div>
         </Link>
