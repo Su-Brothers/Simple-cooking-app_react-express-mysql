@@ -1,10 +1,18 @@
 $black: #242424;
 $lgray: #dee0e4;
+@import "./media/media.scss";
 .left-aside {
   position: fixed;
   top: 0;
   display: flex;
   padding-top: 65px;
+  z-index: 1;
+  @include tabletSmall {
+    display: none;
+  }
+  @include mobile {
+    display: none;
+  }
   .left-aside-list {
     margin-left: 30px;
     .left-aside-item {

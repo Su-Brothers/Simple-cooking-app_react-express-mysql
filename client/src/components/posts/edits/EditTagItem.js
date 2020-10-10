@@ -30,4 +30,4 @@ EditTagItem.propTypes = {
   id: PropTypes.number.isRequired,
 };
 
-export default EditTagItem;
+export default React.memo(EditTagItem);

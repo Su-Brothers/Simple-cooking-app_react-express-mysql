@@ -36,15 +36,16 @@ function PostRecipe() {
         <div className="post-recipe-title">레시피</div>
         <div className="view-box">{viewItem}</div>
         <div className={`post-recipe-item-container ${View}`}>
-          {recipe.map((item, index) => (
-            <RecipeItem
-              view={View}
-              img={item.img_file}
-              text={item.main_text}
-              key={item.text_no}
-              order={index + 1}
-            />
-          ))}
+          {recipe &&
+            recipe.map((item, index) => (
+              <RecipeItem
+                view={View}
+                img={item.img_file}
+                text={item.main_text}
+                key={item.text_no}
+                order={index + 1}
+              />
+            ))}
         </div>
       </div>
     </div>

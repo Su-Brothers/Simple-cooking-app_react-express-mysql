@@ -8,6 +8,7 @@ import TimeLine from "./TimeLine";
 import Axios from "axios";
 import { useCallback } from "react";
 import { useRef } from "react";
+import SkeletonLoading from "./loadingCompo/SkeletonLoading";
 
 function MyPage() {
   const user = useSelector((state) => state.user.userData, shallowEqual);
@@ -20,15 +21,17 @@ function MyPage() {
   const [isFirst, setisFirst] = useState(true);
 
   const limitItem = useRef(0); //페이징 처리용 리미트
-
+  const isMounted = useRef(null);
   const sortList = [
     //정렬 리스트
     { name: "mypost", koName: "내가 쓴 글" },
     { name: "scrap", koName: "스크랩" },
   ];
   const onSortChange = (target) => () => {
-    setSort(target);
-    getPosts(target);
+    if (loading) {
+      setSort(target);
+      getPosts(target);
+    }
   };
   const sortItem = sortList.map((item, index) => (
     //만들어논 리스트를 맵으로 돌린후 저장한다.
@@ -73,28 +76,33 @@ function MyPage() {
         return "조건에 맞는 데이터가 없습니다.";
       }
     } else {
-      return "loading...";
+      return null;
     }
   };
 
   const getPosts = (target) => {
+    window.scrollTo(0, 0);
     limitItem.current = 0; //0으로 초기화
     setLoading(false);
     setIsEnd(false);
     Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
       .then((res) => {
         console.log(res);
-        if (res.data.success) {
-          setList(res.data.result);
-          if (res.data.result.length < 10) {
-            console.log("isEnd");
-            setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+        if (isMounted.current) {
+          if (res.data.success) {
+            setList(res.data.result);
+            if (res.data.result.length < 10) {
+              console.log("isEnd");
+              setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+            } else {
+              if (limitItem.current === 0) {
+                limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              }
+            }
+            setLoading(true);
           } else {
-            limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+            alert(res.data.message);
           }
-          setLoading(true);
-        } else {
-          alert(res.data.message);
         }
       })
       .catch((err) => console.log(err));
@@ -106,16 +114,18 @@ function MyPage() {
       console.log(isEnd);
       Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
         .then((res) => {
-          if (res.data.success) {
-            setList([...postList, ...res.data.result]);
-            if (res.data.result.length < 10) {
-              console.log("isEnd");
-              setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+          if (isMounted.current) {
+            if (res.data.success) {
+              setList([...postList, ...res.data.result]);
+              if (res.data.result.length < 10) {
+                console.log("isEnd");
+                setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+              } else {
+                limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              }
             } else {
-              limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              alert(res.data.message);
             }
-          } else {
-            alert(res.data.message);
           }
         })
         .catch((err) => console.log(err));
@@ -144,15 +154,19 @@ function MyPage() {
     }
 
     //deps를 넣어줘야 최신 상태를 유지할 수 있다.
-  }, [postList.length, isEnd, sort, user.isAuth]);
+  }, [postList, isEnd, sort, user.isAuth]);
   useEffect(() => {
     console.log("asdsad");
+    isMounted.current = true;
     if (isFirst && user.isAuth) {
       getPosts("mypost");
       setisFirst(false);
     }
     window.addEventListener("scroll", onScrollHandler);
-    return () => window.removeEventListener("scroll", onScrollHandler);
+    return () => {
+      window.removeEventListener("scroll", onScrollHandler);
+      isMounted.current = false;
+    };
   }, [onScrollHandler]);
 
   return (
@@ -196,6 +210,7 @@ function MyPage() {
             <div className="user-name">{user._nickname}</div>
           </div>
         </div>
+        <SkeletonLoading limit={5} active={loading} />
         {postsData()}
       </div>
       {modal && (

@@ -45,4 +45,4 @@ EditIngreItem.propTypes = {
   volume: PropTypes.string.isRequired,
 };
 
-export default EditIngreItem;
+export default React.memo(EditIngreItem);

@@ -2,6 +2,7 @@ $gray: #cecece;
 $lgray: #ececec;
 $dgray: #686868;
 $dorange: #ff5100;
+@import "../media/media.scss";
 .order-item-box {
   width: 650px;
   height: 160px;
@@ -20,24 +21,29 @@ $dorange: #ff5100;
     padding: 0;
     box-sizing: border-box;
   }
-  .order-item-drop-zone {
-    position: relative;
-    color: $dgray;
-    font-size: 3rem;
-    height: 100%;
+  .order-item-img-box {
+    height: 160px;
     width: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $lgray;
-    border: 1px solid $gray;
-    border-radius: 5px;
-    img {
+    .order-item-drop-zone {
+      position: relative;
+      color: $dgray;
+      font-size: 3rem;
       width: 100%;
       height: 100%;
-      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $lgray;
+      border: 1px solid $gray;
+      border-radius: 5px;
+      img {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
     }
   }
+
   button {
     font-size: 1.6rem;
     background-color: transparent;
@@ -48,5 +54,55 @@ $dorange: #ff5100;
     color: $dorange;
     outline: none;
     cursor: pointer;
+  }
+  @include mobile {
+    width: 100%;
+    height: 140px;
+
+    .order-item-box-num {
+      font-size: 1.4rem;
+    }
+    textarea {
+      width: 55%;
+    }
+    .order-item-img-box {
+      width: 23%;
+      height: auto;
+      padding-bottom: 23%; // 1:1
+      display: flex;
+      justify-content: center;
+      position: relative;
+      .order-item-drop-zone {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        font-size: 2.5rem;
+      }
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 0px;
+      margin-left: 5px;
+    }
+  }
+  @include smartPhone {
+    width: 100%;
+    height: 100px;
+
+    .order-item-box-num {
+      font-size: 1rem;
+    }
+    textarea {
+      width: 55%;
+    }
+    .order-item-drop-zone {
+      font-size: 1.7rem;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 0px;
+      margin-left: 5px;
+    }
   }
 }

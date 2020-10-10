@@ -9,13 +9,14 @@ function PostInre() {
     <div className="post-item post-ingre">
       <div className="post-item-box post-ingre-box">
         <div className="post-ingre-title">재료리스트</div>
-        {ingre.map((item, index) => (
-          <PostIngreItem
-            name={item.ingre_name}
-            volume={item.ingre_volume}
-            key={item.ingre_no}
-          />
-        ))}
+        {ingre &&
+          ingre.map((item, index) => (
+            <PostIngreItem
+              name={item.ingre_name}
+              volume={item.ingre_volume}
+              key={item.ingre_no}
+            />
+          ))}
       </div>
     </div>
   );

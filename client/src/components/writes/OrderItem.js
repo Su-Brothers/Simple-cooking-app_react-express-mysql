@@ -25,17 +25,23 @@ function OrderItem({ id, text, order, orderPhoto }) {
     <div className="order-item-box">
       <div className="order-item-box-num">{order}</div>
       <textarea value={text} onChange={inputHandler} />
-      <DropZone onDrop={imageUpload} multiple={false} maxSize={1000000}>
-        {({ getRootProps, getInputProps }) => (
-          <div className="order-item-drop-zone" {...getRootProps()}>
-            <input {...getInputProps()} />
-            <FaCamera />
-            {orderPhoto ? (
-              <img src={`http://localhost:5000/${orderPhoto}`} alt="요리사진" />
-            ) : null}
-          </div>
-        )}
-      </DropZone>
+      <div className="order-item-img-box">
+        <DropZone onDrop={imageUpload} multiple={false} maxSize={1000000}>
+          {({ getRootProps, getInputProps }) => (
+            <div className="order-item-drop-zone" {...getRootProps()}>
+              <input {...getInputProps()} />
+              <FaCamera />
+              {orderPhoto ? (
+                <img
+                  src={`http://localhost:5000/${orderPhoto}`}
+                  alt="요리사진"
+                />
+              ) : null}
+            </div>
+          )}
+        </DropZone>
+      </div>
+
       <button type="button" onClick={removeHandler}>
         <FaTimesCircle />
       </button>
@@ -49,4 +55,4 @@ OrderItem.propTypes = {
   orderPhoto: PropTypes.string,
 };
 
-export default OrderItem;
+export default React.memo(OrderItem);

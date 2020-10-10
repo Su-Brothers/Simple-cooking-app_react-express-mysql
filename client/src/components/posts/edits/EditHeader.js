@@ -64,45 +64,47 @@ function EditHeader({ title, description, time, diff, type, photo }) {
       </div>
       <div className="write-header-bottom">
         요리 정보
-        <div className="header-bottom-item">
-          <label htmlFor="time">시간</label>
-          <select name="time" id="time" onChange={optionHandler} value={time}>
-            <option value="">시간</option>
-            <option value="lessTen">10분 이내</option>
-            <option value="lessTwenty">20분 이내</option>
-            <option value="lessThirty">30분 이내</option>
-            <option value="moreHours">1시간 이상</option>
-          </select>
-        </div>
-        <div className="header-bottom-item">
-          <label htmlFor="diff">난이도</label>
-          <select
-            name="difficulty"
-            id="diff"
-            onChange={optionHandler}
-            value={diff}
-          >
-            <option value="">난이도</option>
-            <option value="diffTop">상</option>
-            <option value="diffMiddle">중</option>
-            <option value="diffBottom">하</option>
-          </select>
-        </div>
-        <div className="header-bottom-item">
-          <label htmlFor="cookType">종류</label>
-          <select
-            name="type"
-            id="cookType"
-            onChange={optionHandler}
-            value={type}
-          >
-            <option value="">종류</option>
-            <option value="typeKo">한식</option>
-            <option value="typeChin">중식</option>
-            <option value="typeJa">일식</option>
-            <option value="typeWest">양식</option>
-            <option value="typeEtc">기타</option>
-          </select>
+        <div className="header-bottom-box">
+          <div className="header-bottom-item">
+            <label htmlFor="time">시간</label>
+            <select name="time" id="time" onChange={optionHandler} value={time}>
+              <option value="">시간</option>
+              <option value="lessTen">10분 이내</option>
+              <option value="lessTwenty">20분 이내</option>
+              <option value="lessThirty">30분 이내</option>
+              <option value="moreHours">1시간 이상</option>
+            </select>
+          </div>
+          <div className="header-bottom-item">
+            <label htmlFor="diff">난이도</label>
+            <select
+              name="difficulty"
+              id="diff"
+              onChange={optionHandler}
+              value={diff}
+            >
+              <option value="">난이도</option>
+              <option value="diffTop">상</option>
+              <option value="diffMiddle">중</option>
+              <option value="diffBottom">하</option>
+            </select>
+          </div>
+          <div className="header-bottom-item">
+            <label htmlFor="cookType">종류</label>
+            <select
+              name="type"
+              id="cookType"
+              onChange={optionHandler}
+              value={type}
+            >
+              <option value="">종류</option>
+              <option value="typeKo">한식</option>
+              <option value="typeChin">중식</option>
+              <option value="typeJa">일식</option>
+              <option value="typeWest">양식</option>
+              <option value="typeEtc">기타</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>

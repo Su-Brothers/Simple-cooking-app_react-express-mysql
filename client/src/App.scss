@@ -1,5 +1,6 @@
 //글로벌 스타일
 $lgray: #ececec;
+@import "./components/styles/media/media.scss";
 html,
 body,
 #root {
@@ -25,5 +26,14 @@ body {
     padding-right: 173px;
     display: flex;
     justify-content: center;
+    @include tabletSmall {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+    @include mobile {
+      padding-top: 50px;
+      padding-left: 0px;
+      padding-right: 0px;
+    }
   }
 }

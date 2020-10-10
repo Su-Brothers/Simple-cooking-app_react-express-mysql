@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Axios from "axios";
 import { useRef } from "react";
+import SkeletonLoadingIngre from "./loadingCompo/SkeletonLoadingIngre";
 function CookModal({ history, onExit }) {
   const [loading, setLoading] = useState(false); //로딩 체크
 
@@ -23,15 +24,22 @@ function CookModal({ history, onExit }) {
   const scrollBox = useRef(null); //ref를 div에 할당하여 스크롤 이벤트 추가
 
   const getSearchIngre = async () => {
+    if (!loading) {
+      return;
+    }
+    scrollBox.current.scrollTo(0, 0);
     limitItem.current = 0; //검색이면 0부터 세야함
     setLoading(false);
+    console.log(ingreList);
+    console.log("검색");
+    console.log(limitItem.current);
     if (search === "") {
       const data = await Axios.get(
         `/api/post/cook/getingre/${limitItem.current}`
       )
         .then((res) => res.data)
         .catch((err) => console.log(err));
-      console.log(data);
+
       if (data.success) {
         if (ingreResult.length > 0 && data.result.length > 0) {
           //결과값에 이미 검색한 결과중 하나가 있으면 active
@@ -94,6 +102,7 @@ function CookModal({ history, onExit }) {
   };
 
   const getIngre = async () => {
+    scrollBox.current.scrollTo(0, 0);
     setLoading(false);
     const data = await Axios.get(`/api/post/cook/getingre/${limitItem.current}`)
       .then((res) => res.data)
@@ -168,7 +177,7 @@ function CookModal({ history, onExit }) {
         return "재료 리스트가 없습니다.";
       }
     } else {
-      return "...loading";
+      return null;
     }
   };
   const onInputHandler = (e) => {
@@ -192,7 +201,8 @@ function CookModal({ history, onExit }) {
 
   const onLoadHandler = async () => {
     console.log(ingreList);
-    console.log("Dasdasdasdas");
+    console.log("로드");
+    console.log(limitItem.current);
     if (searchData === "") {
       console.log(limitItem.current);
 
@@ -203,6 +213,8 @@ function CookModal({ history, onExit }) {
         .catch((err) => console.log(err));
       console.log(data);
       if (data.success) {
+        console.log("성공");
+        console.log(ingreList);
         if (ingreResult.length > 0 && data.result.length > 0) {
           //결과값에 이미 검색한 결과중 하나가 있으면 active
           const activeData = data.result.map((item) => {
@@ -228,6 +240,7 @@ function CookModal({ history, onExit }) {
           }
         }
       }
+      console.log("??");
       limitItem.current += 10; //데이터를 가져올때마다 다음 페이지를 위해 +10
     } else {
       const data = await Axios.get(
@@ -305,6 +318,7 @@ function CookModal({ history, onExit }) {
               ref={scrollBox}
               onScroll={onScrollHandler}
             >
+              <SkeletonLoadingIngre limit={10} active={loading} />
               {ingredients()}
             </div>
           </div>

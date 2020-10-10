@@ -10,11 +10,13 @@ function PostTag() {
       <div className="post-item-box">
         <div className="post-tag-title">태그</div>
         <div className="post-tag-items">
-          {tag.map((item, index) => (
-            <Link to={`/post/tag/${item.tag_name}`} key={item.tag_no}>
-              <PostTagItem tag={item.tag_name} />
-            </Link>
-          ))}
+          {tag
+            ? tag.map((item, index) => (
+                <Link to={`/post/tag/${item.tag_name}`} key={item.tag_no}>
+                  <PostTagItem tag={item.tag_name} />
+                </Link>
+              ))
+            : null}
         </div>
       </div>
     </div>

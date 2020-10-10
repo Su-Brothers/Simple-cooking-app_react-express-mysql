@@ -1,4 +1,14 @@
 @import "./global-color.scss";
+@keyframes slide {
+  0% {
+    opacity: 0;
+    margin-top: 25px;
+  }
+  100% {
+    opacity: 1;
+    margin-top: 40px;
+  }
+}
 .mini-aside-chef {
   position: absolute;
   font-size: 0.9rem;
@@ -11,6 +21,9 @@
   color: $dgray;
   border-radius: 5px;
   border: 1px solid $lgray;
+  animation-name: slide;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-in-out;
   .chef-list {
     width: 100%;
     .chef-list-title {
@@ -53,6 +66,7 @@
           width: 115px;
           overflow: hidden;
           text-overflow: ellipsis;
+          color: $dgray;
         }
         .chef-likes {
           text-align: end;

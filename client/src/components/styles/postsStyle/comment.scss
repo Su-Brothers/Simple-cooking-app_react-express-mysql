@@ -1,4 +1,5 @@
 @import "../global-color.scss";
+@import "../media/media.scss";
 .post-comment-box {
   display: flex;
   flex-direction: column;
@@ -33,6 +34,42 @@
         font-weight: bold;
         color: white;
         cursor: pointer;
+      }
+    }
+  }
+  @include mobile {
+    .post-comment-title {
+      font-size: 1.2rem;
+    }
+    .comment-write-box {
+      form {
+        input {
+          height: 65px;
+          width: 73%;
+          font-size: 0.9rem;
+        }
+        button {
+          width: 25%;
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+  @include mobileSmall {
+    .post-comment-title {
+      font-size: 1.15rem;
+    }
+    .comment-write-box {
+      form {
+        input {
+          height: 60px;
+          width: 73%;
+          font-size: 0.75rem;
+        }
+        button {
+          width: 25%;
+          font-size: 1rem;
+        }
       }
     }
   }

@@ -15,7 +15,12 @@ function EditTag() {
   const addHandler = (e) => {
     if (e.key === "," || e.key === "Enter") {
       e.preventDefault(); //, 문자는 지워져야함
-      const isOverlap = tag.every((item) => item.tagName !== input);
+      if (tag) {
+        console.log("asdsad");
+      }
+      const isOverlap = tag
+        ? tag.every((item) => item.tag_name !== input)
+        : true;
       if (isOverlap) {
         //태그 중복확인
         dispatch(tagHandler(input));
@@ -41,13 +46,15 @@ function EditTag() {
             </span>
           </div>
           <div className="tag-area">
-            {tag.map((item, index) => (
-              <TagItem
-                key={item.tag_no ? item.tag_no : item.tId}
-                value={item.tag_name}
-                id={item.tag_no ? item.tag_no : item.tId}
-              />
-            ))}
+            {tag
+              ? tag.map((item, index) => (
+                  <TagItem
+                    key={item.tag_no ? item.tag_no : item.tId}
+                    value={item.tag_name}
+                    id={item.tag_no ? item.tag_no : item.tId}
+                  />
+                ))
+              : null}
           </div>
         </div>
       </div>

@@ -4,7 +4,15 @@ $dgray: #474747;
 $gray: #5e5e5e;
 $vlgray: #727272;
 $lgray: #dee0e4;
+@import "./media/media.scss";
+
 .right-aside-chef {
+  @include tablet {
+    display: none;
+  }
+  @include mobile {
+    display: none;
+  }
   position: fixed;
   top: 0;
   right: 0;

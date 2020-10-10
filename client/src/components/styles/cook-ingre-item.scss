@@ -1,5 +1,5 @@
 @import "./global-color.scss";
-
+@import "../styles/media/media.scss";
 .cook-ingre-link {
   width: 85%;
   margin-top: 10px;
@@ -39,6 +39,16 @@
 
       .cook-ingre-name {
         color: white;
+      }
+    }
+  }
+  @include mobile {
+    .cook-ingre-item {
+      .cook-ingre-name {
+        font-size: 1rem;
+      }
+      .cook-ingre-quan {
+        font-size: 0.9rem;
       }
     }
   }

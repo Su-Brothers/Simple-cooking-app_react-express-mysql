@@ -1,4 +1,5 @@
 @import "./global-color.scss";
+@import "./media/media.scss";
 @keyframes backround_ani {
   0% {
     background-color: rgba(0, 0, 0, 0);
@@ -71,6 +72,7 @@
       img {
         border-radius: 50%;
         width: 110px;
+        height: 110px;
       }
       .camera-box {
         position: absolute;
@@ -135,6 +137,20 @@
     display: flex;
     justify-content: space-between;
     width: 240px;
+    position: relative;
+    .loading-box {
+      position: absolute;
+      left: 0;
+      height: 100%;
+      width: 110px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.4);
+      &.active {
+        display: flex;
+      }
+    }
     button {
       width: 110px;
       height: 55px;
@@ -155,6 +171,98 @@
       color: white;
       &:hover {
         background-color: $dgreen;
+      }
+    }
+  }
+  @include mobile {
+    width: 90%;
+    padding: 20px;
+
+    .profile {
+      width: 90%;
+    }
+    .modify_container {
+      width: 90%;
+
+      input,
+      textarea {
+        width: 100%;
+        background-color: $lgray;
+        border: 1px solid $bgray;
+        border-radius: 3px;
+      }
+      textarea {
+        margin-top: 5px;
+      }
+      input {
+        margin-top: 5px;
+      }
+      .input-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .input-box-vertical-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .bool-box {
+        justify-content: flex-start;
+      }
+    }
+  }
+  @include mobileSmall {
+    width: 95%;
+    padding: 10px;
+
+    .profile {
+      width: 95%;
+
+      .title_image {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+
+        img {
+          height: 90px;
+          width: 90px;
+        }
+        .camera-box {
+          width: 25px;
+          height: 25px;
+          font-size: 0.7rem;
+        }
+      }
+      .user-name {
+        font-weight: bold;
+        color: $black;
+        padding: 10px 0px;
+        font-size: 1.5rem;
+      }
+    }
+    .modify_container {
+      width: 95%;
+      margin-bottom: 20px;
+
+      input {
+        height: 40px;
+      }
+      .input-box {
+        margin-top: 15px;
+      }
+      .input-box-vertical-top {
+        margin-top: 15px;
+      }
+      .bool-box {
+        font-size: 0.7rem;
+      }
+    }
+    .btn-location {
+      width: 200px;
+      button {
+        width: 90px;
+        height: 50px;
+
+        font-size: 1rem;
       }
     }
   }

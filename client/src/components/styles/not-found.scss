@@ -1,0 +1,35 @@
+@import "../styles/global-color.scss";
+@import "../styles/media/media.scss";
+.not-found {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: $green;
+  font-size: 2rem;
+  z-index: 0;
+
+  font-family: "Black Han Sans", sans-serif;
+  .not-found-en {
+    font-size: 3rem;
+    font-weight: bold;
+    color: $dorange;
+  }
+  @include mobile {
+    font-size: 1.5rem;
+    .not-found-en {
+      font-size: 2rem;
+    }
+  }
+  @include mobileSmall {
+    font-size: 0.8rem;
+    .not-found-en {
+      font-size: 1.4rem;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 @import "./global-color.scss";
-
+@import "./media/media.scss";
 @keyframes slideUp {
   0% {
     opacity: 0;
@@ -150,6 +150,121 @@
         &:hover {
           background-color: $green;
           color: white;
+        }
+      }
+    }
+  }
+  @include mobile {
+    width: 97%;
+    height: 470px;
+    justify-content: space-evenly;
+
+    .cook-modal-exit {
+      font-size: 1.5rem;
+    }
+
+    .cook-title {
+      font-size: 1.8rem;
+    }
+    .cook-inner-box {
+      width: 95%;
+      height: 80%;
+      display: flex;
+      justify-content: space-between;
+      .cook-inner-left {
+        width: 47%;
+        justify-content: space-between;
+        .cook-search-box {
+          width: 100%;
+
+          input {
+            font-size: 0.7rem;
+          }
+        }
+        .search-list {
+          height: 320px;
+        }
+      }
+    }
+  }
+  @include mobileSmall {
+    height: auto;
+    justify-content: center;
+    padding: 25px 20px;
+    .cook-modal-exit {
+      font-size: 1.2rem;
+      padding: 5px;
+    }
+
+    .cook-title {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      font-size: 1.5rem;
+      font-family: "Do Hyeon", sans-serif;
+    }
+    .cook-inner-box {
+      width: 100%;
+      height: auto;
+      align-items: center;
+      flex-direction: column;
+      justify-content: flex-start;
+      .cook-inner-left {
+        width: 100%;
+        height: 45%;
+        .cook-search-box {
+          width: 100%;
+          input {
+            font-size: 0.8rem;
+          }
+          button {
+            transform: translateX(-90%);
+          }
+        }
+        .search-list {
+          height: 300px;
+        }
+      }
+      .cook-inner-right {
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        padding: 0px;
+
+        .ingre-result-list {
+          padding: 5px;
+          display: flex;
+          flex-wrap: wrap;
+        }
+        button {
+          width: 100%;
+          height: 45px;
+          background-color: transparent;
+        }
+      }
+    }
+  }
+  @include smartPhone {
+    padding: 20px 15px;
+    .cook-title {
+      font-size: 1.3rem;
+    }
+    .cook-inner-box {
+      justify-content: flex-start;
+      .cook-inner-left {
+        .cook-search-box {
+          width: 100%;
+          input {
+            font-size: 0.7rem;
+          }
+        }
+      }
+      .cook-inner-right {
+        button {
+          width: 100%;
+          height: 45px;
+          font-size: 0.7rem;
+          background-color: transparent;
         }
       }
     }

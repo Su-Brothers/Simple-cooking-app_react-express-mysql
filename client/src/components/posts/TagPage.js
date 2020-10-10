@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import Axios from "axios";
 import { useRef } from "react";
 import { useCallback } from "react";
+import SkeletonLoading from "../loadingCompo/SkeletonLoading";
+import NotFound from "../NotFound";
 function TagPage({ match }) {
   const [sort, setSort] = useState("popular");
   const [postList, setList] = useState([]);
@@ -15,6 +17,7 @@ function TagPage({ match }) {
   const [isFirst, setisFirst] = useState(true);
 
   const limitItem = useRef(0); //페이징 처리용 리미트
+  const isMounted = useRef(null);
   const sortList = [
     //정렬 리스트
     { name: "popular", koName: "인기순" },
@@ -22,8 +25,10 @@ function TagPage({ match }) {
     { name: "views", koName: "조회순" },
   ];
   const onSortChange = (target) => () => {
-    setSort(target);
-    getPosts(target);
+    if (loading) {
+      setSort(target);
+      getPosts(target);
+    }
   };
 
   const sortItem = sortList.map((item, index) => (
@@ -62,14 +67,15 @@ function TagPage({ match }) {
         ));
       } else {
         //로딩이 다되었음에도 불구하고 length 가 0이면 결과가 없는것이다.
-        return "조건에 맞는 데이터가 없습니다.";
+        return <NotFound item={"태그"} />;
       }
     } else {
-      return "loading...";
+      return null;
     }
   };
 
   const getPosts = (target) => {
+    window.scrollTo(0, 0);
     limitItem.current = 0; //0으로 초기화
     console.log(match.params.name);
     setLoading(false);
@@ -78,17 +84,21 @@ function TagPage({ match }) {
       `/api/post/tag/${match.params.name}/${target}/${limitItem.current}`
     )
       .then((res) => {
-        if (res.data.success) {
-          setList(res.data.result);
-          if (res.data.result.length < 10) {
-            console.log("isEnd");
-            setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+        if (isMounted.current) {
+          if (res.data.success) {
+            setList(res.data.result);
+            if (res.data.result.length < 10) {
+              console.log("isEnd");
+              setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+            } else {
+              if (limitItem.current === 0) {
+                limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              }
+            }
+            setLoading(true);
           } else {
-            limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+            alert(res.data.message);
           }
-          setLoading(true);
-        } else {
-          alert(res.data.message);
         }
       })
       .catch((err) => console.log(err));
@@ -103,16 +113,18 @@ function TagPage({ match }) {
         `/api/post/tag/${match.params.name}/${target}/${limitItem.current}`
       )
         .then((res) => {
-          if (res.data.success) {
-            setList([...postList, ...res.data.result]);
-            if (res.data.result.length < 10) {
-              console.log("isEnd");
-              setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+          if (isMounted.current) {
+            if (res.data.success) {
+              setList([...postList, ...res.data.result]);
+              if (res.data.result.length < 10) {
+                console.log("isEnd");
+                setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+              } else {
+                limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              }
             } else {
-              limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              alert(res.data.message);
             }
-          } else {
-            alert(res.data.message);
           }
         })
         .catch((err) => console.log(err));
@@ -141,16 +153,21 @@ function TagPage({ match }) {
     }
 
     //deps를 넣어줘야 최신 상태를 유지할 수 있다.
-  }, [postList.length, isEnd, sort]);
+  }, [postList, isEnd, sort]);
 
   useEffect(() => {
+    isMounted.current = true;
     if (isFirst) {
       console.log("??");
+      console.log(isFirst);
       getPosts("popular");
       setisFirst(false);
     }
     window.addEventListener("scroll", onScrollHandler);
-    return () => window.removeEventListener("scroll", onScrollHandler);
+    return () => {
+      window.removeEventListener("scroll", onScrollHandler);
+      isMounted.current = false;
+    };
   }, [onScrollHandler]);
 
   return (
@@ -162,6 +179,7 @@ function TagPage({ match }) {
         <span>개 있습니다.</span>
       </div>
       <div className="sort-box">{sortItem}</div>
+      <SkeletonLoading limit={5} active={loading} />
       {postsData()}
     </div>
   );

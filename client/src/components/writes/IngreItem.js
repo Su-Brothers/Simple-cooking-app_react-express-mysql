@@ -43,4 +43,4 @@ IngreItem.propTypes = {
   volume: PropTypes.string.isRequired,
 };
 
-export default IngreItem;
+export default React.memo(IngreItem);

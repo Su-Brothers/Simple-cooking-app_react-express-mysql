@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "./styles/profile-setting.scss";
-import { FaTimes, FaCamera, FaIgloo } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 import DropZone from "react-dropzone";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { changeHandler, reloadUser } from "../modules/user";
+import { debounce } from "lodash";
+import { useDispatch } from "react-redux";
+import { reloadUser } from "../modules/user";
 import { useEffect } from "react";
 import Axios from "axios";
+import LoadingSpinner from "./loadingCompo/LoadingSpinner";
 function ProfileSetting({
   onClose,
   imgData,
@@ -24,6 +26,8 @@ function ProfileSetting({
     passwordCheck: "",
   });
   const dispatch = useDispatch();
+
+  const [clickLoading, setclickLoading] = useState(true); //submit시 로딩
 
   const [nickBool, setNickBool] = useState(""); //닉네임 체크
   const [emailBool, setEmailBool] = useState(""); //이메일 체크
@@ -78,94 +82,104 @@ function ProfileSetting({
     }
   };
 
-  const onSubmitHandler = () => {
-    //한 번만 시도를 하지 않았을경우 틀린 것만 보여줘야하므로 처음에 초기화
-    setEmailBool("");
-    setNickBool("");
-    setNowPsBool("");
-    setPsBool("");
-    setPsCheckBool("");
-    //닉네임 체크
-    if (!userNickname) {
-      return setNickBool("닉네임을 입력해주십시오.");
-    }
-    //이메일 체크
-    const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; //정규식 사용
-    if (email.length === 0) {
-      return setEmailBool("이메일을 입력해주십시오.");
-    } else {
-      if (!reg_email.test(email)) {
-        return setEmailBool("이메일 형식에 알맞지 않습니다.");
+  const onSubmitHandler = debounce(
+    () => {
+      //디바운스 처리
+      //한 번만 시도를 하지 않았을경우 틀린 것만 보여줘야하므로 처음에 초기화
+      setEmailBool("");
+      setNickBool("");
+      setNowPsBool("");
+      setPsBool("");
+      setPsCheckBool("");
+      console.log("submit");
+      //닉네임 체크
+      if (!userNickname) {
+        return setNickBool("닉네임을 입력해주십시오.");
       }
-    }
-    //비밀번호 체크
-    if (password || newPassword || passwordCheck) {
-      //세 인풋값이 전부 있을경우
-      if (password && newPassword && passwordCheck) {
-        if (newPassword !== passwordCheck) {
-          //비밀번호확인과 비밀번호가 맞는지 체크한다
-          return setPsCheckBool("비밀번호를 확인해주세요.");
+      //이메일 체크
+      const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; //정규식 사용
+      if (email.length === 0) {
+        return setEmailBool("이메일을 입력해주십시오.");
+      } else {
+        if (!reg_email.test(email)) {
+          return setEmailBool("이메일 형식에 알맞지 않습니다.");
+        }
+      }
+      //비밀번호 체크
+      if (password || newPassword || passwordCheck) {
+        //세 인풋값이 전부 있을경우
+        if (password && newPassword && passwordCheck) {
+          if (newPassword !== passwordCheck) {
+            //비밀번호확인과 비밀번호가 맞는지 체크한다
+            return setPsCheckBool("비밀번호를 확인해주세요.");
+          } else {
+            //맞으면 8자리 이상인지 확인
+            if (newPassword.length < 8) {
+              return setPsBool("비밀번호는 8자리 이상입니다.");
+            }
+            //여기까지 통과되었으면 성공
+            if (noData) {
+              setclickLoading(false);
+              console.log(noData);
+              Axios.post(`/api/users/edit`, {
+                userNo: noData,
+                imgFile: imgFile,
+                email: email,
+                nickname: userNickname,
+                description: description,
+                password: password,
+                newPassword: newPassword,
+              }).then((res) => {
+                if (res.data.success) {
+                  setclickLoading(true);
+                  alert(res.data.message);
+                  dispatch(reloadUser());
+                  onClose();
+                } else {
+                  alert(res.data.message);
+                }
+              });
+            }
+          }
         } else {
-          //맞으면 8자리 이상인지 확인
+          if (!password) {
+            return setNowPsBool("현재 비밀번호를 입력해주세요.");
+          }
           if (newPassword.length < 8) {
             return setPsBool("비밀번호는 8자리 이상입니다.");
           }
-          //여기까지 통과되었으면 성공
-          if (noData) {
-            console.log(noData);
-            Axios.post(`/api/users/edit`, {
-              userNo: noData,
-              imgFile: imgFile,
-              email: email,
-              nickname: userNickname,
-              description: description,
-              password: password,
-              newPassword: newPassword,
-            }).then((res) => {
-              if (res.data.success) {
-                alert(res.data.message);
-                dispatch(reloadUser());
-                onClose();
-              } else {
-                alert(res.data.message);
-              }
-            });
+          if (passwordCheck.length < 8) {
+            return setPsCheckBool("비밀번호 확인을 정확히 입력해주세요.");
           }
         }
       } else {
-        if (!password) {
-          return setNowPsBool("현재 비밀번호를 입력해주세요.");
-        }
-        if (newPassword.length < 8) {
-          return setPsBool("비밀번호는 8자리 이상입니다.");
-        }
-        if (passwordCheck.length < 8) {
-          return setPsCheckBool("비밀번호 확인을 정확히 입력해주세요.");
+        if (nickData) {
+          console.log(noData);
+          setclickLoading(false);
+          Axios.post(`/api/users/edit`, {
+            userNo: noData,
+            imgFile: imgFile,
+            email: email,
+            nickname: userNickname,
+            description: description,
+            password: null,
+            newPassword: null,
+          }).then((res) => {
+            if (res.data.success) {
+              setclickLoading(true);
+              alert(res.data.message);
+              dispatch(reloadUser());
+              onClose();
+            } else {
+              alert(res.data.message);
+            }
+          });
         }
       }
-    } else {
-      if (nickData) {
-        console.log(noData);
-        Axios.post(`/api/users/edit`, {
-          userNo: noData,
-          imgFile: imgFile,
-          email: email,
-          nickname: userNickname,
-          description: description,
-          password: null,
-          newPassword: null,
-        }).then((res) => {
-          if (res.data.success) {
-            alert(res.data.message);
-            dispatch(reloadUser());
-            onClose();
-          } else {
-            alert(res.data.message);
-          }
-        });
-      }
-    }
-  };
+    },
+    300,
+    { leading: true, trailing: false }
+  );
 
   useEffect(() => {
     setInfo({
@@ -203,7 +217,7 @@ function ProfileSetting({
               </div>
             )}
           </DropZone>
-          <div className="user-name">덩파이</div>
+          <div className="user-name">{nickData}</div>
         </div>
         <div className="modify_container">
           <div className="input-box">
@@ -267,6 +281,9 @@ function ProfileSetting({
           <div className="bool-box">{psCheckBool}</div>
         </div>
         <div className="btn-location">
+          <div className={`loading-box ${clickLoading ? "" : "active"}`}>
+            <LoadingSpinner />
+          </div>
           <button type="button" className="save-btn" onClick={onSubmitHandler}>
             저장
           </button>

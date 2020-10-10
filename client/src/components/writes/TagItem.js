@@ -29,4 +29,4 @@ TagItem.propTypes = {
   id: PropTypes.number.isRequired,
 };
 
-export default TagItem;
+export default React.memo(TagItem);

@@ -1,0 +1,48 @@
+$tablet-screen: 1624px; //aside right hide
+$tablet-small: 1350px; //aside left hide
+$ipad: 1024px; //아이패드
+$mobile-screen: 768px; //모바일(아이패드 등)
+$mobile-small: 479px; //모바일(스마트폰)
+$mobile-mini: 410px; //최소크기(스마트폰)
+
+@mixin desktop {
+  @media (min-width: #{$tablet-screen}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$mobile-screen}) and (max-width: #{$tablet-screen - 1px}) {
+    @content;
+  }
+}
+
+@mixin tabletSmall {
+  @media (min-width: #{$mobile-screen}) and (max-width: #{$tablet-small - 1px}) {
+    @content;
+  }
+}
+
+@mixin ipad {
+  @media (min-width: #{$mobile-screen}) and (max-width: #{$ipad - 1px}) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: #{$mobile-screen - 1px}) {
+    @content;
+  }
+}
+
+@mixin mobileSmall {
+  @media (max-width: #{$mobile-small}) {
+    @content;
+  }
+}
+
+@mixin smartPhone {
+  @media (max-width: #{$mobile-mini}) {
+    @content;
+  }
+}

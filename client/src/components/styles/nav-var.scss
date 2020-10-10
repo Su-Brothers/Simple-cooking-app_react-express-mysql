@@ -1,4 +1,15 @@
 @import "./global-color.scss";
+@import "./media/media.scss";
+@keyframes slide {
+  0% {
+    opacity: 0;
+    margin-top: 25px;
+  }
+  100% {
+    opacity: 1;
+    margin-top: 40px;
+  }
+}
 header {
   height: 65px;
   width: 100%;
@@ -78,6 +89,10 @@ header {
     .item-user {
       position: relative;
       .user-box {
+        opacity: 1;
+        animation-name: slide;
+        animation-duration: 0.2s;
+        animation-timing-function: ease-in-out;
         width: 130px;
         position: absolute;
         background-color: white;
@@ -109,6 +124,102 @@ header {
     }
     .item-rank {
       position: relative;
+    }
+  }
+  @include tablet {
+    .header-left-menu {
+      width: 450px;
+    }
+  }
+  @include mobile {
+    height: 50px;
+    .header-left-menu {
+      width: 360px;
+      .header-title-container {
+        a {
+          .header-title-icon {
+            width: 60px;
+          }
+        }
+      }
+      .header-search {
+        form {
+          input {
+            font-size: 0.75rem;
+            height: 1.7rem;
+            width: 200px;
+          }
+        }
+      }
+    }
+    .header-right-menu {
+      font-size: 1.4rem;
+      width: 100px;
+    }
+  }
+  @include mobileSmall {
+    .header-left-menu {
+      width: 250px;
+
+      .header-title-container {
+        margin-left: 10px;
+        a {
+          .header-title-icon {
+            width: 40px;
+          }
+        }
+      }
+      .header-search {
+        form {
+          button {
+            .header-search-icon {
+              font-size: 0.7rem;
+            }
+          }
+
+          input {
+            font-size: 0.55rem;
+            height: 1.7rem;
+            width: 160px;
+          }
+        }
+      }
+    }
+    .header-right-menu {
+      margin-right: 10px;
+      font-size: 1.2rem;
+      width: 80px;
+    }
+  }
+  @include smartPhone {
+    .header-left-menu {
+      width: 200px;
+      .header-title-container {
+        margin-left: 5px;
+        a {
+          .header-title-icon {
+            width: 35px;
+          }
+        }
+      }
+      .header-search {
+        form {
+          input {
+            font-size: 0.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-indent: 25px;
+            height: 1.4rem;
+            line-height: 1.4rem;
+            width: 120px;
+          }
+        }
+      }
+    }
+    .header-right-menu {
+      margin-right: 10px;
+      font-size: 1rem;
+      width: 60px;
     }
   }
 }

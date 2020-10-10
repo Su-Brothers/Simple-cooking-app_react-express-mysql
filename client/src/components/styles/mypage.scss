@@ -1,4 +1,5 @@
 @import "./global-color.scss";
+@import "./media/media.scss";
 .mypage-container {
   width: 720px;
   margin-top: 30px;
@@ -61,9 +62,14 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         font-size: 1.2rem;
         color: $gray;
+        max-height: 100%;
+        max-width: 90%;
         span {
+          max-height: 7rem;
+          overflow: hidden;
           margin: 5px 0px;
         }
         .quote-left {
@@ -97,6 +103,7 @@
           border-radius: 50%;
           border: 5px solid #ffe6008c;
           width: 90%;
+          height: 90%;
         }
       }
       .user-name {
@@ -128,11 +135,94 @@
       }
     }
   }
-  .timeline-link {
+
+  @include mobile {
     width: 100%;
-    .timeline-container {
-      width: 100%;
-      height: 550px;
+    margin-top: 0px;
+    .my-top {
+      .my-top-description-box {
+        border-radius: 0px;
+        border: none;
+        border-bottom: 1px solid $black;
+        span {
+          max-height: 7.2rem;
+        }
+      }
+      .my-top-sort-box {
+        border: none;
+        border-radius: 0px;
+        border-top: 1px solid $bgray;
+        border-bottom: 1px solid $bgray;
+        .user-name {
+          height: 60px;
+        }
+        .my-img-box {
+          width: 150px;
+          height: 150px;
+        }
+        button {
+          width: calc(50% - 75px);
+        }
+      }
+    }
+  }
+  @include mobileSmall {
+    .my-top {
+      height: 400px;
+      .my-top-description-box {
+        height: 280px;
+        .description-text {
+          font-size: 1rem;
+          span {
+            max-height: 6rem;
+          }
+        }
+      }
+      .my-top-sort-box {
+        height: 110px;
+        .my-img-box {
+          width: 120px;
+          height: 120px;
+        }
+        .user-name {
+          height: 55px;
+          font-size: 1rem;
+        }
+        button {
+          width: calc(50% - 60px);
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  @include smartPhone {
+    .my-top {
+      height: 320px;
+      .my-top-description-box {
+        height: 220px;
+        .description-text {
+          font-size: 0.85rem;
+
+          span {
+            max-height: 5.1rem;
+          }
+        }
+      }
+      .my-top-sort-box {
+        height: 90px;
+        .my-img-box {
+          width: 100px;
+          height: 100px;
+        }
+        .user-name {
+          font-size: 1rem;
+        }
+        button {
+          width: calc(50% - 50px);
+          font-size: 0.9rem;
+        }
+      }
     }
   }
 }

@@ -58,21 +58,23 @@ function PostHeader({
       <div className="header-box post-item-box">
         <div className="post-date">
           <span>{`date: ${created_date}`}</span>
+          {user ? (
+            <div className="edit-btn-box">
+              <button
+                type="button"
+                className="edit-btn"
+                onClick={() =>
+                  history.push(`${history.location.pathname}/edit`)
+                }
+              >
+                수정
+              </button>
+              <button type="button" className="delete-btn" onClick={onDelete}>
+                삭제
+              </button>
+            </div>
+          ) : null}
         </div>
-        {user ? (
-          <div className="edit-btn-box">
-            <button
-              type="button"
-              className="edit-btn"
-              onClick={() => history.push(`${history.location.pathname}/edit`)}
-            >
-              수정
-            </button>
-            <button type="button" className="delete-btn" onClick={onDelete}>
-              삭제
-            </button>
-          </div>
-        ) : null}
 
         <div className="post-header-middle">
           <img

@@ -7,6 +7,9 @@ import TimeLine from "./TimeLine";
 import Axios from "axios";
 import { useRef } from "react";
 import { useCallback } from "react";
+import { debounce } from "lodash";
+import SkeletonLoading from "./loadingCompo/SkeletonLoading";
+import NotFound from "./NotFound";
 function CookPage({ location }) {
   const ingres = qs.parse(location.search, {
     ignoreQueryPrefix: true, //?뺴고 파싱
@@ -19,6 +22,7 @@ function CookPage({ location }) {
   const [prevName, setPrevName] = useState("");
 
   const limitItem = useRef(0); //페이징 처리용 리미트
+  const isMounted = useRef(null);
   const sortList = [
     //정렬 리스트
     { name: "exact", koName: "정확순" },
@@ -26,8 +30,10 @@ function CookPage({ location }) {
     { name: "popular", koName: "인기순" },
   ];
   const onSortChange = (target) => () => {
-    setSort(target);
-    getPosts(target);
+    if (loading) {
+      setSort(target);
+      getPosts(target);
+    }
   };
 
   const sortItem = sortList.map((item, index) => (
@@ -66,55 +72,67 @@ function CookPage({ location }) {
         ));
       } else {
         //로딩이 다되었음에도 불구하고 length 가 0이면 결과가 없는것이다.
-        return "조건에 맞는 데이터가 없습니다.";
+        return <NotFound item={"재료"} />;
       }
     } else {
-      return "loading...";
+      return null;
     }
   };
 
-  const getPosts = (target) => {
+  const getPosts = (target, params = ingres.names) => {
+    window.scrollTo(0, 0);
     limitItem.current = 0; //0으로 초기화
     setLoading(false);
     setIsEnd(false);
     Axios.get(
-      `/api/post/cook/getposts/${ingres.names}/${target}/${limitItem.current}`
+      `/api/post/cook/getposts/${params}/${target}/${limitItem.current}`
     )
       .then((res) => {
-        if (res.data.success) {
-          setList(res.data.result);
-          if (res.data.result.length < 10) {
-            console.log("isEnd");
-            setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
-          } else {
-            limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
-          }
-          setLoading(true);
-        } else {
-          alert(res.data.message);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
-  const loadPosts = (target) => {
-    console.log(target);
-    console.log(postList);
-    if (!isEnd) {
-      console.log(isEnd);
-      Axios.get(
-        `/api/post/cook/getposts/${ingres.names}/${target}/${limitItem.current}`
-      )
-        .then((res) => {
+        if (isMounted.current) {
           if (res.data.success) {
-            setList([...postList, ...res.data.result]);
+            setList(res.data.result);
             if (res.data.result.length < 10) {
               console.log("isEnd");
               setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
             } else {
-              limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              if (limitItem.current === 0) {
+                limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              }
             }
+            setLoading(true);
           } else {
             alert(res.data.message);
+          }
+        }
+      })
+      .catch((err) => console.log(err));
+    console.log(limitItem.current);
+  };
+  const loadPosts = (target) => {
+    console.log(target);
+    console.log(postList);
+    console.log(ingres.names);
+    if (!isEnd) {
+      console.log(isEnd);
+      console.log(limitItem.current);
+      Axios.get(
+        `/api/post/cook/getposts/${ingres.names}/${target}/${limitItem.current}`
+      )
+        .then((res) => {
+          if (isMounted.current) {
+            if (res.data.success) {
+              console.log("결과");
+              console.log(postList);
+              setList([...postList, ...res.data.result]);
+              if (res.data.result.length < 10) {
+                console.log("isEnd");
+                setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
+              } else {
+                limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
+              }
+            } else {
+              alert(res.data.message);
+            }
           }
         })
         .catch((err) => console.log(err));
@@ -123,6 +141,27 @@ function CookPage({ location }) {
     }
   };
 
+  const onChangeRoute = useCallback(
+    debounce(
+      (params) => {
+        console.log("dd");
+        //라우트가 과도하게 변경될때에 대한 디바운스처리로, match를 deps에 넣으면 무조건 바뀌므로 인자로 받아온다.
+        if (prevName && prevName !== params) {
+          setPrevName(params); //요청이 먼저 가버리면 다시 실행되기 때문에 가장 먼저 변경
+          console.log("성공");
+          console.log(loading);
+          console.log(postList);
+          console.log(prevName);
+          console.log(params);
+          getPosts("exact", params);
+          setSort("exact");
+        }
+      },
+      300,
+      { leading: true }
+    ),
+    [prevName]
+  );
   const onScrollHandler = useCallback(() => {
     const { clientHeight } = document.documentElement; //요소 높이
     const scrollTop = //남은 높이
@@ -133,30 +172,31 @@ function CookPage({ location }) {
     console.log(sort);
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
-      clientHeight !== scrollHeight
+      clientHeight !== scrollHeight &&
+      loading
     ) {
       console.log("맨끝");
       loadPosts(sort);
     }
-    //postList의 길이를 넣어준 이유는 중첩객체이기 때문에 항상 다른값으로 인식한다.
     //deps를 넣어줘야 최신 상태를 유지할 수 있다. 이벤트리스너에 등록하는경우 props나 state를 따르지 않는다.
-  }, [postList.length, isEnd, sort]);
+  }, [postList, isEnd, sort, loading]);
 
   useEffect(() => {
+    isMounted.current = true;
+    console.log("??");
+    console.log(loading);
     if (isFirst) {
-      window.scrollTo(0, 0);
+      console.log("처음");
       getPosts("exact");
       setisFirst(false);
       setPrevName(ingres.names);
-    } else if (prevName !== ingres.names) {
-      window.scrollTo(0, 0);
-      console.log("성공");
-      getPosts("exact");
-      setSort("exact");
-      setPrevName(ingres.names);
     }
+    onChangeRoute(ingres.names);
     window.addEventListener("scroll", onScrollHandler);
-    return () => window.removeEventListener("scroll", onScrollHandler);
+    return () => {
+      window.removeEventListener("scroll", onScrollHandler);
+      isMounted.current = false;
+    };
   }, [onScrollHandler, ingres.names]);
 
   return (
@@ -168,6 +208,7 @@ function CookPage({ location }) {
         <span>개 있습니다.</span>
       </div>
       <div className="sort-box">{sortItem}</div>
+      <SkeletonLoading limit={5} active={loading} />
       {postsData()}
     </div>
   );

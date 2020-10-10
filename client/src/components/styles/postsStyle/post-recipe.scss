@@ -1,4 +1,5 @@
 @import "../global-color.scss";
+@import "../media/media.scss";
 .post-recipe-box {
   display: flex;
   flex-direction: column;
@@ -14,8 +15,8 @@
       color: $gray;
       margin-right: -1px;
       &.active {
-        border: 1px solid $lorange;
-        color: $lorange;
+        border: 1px solid $horange;
+        color: $horange;
         z-index: 1;
       }
     }
@@ -38,6 +39,38 @@
     }
     &.onlyText {
       flex-direction: column;
+    }
+  }
+  @include mobile {
+    .view-box {
+      .view-btn {
+        padding: 6px;
+        font-size: 0.9rem;
+      }
+    }
+    .post-recipe-title {
+      font-size: 1.2rem;
+    }
+    .post-recipe-item-container {
+      &.middle {
+        flex-direction: column;
+      }
+    }
+  }
+  @include mobileSmall {
+    .view-box {
+      .view-btn {
+        padding: 5px;
+        font-size: 0.8rem;
+      }
+    }
+    .post-recipe-title {
+      font-size: 1.15rem;
+    }
+    .post-recipe-item-container {
+      &.middle {
+        flex-direction: column;
+      }
     }
   }
 }

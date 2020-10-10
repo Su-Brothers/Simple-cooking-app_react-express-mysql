@@ -1,6 +1,7 @@
 $gray: #cecece;
 $lgray: #ececec;
 $dgray: #686868;
+@import "../media/media.scss";
 .write-header {
   width: 100%;
   background-color: white;
@@ -58,18 +59,142 @@ $dgray: #686868;
     display: flex;
     align-items: center;
     margin-top: 10px;
-    .header-bottom-item {
-      line-height: 45px;
-      font-size: 1.3rem;
-      height: 100%;
-      label {
-        margin-left: 10px;
-        color: $dgray;
+    .header-bottom-box {
+      display: flex;
+      .header-bottom-item {
+        line-height: 45px;
+        font-size: 1.3rem;
+        height: 100%;
+        label {
+          margin-left: 10px;
+          color: $dgray;
+        }
+        select {
+          margin-left: 5px;
+          height: 40px;
+          color: $dgray;
+        }
       }
-      select {
-        margin-left: 5px;
-        height: 40px;
-        color: $dgray;
+    }
+  }
+  @include tabletSmall {
+    .write-header-top {
+      input,
+      textarea {
+        margin-left: 0px;
+      }
+    }
+  }
+  @include ipad {
+    width: 100%;
+
+    .write-header-top {
+      width: 90%;
+      height: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      input,
+      textarea {
+        margin-left: 0px;
+        width: 100%;
+      }
+      .write-header-title,
+      .write-header-description {
+        margin-top: 10px;
+      }
+
+      .drop-zone {
+        width: 270px;
+        height: 240px;
+      }
+    }
+  }
+  @include mobile {
+    width: 100%;
+    .write-header-top {
+      width: 95%;
+      height: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      input,
+      textarea {
+        margin-left: 0px;
+        width: 100%;
+      }
+      .write-header-title,
+      .write-header-description {
+        margin-top: 10px;
+      }
+
+      .drop-zone {
+        width: 270px;
+        height: 240px;
+      }
+    }
+    .write-header-bottom {
+      width: 95%;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 10px;
+      .header-bottom-box {
+        display: flex;
+        .header-bottom-item {
+          margin-right: 5px;
+          label {
+            margin-left: 0px;
+          }
+        }
+      }
+    }
+  }
+
+  @include mobileSmall {
+    padding: 0px;
+    padding-bottom: 30px;
+    margin-top: 0px !important;
+    .write-header-top {
+      width: 100%;
+      input,
+      textarea {
+        margin-left: 0px;
+        width: 100%;
+      }
+      .header-top-left {
+        padding: 0px 5px;
+        .write-header-title,
+        .write-header-description {
+          margin-top: 10px;
+        }
+      }
+      .header-top-right {
+        width: 100%;
+        padding-bottom: 75%;
+        position: relative;
+        .drop-zone {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border: none;
+          border-bottom: 1px solid $gray;
+        }
+      }
+    }
+    .write-header-bottom {
+      width: 100%;
+      padding: 0px 5px;
+
+      .header-bottom-box {
+        .header-bottom-item {
+          label {
+            display: none;
+            margin-left: 0px;
+          }
+          select {
+            margin-left: 0px;
+          }
+        }
       }
     }
   }
