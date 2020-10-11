@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles/nav-var.scss";
+import "../styles/nav-var.scss";
 import {
   FaSearch,
   FaUserAlt,
@@ -11,7 +11,7 @@ import {
   FaSignInAlt,
 } from "react-icons/fa";
 
-import logo from "../images/jabakLogo_v4.png";
+import logo from "../../images/jabakLogo_v4.png";
 import { withRouter, Link } from "react-router-dom";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -19,7 +19,7 @@ import Axios from "axios";
 import { useEffect } from "react";
 import { debounce } from "lodash";
 import { useRef } from "react";
-import CookModal from "./CookModal";
+import CookModal from "../cooks/CookModal";
 import AsideChefMini from "./AsideChefMini";
 
 function NavBar({ location, history }) {

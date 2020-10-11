@@ -234,18 +234,31 @@ router.post("/:postId/edit", async (req, res) => {
 });
 //게시글 삭제
 router.delete("/:postId/delete", async (req, res) => {
+  const connection = await pool.getConnection();
+  await connection.beginTransaction();
   const { postId } = req.params;
+  //포스트에 밀접해있는 것들 모두 삭제
   const sql = `update board set isdeleted = 1 where board_no = ?`;
+  const tagSql = `update board_tag set isdeleted = 1 where board_no = ?`;
+  const ingreSql = `update board_ingredient set isdeleted = 1 where board_no = ?`;
+  const orderSql = `update board_text set isdeleted = 1 where board_no = ?`;
+  const likeSql = `update board_like set is_like = 0 where board_no = ?`;
   try {
     //업데이트
-    const data = await pool.query(sql, [postId]);
-    console.log(data);
-    if (data[0].affectedRows > 0) {
-      res.json({ success: true, message: "게시글 삭제완료." });
-    }
+    await connection.query(tagSql, [postId]);
+    await connection.query(ingreSql, [postId]);
+    await connection.query(orderSql, [postId]);
+    await connection.query(likeSql, [postId]);
+    await connection.query(sql, [postId]);
+    console.log("삭제 완료");
+    await connection.commit();
+    res.json({ success: true, message: "게시글 삭제완료." });
   } catch (err) {
     console.log(err);
+    await connection.rollback(); //롤백
     return res.json({ success: false, message: "삭제 실패" });
+  } finally {
+    connection.release();
   }
 });
 
@@ -403,11 +416,11 @@ router.get("/tag/:name/popular/:limit", async (req, res) => {
   const { name, limit } = req.params;
   const sql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,
   count(distinct bl.user_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
-  left join board_tag bt on b.board_no = bt.board_no 
+  left join board_tag bt on b.board_no = bt.board_no and bt.isdeleted = 0
   left join board_like bl on bl.board_no = b.board_no and bl.is_like = 1 
   left join user_info ui on b.user_no = ui.user_no 
   left join comment c on b.board_no = c.board_no and c.isdeleted = 0
-  where tag_name = ?
+  where tag_name = ? and b.isdeleted = 0
   group by board_no order by likes desc,board_views desc,board_no desc
   limit 10 offset ?`; //인기순
   console.log(req.params.name);
@@ -431,11 +444,11 @@ router.get("/tag/:name/latest/:limit", async (req, res) => {
   const { name, limit } = req.params;
   const sql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,
   count(distinct bl.user_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
-  left join board_tag bt on b.board_no = bt.board_no 
+  left join board_tag bt on b.board_no = bt.board_no and bt.isdeleted = 0
   left join board_like bl on bl.board_no = b.board_no and bl.is_like = 1 
   left join user_info ui on b.user_no = ui.user_no 
   left join comment c on b.board_no = c.board_no and c.isdeleted = 0
-  where tag_name = ?
+  where tag_name = ? and b.isdeleted = 0
   group by board_no order by board_no desc,likes desc,board_views desc
   limit 10 offset ?`;
   console.log(req.params.name);
@@ -459,11 +472,11 @@ router.get("/tag/:name/views/:limit", async (req, res) => {
   const { name, limit } = req.params;
   const sql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,
   count(distinct bl.user_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
-  left join board_tag bt on b.board_no = bt.board_no 
+  left join board_tag bt on b.board_no = bt.board_no and bt.isdeleted = 0 
   left join board_like bl on bl.board_no = b.board_no and bl.is_like = 1 
   left join user_info ui on b.user_no = ui.user_no 
   left join comment c on b.board_no = c.board_no and c.isdeleted = 0
-  where tag_name = ?
+  where tag_name = ? and b.isdeleted = 0
   group by board_no order by board_views desc,likes desc,board_no desc
   limit 10 offset ?`; //인기순
   console.log(req.params.name);
@@ -531,6 +544,8 @@ router.get("/search/:name/:sort/:limit", async (req, res) => {
       return "typeJa";
     } else if (name === "양식") {
       return "typeWest";
+    } else if (name === "기타") {
+      return "typeEtc";
     } else {
       return name;
     }
@@ -538,9 +553,9 @@ router.get("/search/:name/:sort/:limit", async (req, res) => {
   //sql
   const popSql = `select distinct b.board_no,b.title,ui.user_no,ui.user_nickname writer,ui.user_img user_img,b.description ,b.board_img,b.board_views,b.food_type,
   count(distinct bl.user_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
-  left join board_tag bt on b.board_no = bt.board_no
+  left join board_tag bt on b.board_no = bt.board_no and bt.isdeleted = 0
   left join user_info ui on b.user_no = ui.user_no
-  left join board_ingredient bi on b.board_no = bi.board_no
+  left join board_ingredient bi on b.board_no = bi.board_no and bi.isdeleted = 0
   left join comment c on b.board_no = c.board_no and c.isdeleted = 0
   left join board_like bl on b.board_no = bl.board_no and bl.is_like = 1
   where (tag_name = ? or title like ? or ingre_name = ? or food_type = ?) and b.isdeleted = 0
@@ -550,9 +565,9 @@ router.get("/search/:name/:sort/:limit", async (req, res) => {
 
   const latSql = `select distinct b.board_no,b.title,ui.user_no,ui.user_nickname writer,ui.user_img user_img,b.description ,b.board_img,b.board_views,b.food_type,
   count(distinct bl.user_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
-  left join board_tag bt on b.board_no = bt.board_no
+  left join board_tag bt on b.board_no = bt.board_no and bt.isdeleted = 0
   left join user_info ui on b.user_no = ui.user_no
-  left join board_ingredient bi on b.board_no = bi.board_no
+  left join board_ingredient bi on b.board_no = bi.board_no and bi.isdeleted = 0
   left join comment c on b.board_no = c.board_no and c.isdeleted = 0
   left join board_like bl on b.board_no = bl.board_no and bl.is_like = 1
   where (tag_name = ? or title like ? or ingre_name = ? or food_type = ?) and b.isdeleted = 0
@@ -562,9 +577,9 @@ router.get("/search/:name/:sort/:limit", async (req, res) => {
 
   const viewSql = `select distinct b.board_no,b.title,ui.user_no,ui.user_nickname writer,ui.user_img user_img,b.description ,b.board_img,b.board_views,b.food_type,
   count(distinct bl.user_no) likes,count(distinct c.co_no) co ,date_format(b.created_date,'%Y-%m-%d') date from board b 
-  left join board_tag bt on b.board_no = bt.board_no
+  left join board_tag bt on b.board_no = bt.board_no and bt.isdeleted = 0
   left join user_info ui on b.user_no = ui.user_no
-  left join board_ingredient bi on b.board_no = bi.board_no
+  left join board_ingredient bi on b.board_no = bi.board_no and bi.isdeleted = 0
   left join comment c on b.board_no = c.board_no and c.isdeleted = 0
   left join board_like bl on b.board_no = bl.board_no and bl.is_like = 1
   where (tag_name = ? or title like ? or ingre_name = ? or food_type = ?) and b.isdeleted = 0

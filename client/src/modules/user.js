@@ -3,7 +3,6 @@ import axios from "axios";
 const LOGIN_USER = "LOGIN_USER";
 const SIGNUP_USER = "SIGNUP_USER";
 const AUTH_USER = "AUTH_USER";
-const SEARCH_USER = "SEARCH_USER";
 
 /*
 export const changeHandler = (userid, usernickname, useremail) => async (

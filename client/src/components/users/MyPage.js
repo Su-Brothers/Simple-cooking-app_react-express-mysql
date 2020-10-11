@@ -1,33 +1,31 @@
-import React from "react";
-import qs from "qs";
+import React, { useState } from "react";
+import "../styles/mypage.scss";
+import { FaQuoteLeft, FaQuoteRight, FaCog } from "react-icons/fa";
+import ProfileSetting from "./ProfileSetting";
+import { shallowEqual, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useState } from "react";
-import "./styles/postsStyle/tag-page.scss";
-import TimeLine from "./TimeLine";
+import TimeLine from "../TimeLine";
 import Axios from "axios";
-import { useRef } from "react";
 import { useCallback } from "react";
-import { debounce } from "lodash";
-import SkeletonLoading from "./loadingCompo/SkeletonLoading";
-import NotFound from "./NotFound";
-function CookPage({ location }) {
-  const ingres = qs.parse(location.search, {
-    ignoreQueryPrefix: true, //?뺴고 파싱
-  });
-  const [sort, setSort] = useState("exact");
+import { useRef } from "react";
+import SkeletonLoading from "../loadingCompo/SkeletonLoading";
+
+function MyPage() {
+  const user = useSelector((state) => state.user.userData, shallowEqual);
+  console.log(user);
+  const [sort, setSort] = useState("mypost");
+  const [modal, setmodal] = useState(false);
   const [postList, setList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isEnd, setIsEnd] = useState(false); //더 이상 가져올 수 있는 데이터가 있는지
   const [isFirst, setisFirst] = useState(true);
-  const [prevName, setPrevName] = useState("");
 
   const limitItem = useRef(0); //페이징 처리용 리미트
   const isMounted = useRef(null);
   const sortList = [
     //정렬 리스트
-    { name: "exact", koName: "정확순" },
-    { name: "latest", koName: "최신순" },
-    { name: "popular", koName: "인기순" },
+    { name: "mypost", koName: "내가 쓴 글" },
+    { name: "scrap", koName: "스크랩" },
   ];
   const onSortChange = (target) => () => {
     if (loading) {
@@ -35,7 +33,6 @@ function CookPage({ location }) {
       getPosts(target);
     }
   };
-
   const sortItem = sortList.map((item, index) => (
     //만들어논 리스트를 맵으로 돌린후 저장한다.
     //이 과정에서 item의 이름이 현재 상태와 같으면 active를 클래스로 준다.
@@ -48,6 +45,10 @@ function CookPage({ location }) {
       {item.koName}
     </button>
   ));
+
+  const onModalHandler = () => {
+    setmodal(!modal); //모달 핸들러
+  };
 
   const postsData = () => {
     //렌더링 될 포스트 데이터
@@ -72,22 +73,21 @@ function CookPage({ location }) {
         ));
       } else {
         //로딩이 다되었음에도 불구하고 length 가 0이면 결과가 없는것이다.
-        return <NotFound item={"재료"} />;
+        return "조건에 맞는 데이터가 없습니다.";
       }
     } else {
       return null;
     }
   };
 
-  const getPosts = (target, params = ingres.names) => {
+  const getPosts = (target) => {
     window.scrollTo(0, 0);
     limitItem.current = 0; //0으로 초기화
     setLoading(false);
     setIsEnd(false);
-    Axios.get(
-      `/api/post/cook/getposts/${params}/${target}/${limitItem.current}`
-    )
+    Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
       .then((res) => {
+        console.log(res);
         if (isMounted.current) {
           if (res.data.success) {
             setList(res.data.result);
@@ -106,23 +106,16 @@ function CookPage({ location }) {
         }
       })
       .catch((err) => console.log(err));
-    console.log(limitItem.current);
   };
+
   const loadPosts = (target) => {
     console.log(target);
-    console.log(postList);
-    console.log(ingres.names);
     if (!isEnd) {
       console.log(isEnd);
-      console.log(limitItem.current);
-      Axios.get(
-        `/api/post/cook/getposts/${ingres.names}/${target}/${limitItem.current}`
-      )
+      Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
         .then((res) => {
           if (isMounted.current) {
             if (res.data.success) {
-              console.log("결과");
-              console.log(postList);
               setList([...postList, ...res.data.result]);
               if (res.data.result.length < 10) {
                 console.log("isEnd");
@@ -141,27 +134,6 @@ function CookPage({ location }) {
     }
   };
 
-  const onChangeRoute = useCallback(
-    debounce(
-      (params) => {
-        console.log("dd");
-        //라우트가 과도하게 변경될때에 대한 디바운스처리로, match를 deps에 넣으면 무조건 바뀌므로 인자로 받아온다.
-        if (prevName && prevName !== params) {
-          setPrevName(params); //요청이 먼저 가버리면 다시 실행되기 때문에 가장 먼저 변경
-          console.log("성공");
-          console.log(loading);
-          console.log(postList);
-          console.log(prevName);
-          console.log(params);
-          getPosts("exact", params);
-          setSort("exact");
-        }
-      },
-      300,
-      { leading: true }
-    ),
-    [prevName]
-  );
   const onScrollHandler = useCallback(() => {
     const { clientHeight } = document.documentElement; //요소 높이
     const scrollTop = //남은 높이
@@ -172,46 +144,87 @@ function CookPage({ location }) {
     console.log(sort);
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
-      clientHeight !== scrollHeight &&
-      loading
+      clientHeight !== scrollHeight
     ) {
       console.log("맨끝");
+      console.log(scrollTop);
+      console.log(clientHeight);
+      console.log(scrollHeight);
       loadPosts(sort);
     }
-    //deps를 넣어줘야 최신 상태를 유지할 수 있다. 이벤트리스너에 등록하는경우 props나 state를 따르지 않는다.
-  }, [postList, isEnd, sort, loading]);
 
+    //deps를 넣어줘야 최신 상태를 유지할 수 있다.
+  }, [postList, isEnd, sort, user.isAuth]);
   useEffect(() => {
+    console.log("asdsad");
     isMounted.current = true;
-    console.log("??");
-    console.log(loading);
-    if (isFirst) {
-      console.log("처음");
-      getPosts("exact");
+    if (isFirst && user.isAuth) {
+      getPosts("mypost");
       setisFirst(false);
-      setPrevName(ingres.names);
     }
-    onChangeRoute(ingres.names);
     window.addEventListener("scroll", onScrollHandler);
     return () => {
       window.removeEventListener("scroll", onScrollHandler);
       isMounted.current = false;
     };
-  }, [onScrollHandler, ingres.names]);
+  }, [onScrollHandler]);
 
   return (
-    <div className="tag-page-container">
-      <div className="tag-page-title">
-        <span className="tag-page-title-tag">{`"${ingres.names}"`}</span>
-        <span>에 대한 검색결과가 </span>
-        <span className="tag-page-title-index">{postList.length}</span>
-        <span>개 있습니다.</span>
+    <>
+      <div className="mypage-container">
+        <div className="my-top">
+          <div className="my-top-description-box">
+            <button
+              type="button"
+              className="setting-btn"
+              onClick={onModalHandler}
+            >
+              <FaCog />
+              <span> 프로필 설정</span>
+            </button>
+            <div className="description-text">
+              <FaQuoteLeft className="quote-left" />
+              <span>
+                {user._description
+                  ? user._description
+                  : "등록된 자기소개가 없습니다."}
+              </span>
+              <FaQuoteRight className="quote-right" />
+            </div>
+          </div>
+          <div className="my-top-sort-box">
+            <div className="my-img-box">
+              {user._imgFile ? (
+                <img
+                  src={`http://localhost:5000/${user._imgFile}`}
+                  alt="프로필사진"
+                />
+              ) : (
+                <img
+                  src={`http://localhost:5000/uploads/normal-profile.png`}
+                  alt="프로필사진"
+                />
+              )}
+            </div>
+            {sortItem}
+            <div className="user-name">{user._nickname}</div>
+          </div>
+        </div>
+        <SkeletonLoading limit={5} active={loading} />
+        {postsData()}
       </div>
-      <div className="sort-box">{sortItem}</div>
-      <SkeletonLoading limit={5} active={loading} />
-      {postsData()}
-    </div>
+      {modal && (
+        <ProfileSetting
+          onClose={onModalHandler}
+          emailData={user._email}
+          imgData={user._imgFile}
+          nickData={user._nickname}
+          desData={user._description}
+          noData={user._no}
+        />
+      )}
+    </>
   );
 }
 
-export default CookPage;
+export default MyPage;

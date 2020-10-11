@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "./styles/signup-page.scss";
-import logo from "../images/jabakLogo_v4.png";
+import "../styles/signup-page.scss";
+import logo from "../../images/jabakLogo_v4.png";
 import { useDispatch } from "react-redux";
-import { signupHandler } from "../modules/user";
+import { signupHandler } from "../../modules/user";
 import { debounce } from "lodash";
-import LoadingSpinner from "./loadingCompo/LoadingSpinner";
+import LoadingSpinner from "../loadingCompo/LoadingSpinner";
 function SignupPage({ history }) {
   const [info, setInfo] = useState({
     email: "",

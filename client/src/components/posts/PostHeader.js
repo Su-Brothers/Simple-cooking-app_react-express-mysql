@@ -17,6 +17,8 @@ import {
   pGenderDiff,
   pGenderType,
 } from "../../custom-module/typeGender";
+import LoadingSpinner from "../loadingCompo/LoadingSpinner";
+import { useState } from "react";
 function PostHeader({
   title,
   board_img,
@@ -34,12 +36,14 @@ function PostHeader({
   writer,
 }) {
   console.log("dd");
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const onDelete = async () => {
     const result = window.confirm(
       "정말로 삭제하시겠습니까? (삭제한 내용은 복구할 수 없습니다.)"
     );
     if (result) {
       //서버 요청
+      setDeleteLoading(true);
       const data = await Axios.delete(`/api/post/${postId}/delete`)
         .then((res) => res.data)
         .catch((err) => console.log(err));
@@ -47,6 +51,8 @@ function PostHeader({
       if (data.success) {
         alert(data.message);
         history.push("/");
+      } else {
+        setDeleteLoading(false);
       }
     } else {
       return;
@@ -58,7 +64,8 @@ function PostHeader({
       <div className="header-box post-item-box">
         <div className="post-date">
           <span>{`date: ${created_date}`}</span>
-          {user ? (
+          {deleteLoading && <LoadingSpinner size={"small"} />}
+          {user && !deleteLoading ? (
             <div className="edit-btn-box">
               <button
                 type="button"

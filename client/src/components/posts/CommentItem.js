@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { useCallback } from "react";
 import LoadingSpinner from "../loadingCompo/LoadingSpinner";
 function CommentItem({
   writer,

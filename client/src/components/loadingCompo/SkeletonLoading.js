@@ -1,6 +1,4 @@
 import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
 import "../styles/skeleton/skeleton-loading.scss";
 function SkeletonLoading({ limit, active }) {
   //데이터를 불러올때 loading을 부드럽게 하기 위해 만든 컴포넌트

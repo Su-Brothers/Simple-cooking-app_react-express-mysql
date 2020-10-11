@@ -1,20 +1,14 @@
 import React from "react";
-import { FaCrown } from "react-icons/fa";
-import "./styles/aside-chef.scss";
-import { withRouter } from "react-router-dom";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { GiChefToque } from "react-icons/gi";
 import { Link } from "react-router-dom";
-import { getUserRanking } from "../modules/post";
-
-function AsideChef({ location }) {
+import "../styles/aside-chef-mini.scss";
+function AsideChefMini() {
+  //모바일화면에서의 금주의 요리사 모달
   const userState = useSelector((state) => state.user.userData);
   const userRanking = useSelector((state) => state.post.userRanking);
   const userLoading = useSelector((state) => state.post.userLoading);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getUserRanking());
-  }, []);
+
   const ranking = () => {
     //데이터 있을시 넣어줌
     if (userLoading) {
@@ -28,7 +22,7 @@ function AsideChef({ location }) {
             }
             key={item.user_no}
           >
-            <div className="chef-list-item">
+            <div className="m-chef-list-item">
               <div className="chef-list-item-index">{index + 1}</div>
               <div className="chef-content">
                 <span className="chef-name">{item.nick}</span>
@@ -44,22 +38,19 @@ function AsideChef({ location }) {
       return "loading...";
     }
   };
-  return location.pathname !== "/login" &&
-    location.pathname !== "/signup" &&
-    location.pathname !== "/write" ? (
-    <aside className="right-aside-chef">
+  return (
+    <aside className="mini-aside-chef">
       <div className="chef-list">
         <div className="chef-list-title">
           <div>
-            <FaCrown />
+            <GiChefToque />
             <span>금주의 요리사</span>
           </div>
-          <hr />
         </div>
         {ranking()}
       </div>
     </aside>
-  ) : null;
+  );
 }
 
-export default withRouter(AsideChef);
+export default AsideChefMini;

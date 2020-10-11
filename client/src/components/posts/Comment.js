@@ -5,7 +5,7 @@ import { useState } from "react";
 import Axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { readComment } from "../../modules/post";
-import { debounce, throttle } from "lodash";
+import { debounce } from "lodash";
 function Comment({ postId, user }) {
   const [input, setInput] = useState("");
   const comment = useSelector((state) => state.post.post.comment);

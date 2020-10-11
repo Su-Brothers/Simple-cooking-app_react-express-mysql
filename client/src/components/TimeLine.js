@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./styles/timeline.scss";
 import {
   FaRegStar,
@@ -33,15 +33,18 @@ function TimeLine({
           <div className="timeline-top">
             <div className="img-box">
               {profile ? (
-              <img src={`http://localhost:5000/${profile}`} alt="프로필사진" />
+                <img
+                  src={`http://localhost:5000/${profile}`}
+                  alt="프로필사진"
+                />
               ) : (
                 <img
                   src={`http://localhost:5000/uploads/normal-profile.png`}
                   alt="프로필사진"
                 />
-               )}
+              )}
             </div>
-            
+
             <div className="timeline-writer">
               <span className="writer"> {writer}</span>
               <span>{`·${pGenderType(type)}`}</span>
@@ -55,7 +58,7 @@ function TimeLine({
                 <FaQuoteRight />
               </div>
             </div>
-            <img src={`http://localhost:5000/${photo}`} />
+            <img src={`http://localhost:5000/${photo}`} alt="요리이미지" />
             <div className="timeline-title">{title}</div>
           </div>
           <div className="timeline-bottom">

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
 import TimeLine from "../TimeLine";
 import "../styles/postsStyle/tag-page.scss";
 import { useState } from "react";
@@ -143,7 +143,8 @@ function TagPage({ match }) {
     console.log(sort);
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
-      clientHeight !== scrollHeight
+      clientHeight !== scrollHeight &&
+      loading
     ) {
       console.log("맨끝");
       console.log(scrollTop);
@@ -153,7 +154,7 @@ function TagPage({ match }) {
     }
 
     //deps를 넣어줘야 최신 상태를 유지할 수 있다.
-  }, [postList, isEnd, sort]);
+  }, [postList, isEnd, sort, loading]);
 
   useEffect(() => {
     isMounted.current = true;

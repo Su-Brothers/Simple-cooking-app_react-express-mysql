@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./styles/loginpage.scss";
-import logo from "../images/jabakLogo_v4.png";
-import { loginHandler } from "../modules/user";
+import "../styles/loginpage.scss";
+import logo from "../../images/jabakLogo_v4.png";
+import { loginHandler } from "../../modules/user";
 import { useDispatch } from "react-redux";
 import { debounce } from "lodash";
 function LoginPage({ history }) {
