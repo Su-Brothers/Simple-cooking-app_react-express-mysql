@@ -2,22 +2,21 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import MainPage from "./components/MainPage";
-import NavBar from "./components/NavBar";
-import RankPage from "./components/RankPage";
-import LoginPage from "./components/LoginPage";
-import SignupPage from "./components/SignupPage";
+import NavBar from "./components/sides/NavBar";
+import LoginPage from "./components/users/LoginPage";
+import SignupPage from "./components/users/SignupPage";
 import Auth from "./components/hoc/auth";
-import AsideBar from "./components/AsideBar";
-import AsideChef from "./components/AsideChef";
+import AsideBar from "./components/sides/AsideBar";
+import AsideChef from "./components/sides/AsideChef";
 import WritePage from "./components/writes/WritePage";
 import Post from "./components/posts/Post";
-import EditPage from "./components/posts/edits/EditPage";
-import TagPage from "./components/posts/TagPage";
-import SearchPage from "./components/SearchPage";
-import CookPage from "./components/CookPage"; //재료추천 페이지
-import MyPage from "./components/MyPage";
-import ChefPage from "./components/ChefPage";
-import NotFound from "./components/NotFound";
+import EditPage from "./components/posts/edits/EditPage"; //수정 페이지
+import TagPage from "./components/posts/TagPage"; //태그검색 페이지
+import SearchPage from "./components/SearchPage"; //검색 페이지
+import CookPage from "./components/cooks/CookPage"; //재료추천 페이지
+import MyPage from "./components/users/MyPage";
+import ChefPage from "./components/users/ChefPage"; //유저 페이지
+import NotFound from "./components/NotFound"; //404
 function App(props) {
   return (
     <BrowserRouter>

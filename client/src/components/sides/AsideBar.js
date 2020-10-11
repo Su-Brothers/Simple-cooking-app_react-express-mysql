@@ -1,18 +1,16 @@
 import React from "react";
-import "./styles/aside-bar.scss";
+import "../styles/aside-bar.scss";
 import { Link, withRouter } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   FaUser,
-  FaTrophy,
   FaUtensils,
-  FaStar,
   FaEdit,
   FaSignInAlt,
   FaSignOutAlt,
 } from "react-icons/fa";
 import Axios from "axios";
-import CookModal from "./CookModal";
+import CookModal from "../cooks/CookModal";
 import { useState } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";

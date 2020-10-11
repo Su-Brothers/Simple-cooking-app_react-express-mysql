@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles/cook-result-item.scss";
+import "../styles/cook-result-item.scss";
 function CookResultItem({ id, name, remove }) {
   const onRemoveHandler = (e) => {
     e.preventDefault();
@@ -7,7 +7,7 @@ function CookResultItem({ id, name, remove }) {
   };
   return (
     <div className="cook-result-item">
-      <a href="#" onClick={onRemoveHandler}>
+      <a href="_blank" onClick={onRemoveHandler}>
         {name}
       </a>
     </div>

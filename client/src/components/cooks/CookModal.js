@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import "./styles/cook-modal.scss";
+import React from "react";
+import "../styles/cook-modal.scss";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import CookIngreItem from "./CookIngreItem";
 import CookResultItem from "./CookResultItem";
@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Axios from "axios";
 import { useRef } from "react";
-import SkeletonLoadingIngre from "./loadingCompo/SkeletonLoadingIngre";
+import SkeletonLoadingIngre from "../loadingCompo/SkeletonLoadingIngre";
 function CookModal({ history, onExit }) {
   const [loading, setLoading] = useState(false); //로딩 체크
 
@@ -23,7 +23,8 @@ function CookModal({ history, onExit }) {
   const isMounted = useRef(null); //마운트 확인용
   const scrollBox = useRef(null); //ref를 div에 할당하여 스크롤 이벤트 추가
 
-  const getSearchIngre = async () => {
+  const getSearchIngre = async (e) => {
+    e.preventDefault();
     if (!loading) {
       return;
     }
@@ -48,6 +49,8 @@ function CookModal({ history, onExit }) {
               //이름으로 돌려서 같은걸 찾아낸다.
               if (item.ingre_name === rItem.ingre) {
                 return rItem.ingre;
+              } else {
+                return null;
               }
             });
             if (findItem) {
@@ -80,6 +83,8 @@ function CookModal({ history, onExit }) {
               //이름으로 돌려서 같은걸 찾아낸다.
               if (item.ingre_name === rItem.ingre) {
                 return rItem.ingre;
+              } else {
+                return null;
               }
             });
             if (findItem) {
@@ -116,6 +121,8 @@ function CookModal({ history, onExit }) {
             //이름으로 돌려서 같은걸 찾아낸다.
             if (item.ingre_name === rItem.ingre) {
               return rItem.ingre;
+            } else {
+              return null;
             }
           });
           if (findItem) {
@@ -222,6 +229,8 @@ function CookModal({ history, onExit }) {
               //이름으로 돌려서 같은걸 찾아낸다.
               if (item.ingre_name === rItem.ingre) {
                 return rItem.ingre;
+              } else {
+                return null;
               }
             });
             if (findItem) {
@@ -257,6 +266,8 @@ function CookModal({ history, onExit }) {
               //이름으로 돌려서 같은걸 찾아낸다.
               if (item.ingre_name === rItem.ingre) {
                 return rItem.ingre;
+              } else {
+                return null;
               }
             });
             if (findItem) {
@@ -303,15 +314,17 @@ function CookModal({ history, onExit }) {
         <div className="cook-inner-box">
           <div className="cook-inner-left">
             <div className="cook-search-box">
-              <input
-                type="text"
-                placeholder="검색할 재료를 입력하세요.."
-                value={search}
-                onChange={onInputHandler}
-              />
-              <button type="button" onClick={getSearchIngre}>
-                <FaSearch />
-              </button>
+              <form type="submit" onSubmit={getSearchIngre}>
+                <input
+                  type="text"
+                  placeholder="검색할 재료를 입력하세요.."
+                  value={search}
+                  onChange={onInputHandler}
+                />
+                <button type="submit" onClick={getSearchIngre}>
+                  <FaSearch />
+                </button>
+              </form>
             </div>
             <div
               className="search-list"

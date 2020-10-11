@@ -9,11 +9,6 @@ function PostLike({ postId, user }) {
   const [likes, setLikes] = useState(0); //좋아요 수
   const [isLiked, setIsLiked] = useState(null); //눌렀는지
   let isMounted = useRef(null); //마운트 확인용
-  useEffect(() => {
-    isMounted.current = true;
-    getLikes();
-    return () => (isMounted.current = false);
-  }, []);
   const onLike = debounce(async () => {
     //디바운스 처리
     console.log("click");
@@ -76,7 +71,11 @@ function PostLike({ postId, user }) {
       }
     });
   };
-
+  useEffect(() => {
+    isMounted.current = true;
+    getLikes();
+    return () => (isMounted.current = false);
+  }, []);
   return (
     <div className="post-category-item">
       <button type="button" onClick={onLike}>

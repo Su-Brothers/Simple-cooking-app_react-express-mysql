@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import "./styles/profile-setting.scss";
+import "../styles/profile-setting.scss";
 import { FaCamera } from "react-icons/fa";
 import DropZone from "react-dropzone";
 import { debounce } from "lodash";
 import { useDispatch } from "react-redux";
-import { reloadUser } from "../modules/user";
+import { reloadUser } from "../../modules/user";
 import { useEffect } from "react";
 import Axios from "axios";
-import LoadingSpinner from "./loadingCompo/LoadingSpinner";
+import LoadingSpinner from "../loadingCompo/LoadingSpinner";
 function ProfileSetting({
   onClose,
   imgData,
@@ -136,6 +136,7 @@ function ProfileSetting({
                   dispatch(reloadUser());
                   onClose();
                 } else {
+                  setclickLoading(true);
                   alert(res.data.message);
                 }
               });
@@ -171,6 +172,7 @@ function ProfileSetting({
               dispatch(reloadUser());
               onClose();
             } else {
+              setclickLoading(true);
               alert(res.data.message);
             }
           });
@@ -182,15 +184,15 @@ function ProfileSetting({
   );
 
   useEffect(() => {
-    setInfo({
+    setInfo((info) => ({
       ...info,
       imgFile: imgData || "",
       email: emailData || "",
       userNickname: nickData || "",
       description: desData || "",
       noData: noData || "",
-    });
-  }, [noData]);
+    }));
+  }, [imgData, emailData, nickData, desData, noData]);
   return (
     <>
       <div className="outter-box"></div>

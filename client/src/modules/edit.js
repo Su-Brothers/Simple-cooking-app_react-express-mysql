@@ -1,6 +1,5 @@
 import axios from "axios";
 import { debounce } from "lodash";
-import { GiChipsBag } from "react-icons/gi";
 //액션
 const READ_POST = "edit/READ_POST"; //수정할 포스트  데이터 가져옴
 const READ_POST_SERVER = "edit/READ_POST_SERVER"; //수정할 포스트  데이터 서버에서 가져옴

@@ -10,7 +10,6 @@ import { useRef } from "react";
 import { useCallback } from "react";
 import SkeletonLoading from "./loadingCompo/SkeletonLoading";
 import NotFound from "./NotFound";
-import LoadingSpinner from "./loadingCompo/LoadingSpinner";
 function MainPage({ history }) {
   //셀렉터 주의 : 같은 값을 디스패치해도 리액트에서는 다른 값으로본다.(ref가 다르다.) 가져올때 따로 가져오거나 shallowEqual를 사용
   const state = useSelector((state) => state.user.userData, shallowEqual); //얕은 복사
@@ -113,7 +112,7 @@ function MainPage({ history }) {
       }
     }
     //이벤트리스너에 등록하는경우 props나 state를 따르지 않는다.
-  }, [posts.length, isEnd, sort]);
+  }, [posts, isEnd, sort, dispatch]);
   const onEndHandler = () => {
     if (isMounted.current) {
       //리덕스에서 이 함수를 사용하기 때문에 마운트가 되어 있을때만 되도록함
@@ -133,7 +132,7 @@ function MainPage({ history }) {
       window.removeEventListener("scroll", onScrollHandler);
       isMounted.current = false;
     };
-  }, [onScrollHandler]);
+  }, [onScrollHandler, dispatch, isFirst]);
 
   return (
     <div className="main-container">
@@ -141,19 +140,19 @@ function MainPage({ history }) {
       <Link to="/write" className="main-write-feed">
         <div className="main-write-box">
           <div className="writer-img-box">
-          {state.isAuth && state._imgFile ? (
-            <img
-              src={`http://localhost:5000/${state._imgFile}`}
-              alt="프로필사진"
-            />
-          ) : (
-            <img
-              src={`http://localhost:5000/uploads/normal-profile.png`}
-              alt="프로필사진"
-            />
-          )}
+            {state.isAuth && state._imgFile ? (
+              <img
+                src={`http://localhost:5000/${state._imgFile}`}
+                alt="프로필사진"
+              />
+            ) : (
+              <img
+                src={`http://localhost:5000/uploads/normal-profile.png`}
+                alt="프로필사진"
+              />
+            )}
           </div>
-         
+
           <div className="main-write-input">
             {state.isAuth ? `${state._nickname}님` : "어서오세요"}, 당신만의
             자취사전을 등록해주세요!

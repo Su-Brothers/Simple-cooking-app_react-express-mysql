@@ -138,7 +138,7 @@ function SearchPage({ match }) {
       (params) => {
         //뒤로가기나 앞으로가기를 과도하게 누를 경우 데이터가 손실,변경될 수 있으므로 디바운스처리
         //라우트가 과도하게 변경될때에 대한 디바운스처리로, match를 deps에 넣으면 무조건 바뀌므로 인자로 받아온다.
-        if (prevName && prevName !== params) {
+        if (prevName && prevName !== params && isMounted.current) {
           setPrevName(params);
           console.log("성공");
           console.log(prevName);

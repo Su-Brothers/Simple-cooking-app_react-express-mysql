@@ -1,6 +1,4 @@
 import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
 import "../styles/skeleton/skeleton-ingre.scss";
 
 function SkeletonLoadingIngre({ limit, active }) {

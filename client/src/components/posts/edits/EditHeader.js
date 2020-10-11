@@ -1,7 +1,7 @@
 import React from "react";
 import DropZone from "react-dropzone";
 import { FaCamera } from "react-icons/fa";
-import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   hImgHandelr,
   hInputHandler,
