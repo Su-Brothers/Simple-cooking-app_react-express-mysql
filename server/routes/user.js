@@ -8,20 +8,7 @@ const rounds = 10; //암호 자릿수
 const pool = require("../config/pool"); //pool을 가져온다.
 const auth = require("../middleware/auth");
 const router = express.Router();
-/*
-router.post("/update", async (req, res) => {
-  //정보수정
-  const sql = "UPDATE user_info SET user_email =? user_id = ? user_password = ?  user_nickname =? WHERE user_no = ?";
-  const {userid, usernickname, useremail} = req.body;
-  const result =  pool.query(sql, [userid, usernickname, useremail]);
-  if(result == true ){
- 
-  res.json({success : true, message : "수정이 완료 되었습니다."})
-} else {
-  res.json({success : false, message : "수정에 실패 하였습니다."})
-}
-  
-*/
+
 const storage = multer.diskStorage({
   //파일 저장 환경설정
   destination: (req, file, cb) => {
@@ -65,9 +52,7 @@ router.post("/login", async (req, res) => {
 
     if (result.length > 0) {
       //비밀번호 복호화
-      console.log(result);
       bcrypt.compare(password, result[0].user_password, function (err, match) {
-        console.log(match);
         if (match) {
           // 토큰생성
           const token = jwt.sign(
@@ -117,27 +102,22 @@ router.post("/signup", async (req, res) => {
   const sqlCreate =
     "INSERT INTO user_info values (null,?,?,?,?,null,null,now(),null,0)";
   const { email, id, password, nickname } = req.body;
-  const params = [email, id, password, nickname];
   try {
     const dbEmail = await pool.query(sqlEmail, [email]);
-    console.log(dbEmail[0].length);
     if (dbEmail[0].length > 0) {
       return res.json({ success: false, message: "중복된 이메일 입니다." });
     }
     const dbId = await pool.query(sqlId, [id]);
-    console.log(dbId[0].length);
     if (dbId[0].length > 0) {
       return res.json({ success: false, message: "중복된 아이디 입니다." });
     }
     const dbNickname = await pool.query(sqlNickname, [nickname]);
-    console.log(dbNickname[0].length);
     if (dbNickname[0].length > 0) {
       return res.json({ success: false, message: "중복된 닉네임 입니다." });
     }
     //비밀번호 암호화
     bcrypt.hash(password, rounds, async function (err, hash) {
       const result = await pool.query(sqlCreate, [email, id, hash, nickname]);
-      console.log(result);
       return res.json({ success: true, result: result });
     });
   } catch (err) {
@@ -193,7 +173,6 @@ router.post("/edit", async (req, res) => {
     password,
     newPassword,
   } = req.body;
-  console.log(userNo);
   const sql = `update user_info set user_img = ?,
   user_email = ?,user_nickname = ?,user_description = ?,user_password = ?
   where user_no = ?`;
@@ -207,30 +186,19 @@ router.post("/edit", async (req, res) => {
     //유저 정보를 찾는다.
     const userData = await connection.query(userSql, [userNo]); //유저 정보를 받아온다.
     if (userData[0][0].user_email !== email) {
-      console.log(userData[0][0]);
-      console.log(userData[0].length);
-      console.log(userData[0].user_email);
-      console.log(email);
-      console.log("이메일 변경");
       //db 이메일과 body의 이메일이 같지 않으면 변경된 것으로 간주
       const emailData = await connection.query(emailSql, [email]);
       if (emailData[0].length > 0) {
         return res.json({ success: false, message: "중복된 이메일 입니다." });
       }
     }
-    console.log("이메일 통과");
     if (userData[0][0].user_nickname !== nickname) {
-      console.log("닉네임변경");
       const nicknameData = await connection.query(nicknameSql, [nickname]);
-      console.log(nicknameData);
       if (nicknameData[0].length > 0) {
         return res.json({ success: false, message: "중복된 닉네임 입니다." });
       }
     }
-    console.log("닉네임 통과");
     if (password && newPassword) {
-      console.log("비밀번호 변경");
-      console.log(password);
       //패스워드가 있을때는 현재 패스워드가 일치하는지 비교후 변경
       const match = await bcrypt.compare(
         password,
@@ -242,7 +210,6 @@ router.post("/edit", async (req, res) => {
         console.log("비밀번호 확인");
         //비밀번호 암호화
         bcrypt.hash(newPassword, rounds, async function (err, hash) {
-          console.log(hash);
           const data = await connection.query(sql, [
             imgFile,
             email,
@@ -264,7 +231,6 @@ router.post("/edit", async (req, res) => {
       }
     } else {
       //변경할 패스워드가 없을때
-      console.log("바꿀거없음");
       const data = await connection.query(sql, [
         imgFile,
         email,
@@ -314,7 +280,6 @@ router.get("/posts/:no/:type/:limit", async (req, res) => {
       //내가쓴글
       const [result] = await pool.query(sql, [no, parseInt(limit)]);
       if (result.length > 0) {
-        console.log(result);
         return res.json({ success: true, result: result });
       } else {
         return res.json({ success: true, result: [] });
@@ -323,7 +288,6 @@ router.get("/posts/:no/:type/:limit", async (req, res) => {
       //스크랩
       const [result] = await pool.query(likeSql, [no, parseInt(limit)]);
       if (result.length > 0) {
-        console.log(result);
         //liked컬럼이 0이 아니면 자기가 좋아요한 포스트
         return res.json({ success: true, result: result });
       } else {
@@ -344,7 +308,6 @@ router.get("/profile/:no", async (req, res) => {
   try {
     const [result] = await pool.query(sql, [no]);
     if (result.length > 0) {
-      console.log(result);
       return res.json({ success: true, result: result[0] });
     } else {
       return res.json({ success: true, result: false });

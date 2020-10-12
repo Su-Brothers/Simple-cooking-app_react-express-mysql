@@ -25,7 +25,6 @@ function WritePage({ history }) {
   };
   useEffect(() => {
     isMounted.current = true;
-    console.log("render");
     return () => {
       isMounted.current = false;
     };

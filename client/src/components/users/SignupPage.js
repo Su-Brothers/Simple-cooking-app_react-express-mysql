@@ -28,7 +28,6 @@ function SignupPage({ history }) {
       ...info,
       [e.target.name]: e.target.value,
     });
-    console.log(info);
   };
   const emailCheckHandler = () => {
     const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; //정규식 사용
@@ -61,7 +60,6 @@ function SignupPage({ history }) {
   );
   const onDebounceSignUp = (e) => {
     e.preventDefault();
-    console.log("시도");
     const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; //정규식 사용
     const checkInfo =
       Object.values(info).every((x) => x !== "") &&

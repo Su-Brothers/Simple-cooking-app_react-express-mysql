@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/postsStyle/recipe-item.scss";
+import normalImg from "../../images/jabakLogo_v4.png";
 function RecipeItem({ view, img, text, order }) {
-  console.log(text);
   return (
     <div className={`post-recipe-item ${view}`}>
       <div className="order">{`step ${order}`}</div>
@@ -15,11 +15,7 @@ function RecipeItem({ view, img, text, order }) {
               className="recipe-img"
             />
           ) : (
-            <img
-              src={`http://localhost:5000/uploads/jabakLogo_v4.png`}
-              alt="요리 사진"
-              className="recipe-img"
-            />
+            <img src={normalImg} alt="요리 사진" className="recipe-img" />
           )}
         </div>
 

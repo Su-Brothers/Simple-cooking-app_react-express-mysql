@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import "./styles/mainpage.scss";
 import { FaPenFancy } from "react-icons/fa";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import TimeLine from "./TimeLine";
-import { useEffect } from "react";
+import normalProfile from "../images/normal-profile.png"; //기본 이미지 사진
 import { readHandler, readMoreHandler } from "../modules/post";
-import { useRef } from "react";
-import { useCallback } from "react";
 import SkeletonLoading from "./loadingCompo/SkeletonLoading";
 import NotFound from "./NotFound";
 function MainPage({ history }) {
@@ -42,7 +40,6 @@ function MainPage({ history }) {
     if (limitItem.current === 0) {
       limitItem.current += 10;
     }
-    console.log(limitItem.current);
   };
 
   const sortItem = sortList.map((item, index) => (
@@ -95,20 +92,16 @@ function MainPage({ history }) {
     const scrollHeight = //총 높이
       document.documentElement.scrollHeight || document.body.scrollHeight;
     //document.documentElement만 참조는 위험'
-    console.log(sort);
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
       clientHeight !== scrollHeight
     ) {
-      console.log("맨끝");
       //loadPosts(sort);
       if (!isEnd) {
-        console.log(posts.length);
-        console.log(limitItem.current);
         dispatch(readMoreHandler(sort, limitItem.current, onEndHandler));
         limitItem.current += 10;
       } else {
-        console.log("데이터가 없습니다.");
+        console.log("no data");
       }
     }
     //이벤트리스너에 등록하는경우 props나 state를 따르지 않는다.
@@ -122,7 +115,6 @@ function MainPage({ history }) {
   useEffect(() => {
     isMounted.current = true;
     if (isFirst) {
-      console.log("처음");
       dispatch(readHandler("allFood", limitItem.current, onEndHandler));
       limitItem.current += 10;
       setIsFirst(false);
@@ -146,10 +138,7 @@ function MainPage({ history }) {
                 alt="프로필사진"
               />
             ) : (
-              <img
-                src={`http://localhost:5000/uploads/normal-profile.png`}
-                alt="프로필사진"
-              />
+              <img src={normalProfile} alt="프로필사진" />
             )}
           </div>
 

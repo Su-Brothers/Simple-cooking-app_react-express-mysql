@@ -26,7 +26,6 @@ function LoginPage({ history }) {
   );
   const onDebounceLogin = (e) => {
     e.preventDefault();
-    console.log("시도");
     if (userId === "" || userPassword === "") {
       return alert("정보를 모두 입력하세요.");
     }
@@ -37,7 +36,6 @@ function LoginPage({ history }) {
       ...userInfo,
       [e.target.name]: e.target.value,
     });
-    console.log(userInfo);
   };
   return (
     <>

@@ -20,7 +20,6 @@ function Post({ match, history }) {
   const isLoading = useSelector((state) => state.post.post.isLoading); //로딩
   const postData = () => {
     if (isLoading) {
-      console.log(header);
       if (header) {
         //header가 없으면 페이지는 없는 것 이다.
         return (
@@ -63,9 +62,6 @@ function Post({ match, history }) {
   };
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log("ddd");
-    console.log(header);
-    console.log(postId);
     if (header && header.board_no != postId) {
       dispatch(readDetail(postId));
     } else if (header && header.board_no == postId) {

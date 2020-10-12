@@ -8,6 +8,7 @@ import { reloadUser } from "../../modules/user";
 import { useEffect } from "react";
 import Axios from "axios";
 import LoadingSpinner from "../loadingCompo/LoadingSpinner";
+import normalProfile from "../../images/normal-profile.png";
 function ProfileSetting({
   onClose,
   imgData,
@@ -48,7 +49,6 @@ function ProfileSetting({
 
   const onInputHandler = (e) => {
     //인풋핸들러
-    console.log(info);
     setInfo({
       ...info,
       [e.target.name]: e.target.value,
@@ -56,7 +56,6 @@ function ProfileSetting({
   };
 
   const imageUpload = async (file) => {
-    console.log(file);
     let formData = new FormData(); //파일 데이터 형식을 받기 위해 사용
     formData.append("profile", file[0]);
     const config = {
@@ -91,7 +90,6 @@ function ProfileSetting({
       setNowPsBool("");
       setPsBool("");
       setPsCheckBool("");
-      console.log("submit");
       //닉네임 체크
       if (!userNickname) {
         return setNickBool("닉네임을 입력해주십시오.");
@@ -155,7 +153,6 @@ function ProfileSetting({
         }
       } else {
         if (nickData) {
-          console.log(noData);
           setclickLoading(false);
           Axios.post(`/api/users/edit`, {
             userNo: noData,
@@ -208,10 +205,7 @@ function ProfileSetting({
                     alt="프로필사진"
                   />
                 ) : (
-                  <img
-                    src={`http://localhost:5000/uploads/normal-profile.png`}
-                    alt="프로필사진"
-                  />
+                  <img src={normalProfile} alt="프로필사진" />
                 )}
                 <div className="camera-box">
                   <FaCamera />

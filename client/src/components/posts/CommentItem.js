@@ -34,7 +34,6 @@ function CommentItem({
   let isMounted = useRef(null); //마운트 확인
   const onDeleteHandler = debounce(
     async () => {
-      console.log("삭제");
       setIsDeleted(true);
       const data = await Axios.delete(`/api/comment/${coNo}`)
         .then((res) => res.data)
@@ -58,9 +57,7 @@ function CommentItem({
       const userData = //현재 로그인 된 사용자가 이 코멘트의 좋아요와 연관이 있는지 확인
         //유저가 일치하면 데이터가 있을 것이고 일치 하지 않으면 없을 것이다.
         result && result.filter((item) => item.user_no === userState._no)[0];
-      console.log("Dd");
       if (isMounted.current) {
-        console.log(result);
         setIsLike(result.filter((item) => item.is_like === 1).length);
         setIsUnlike(result.filter((item) => item.is_like === 2).length);
         setIsUser(userData ? userData : { ...isUser });
@@ -71,7 +68,6 @@ function CommentItem({
   };
 
   const onLikeHandler = debounce(async () => {
-    console.log("like");
     if (userState.isAuth) {
       if (isUser.is_like === 1) {
         setIsLike(isLike - 1);
@@ -118,7 +114,6 @@ function CommentItem({
   }, 300);
 
   const onUnlikeHandler = debounce(async () => {
-    console.log("unlike");
     if (userState.isAuth) {
       if (isUser.is_like === 2) {
         setIsUnlike(isUnlike - 1);

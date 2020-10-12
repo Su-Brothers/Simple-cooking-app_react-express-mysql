@@ -92,7 +92,6 @@ function CookPage({ location }) {
           if (res.data.success) {
             setList(res.data.result);
             if (res.data.result.length < 10) {
-              console.log("isEnd");
               setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
             } else {
               if (limitItem.current === 0) {
@@ -106,26 +105,17 @@ function CookPage({ location }) {
         }
       })
       .catch((err) => console.log(err));
-    console.log(limitItem.current);
   };
   const loadPosts = (target) => {
-    console.log(target);
-    console.log(postList);
-    console.log(ingres.names);
     if (!isEnd) {
-      console.log(isEnd);
-      console.log(limitItem.current);
       Axios.get(
         `/api/post/cook/getposts/${ingres.names}/${target}/${limitItem.current}`
       )
         .then((res) => {
           if (isMounted.current) {
             if (res.data.success) {
-              console.log("결과");
-              console.log(postList);
               setList([...postList, ...res.data.result]);
               if (res.data.result.length < 10) {
-                console.log("isEnd");
                 setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
               } else {
                 limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
@@ -137,22 +127,16 @@ function CookPage({ location }) {
         })
         .catch((err) => console.log(err));
     } else {
-      console.log("데이터가 없습니다.");
+      console.log("no Data");
     }
   };
 
   const onChangeRoute = useCallback(
     debounce(
       (params) => {
-        console.log("dd");
         //라우트가 과도하게 변경될때에 대한 디바운스처리로, match를 deps에 넣으면 무조건 바뀌므로 인자로 받아온다.
         if (prevName && prevName !== params && isMounted.current) {
           setPrevName(params); //요청이 먼저 가버리면 다시 실행되기 때문에 가장 먼저 변경
-          console.log("성공");
-          console.log(loading);
-          console.log(postList);
-          console.log(prevName);
-          console.log(params);
           getPosts("exact", params);
           setSort("exact");
         }
@@ -169,13 +153,11 @@ function CookPage({ location }) {
     const scrollHeight = //총 높이
       document.documentElement.scrollHeight || document.body.scrollHeight;
     //document.documentElement만 참조는 위험'
-    console.log(sort);
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
       clientHeight !== scrollHeight &&
       loading
     ) {
-      console.log("맨끝");
       loadPosts(sort);
     }
     //deps를 넣어줘야 최신 상태를 유지할 수 있다. 이벤트리스너에 등록하는경우 props나 state를 따르지 않는다.
@@ -183,10 +165,7 @@ function CookPage({ location }) {
 
   useEffect(() => {
     isMounted.current = true;
-    console.log("??");
-    console.log(loading);
     if (isFirst) {
-      console.log("처음");
       getPosts("exact");
       setisFirst(false);
       setPrevName(ingres.names);

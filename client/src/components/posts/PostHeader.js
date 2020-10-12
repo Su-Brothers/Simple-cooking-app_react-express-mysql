@@ -18,6 +18,7 @@ import {
   pGenderType,
 } from "../../custom-module/typeGender";
 import LoadingSpinner from "../loadingCompo/LoadingSpinner";
+import normalProfile from "../../images/normal-profile.png";
 import { useState } from "react";
 function PostHeader({
   title,
@@ -35,7 +36,6 @@ function PostHeader({
   writerNo,
   writer,
 }) {
-  console.log("dd");
   const [deleteLoading, setDeleteLoading] = useState(false);
   const onDelete = async () => {
     const result = window.confirm(
@@ -100,13 +100,13 @@ function PostHeader({
             {profile ? (
               <img
                 src={`http://localhost:5000/${profile}`}
-                alt="대표 이미지"
+                alt="프로필 이미지"
                 className="header-profile-img"
               />
             ) : (
               <img
-                src="http://localhost:5000/uploads/normal-profile.png"
-                alt="대표 이미지"
+                src={normalProfile}
+                alt="프로필 이미지"
                 className="header-profile-img"
               />
             )}

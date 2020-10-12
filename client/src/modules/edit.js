@@ -32,7 +32,6 @@ export const getPostData = (user, history, match) => async (
   console.log(post);
   if (user.isAuth === null) {
     //유저 상태가 들어올때까지 기다린다.
-    console.log("Loading...");
   } else {
     //유저 정보 들어왔으면 실행
     if (user.isAuth) {
@@ -48,7 +47,6 @@ export const getPostData = (user, history, match) => async (
       } else {
         //원래 401 리다이렉트인데 맞는 유저가 url로 접근할 가능성 염두.
         //서버에서 유저 넘버와 포스트 아이디를 넣고 값이 있으면 가져온다.
-        console.log("server...");
         dispatch(getPostServer(history, user, match));
       }
     }
@@ -67,7 +65,6 @@ const getPostServer = (history, user, match) => async (dispatch) => {
       type: READ_POST_SERVER,
       payload: data.result,
     });
-    console.log(data);
     const { Ingredients, cookingOrder, tag } = data.result;
     setId(Ingredients, cookingOrder, tag);
   } else {
@@ -77,7 +74,7 @@ const getPostServer = (history, user, match) => async (dispatch) => {
 };
 
 const setId = (ingre, order, tag) => {
-  //초기 아이디 설정
+  //초기 아이디 설정(원래 있던 아이디의 최고값보다 무조건 커야지 겹치지않음)
   iId = ingre[ingre.length - 1].ingre_no + 1;
   cId = order[order.length - 1].text_no + 1;
   tId = tag ? tag[tag.length - 1].tag_no + 1 : 0;
@@ -213,8 +210,6 @@ export const tagRemoveHandler = (id) => {
 
 export const submitHandler = (history, id) => async (dispatch, getState) => {
   let board = getState().edit;
-  console.log(board);
-  console.log(history);
   //모든 항목이 비지 않았는지 확인
   if (!board.post.title) {
     alert("제목을 입력해주세요.");
@@ -253,18 +248,15 @@ export const submitHandler = (history, id) => async (dispatch, getState) => {
       }
     }
     //아니라면 서버 요청
-    console.log("시도");
     onDebounceSubmit(board, history, id, dispatch);
   }
 };
 const onDebounceSubmit = debounce(
   async (board, history, id, dispatch) => {
     try {
-      console.log("제출");
       dispatch({
         type: START_LOADING,
       });
-
       const data = await axios
         .post(`/api/post/${id}/edit`, board)
         .then((res) => res.data);

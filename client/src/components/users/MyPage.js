@@ -9,10 +9,10 @@ import Axios from "axios";
 import { useCallback } from "react";
 import { useRef } from "react";
 import SkeletonLoading from "../loadingCompo/SkeletonLoading";
+import normalProfile from "../../images/normal-profile.png";
 
 function MyPage() {
   const user = useSelector((state) => state.user.userData, shallowEqual);
-  console.log(user);
   const [sort, setSort] = useState("mypost");
   const [modal, setmodal] = useState(false);
   const [postList, setList] = useState([]);
@@ -87,12 +87,10 @@ function MyPage() {
     setIsEnd(false);
     Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
       .then((res) => {
-        console.log(res);
         if (isMounted.current) {
           if (res.data.success) {
             setList(res.data.result);
             if (res.data.result.length < 10) {
-              console.log("isEnd");
               setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
             } else {
               if (limitItem.current === 0) {
@@ -109,7 +107,6 @@ function MyPage() {
   };
 
   const loadPosts = (target) => {
-    console.log(target);
     if (!isEnd) {
       console.log(isEnd);
       Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
@@ -130,7 +127,7 @@ function MyPage() {
         })
         .catch((err) => console.log(err));
     } else {
-      console.log("데이터가 없습니다.");
+      console.log("no Data");
     }
   };
 
@@ -141,22 +138,16 @@ function MyPage() {
     const scrollHeight = //총 높이
       document.documentElement.scrollHeight || document.body.scrollHeight;
     //document.documentElement만 참조는 위험'
-    console.log(sort);
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
       clientHeight !== scrollHeight
     ) {
-      console.log("맨끝");
-      console.log(scrollTop);
-      console.log(clientHeight);
-      console.log(scrollHeight);
       loadPosts(sort);
     }
 
     //deps를 넣어줘야 최신 상태를 유지할 수 있다.
   }, [postList, isEnd, sort, user.isAuth]);
   useEffect(() => {
-    console.log("asdsad");
     isMounted.current = true;
     if (isFirst && user.isAuth) {
       getPosts("mypost");
@@ -200,10 +191,7 @@ function MyPage() {
                   alt="프로필사진"
                 />
               ) : (
-                <img
-                  src={`http://localhost:5000/uploads/normal-profile.png`}
-                  alt="프로필사진"
-                />
+                <img src={normalProfile} alt="프로필사진" />
               )}
             </div>
             {sortItem}

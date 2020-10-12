@@ -7,7 +7,6 @@ import { orderHandler } from "../../modules/write";
 function WriteOrder() {
   const dispatch = useDispatch();
   const cookingOrder = useSelector((state) => state.write.cookingOrder);
-  console.log(cookingOrder);
   const orderAddHandler = (e) => {
     e.preventDefault();
     dispatch(orderHandler());

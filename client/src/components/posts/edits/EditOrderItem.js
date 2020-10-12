@@ -21,7 +21,6 @@ function EditOrderItem({ id, text, order, orderPhoto }) {
   const imageUpload = (file) => {
     dispatch(orderImgHandelr(id, file));
   };
-  console.log(orderPhoto);
   return (
     <div className="order-item-box">
       <div className="order-item-box-num">{order}</div>

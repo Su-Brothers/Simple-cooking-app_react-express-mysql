@@ -155,7 +155,6 @@ export const submitHandler = (history, onLoading, completeLoading) => async (
     ...board,
     writer: user,
   };
-  console.log(board);
   //모든 항목이 비지 않았는지 확인
   if (!board.title) {
     alert("제목을 입력해주세요.");
@@ -191,14 +190,12 @@ export const submitHandler = (history, onLoading, completeLoading) => async (
       }
     }
     //아니라면 서버 요청
-    console.log("시도!!");
     onDebouncSubmit(board, history, onLoading, completeLoading);
   }
 };
 
 const onDebouncSubmit = debounce(
   async (board, history, onLoading, completeLoading) => {
-    console.log("제출");
     try {
       onLoading();
       const data = await axios

@@ -7,11 +7,9 @@ import { ingreHandler } from "../../../modules/edit";
 
 function EditIngredients() {
   const Ingredients = useSelector((state) => state.edit.post.Ingredients);
-  console.log(Ingredients);
   const dispatch = useDispatch();
 
   const ingreAddHandler = (e) => {
-    console.log("click");
     e.preventDefault(); //재료 추가
     dispatch(ingreHandler());
   };

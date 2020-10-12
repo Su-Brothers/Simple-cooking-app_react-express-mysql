@@ -77,7 +77,6 @@ function TagPage({ match }) {
   const getPosts = (target) => {
     window.scrollTo(0, 0);
     limitItem.current = 0; //0으로 초기화
-    console.log(match.params.name);
     setLoading(false);
     setIsEnd(false);
     Axios.get(
@@ -88,7 +87,6 @@ function TagPage({ match }) {
           if (res.data.success) {
             setList(res.data.result);
             if (res.data.result.length < 10) {
-              console.log("isEnd");
               setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
             } else {
               if (limitItem.current === 0) {
@@ -105,8 +103,6 @@ function TagPage({ match }) {
   };
 
   const loadPosts = (target) => {
-    console.log(target);
-    console.log(postList);
     if (!isEnd) {
       console.log(isEnd);
       Axios.get(
@@ -117,7 +113,6 @@ function TagPage({ match }) {
             if (res.data.success) {
               setList([...postList, ...res.data.result]);
               if (res.data.result.length < 10) {
-                console.log("isEnd");
                 setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
               } else {
                 limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
@@ -140,16 +135,11 @@ function TagPage({ match }) {
     const scrollHeight = //총 높이
       document.documentElement.scrollHeight || document.body.scrollHeight;
     //document.documentElement만 참조는 위험'
-    console.log(sort);
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
       clientHeight !== scrollHeight &&
       loading
     ) {
-      console.log("맨끝");
-      console.log(scrollTop);
-      console.log(clientHeight);
-      console.log(scrollHeight);
       loadPosts(sort);
     }
 
@@ -159,8 +149,6 @@ function TagPage({ match }) {
   useEffect(() => {
     isMounted.current = true;
     if (isFirst) {
-      console.log("??");
-      console.log(isFirst);
       getPosts("popular");
       setisFirst(false);
     }
