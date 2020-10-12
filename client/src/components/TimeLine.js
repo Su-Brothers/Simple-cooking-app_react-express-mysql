@@ -7,6 +7,7 @@ import {
   FaQuoteLeft,
   FaQuoteRight,
 } from "react-icons/fa";
+import normalProfile from "../images/normal-profile.png";
 import { Link } from "react-router-dom";
 import { pGenderType } from "../custom-module/typeGender";
 import { shallowEqual, useSelector } from "react-redux";
@@ -38,13 +39,9 @@ function TimeLine({
                   alt="프로필사진"
                 />
               ) : (
-                <img
-                  src={`http://localhost:5000/uploads/normal-profile.png`}
-                  alt="프로필사진"
-                />
+                <img src={normalProfile} alt="프로필사진" />
               )}
             </div>
-
             <div className="timeline-writer">
               <span className="writer"> {writer}</span>
               <span>{`·${pGenderType(type)}`}</span>

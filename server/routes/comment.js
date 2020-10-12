@@ -49,10 +49,8 @@ router.delete("/:id", async (req, res) => {
 //댓글 좋아요
 router.get("/getLike/:id", async (req, res) => {
   const sql = `select distinct user_no, is_like from comment_like where co_no = ?`;
-  console.log(req.params.id); //코멘트넘버
   try {
     const [result] = await pool.query(sql, [req.params.id]);
-    console.log(result);
     if (result.length > 0) {
       return res.json({ success: true, result: result });
     } else {

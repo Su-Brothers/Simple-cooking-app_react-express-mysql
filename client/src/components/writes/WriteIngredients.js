@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { ingreHandler } from "../../modules/write";
 function WriteIngredients() {
   const Ingredients = useSelector((state) => state.write.Ingredients);
-  console.log(Ingredients);
   const dispatch = useDispatch();
 
   const ingreAddHandler = (e) => {

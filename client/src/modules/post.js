@@ -44,7 +44,7 @@ export const readMoreHandler = (type, limit, isEnd) => async (dispatch) => {
     .get(`/api/post/getposts/${foodType}/${limit}`)
     .then((res) => res.data)
     .catch((err) => console.log(err));
-  console.log(data);
+
   if (data.success) {
     if (data.posts.length < 10) {
       isEnd();
@@ -112,7 +112,6 @@ export const readViews = (id) => async (dispatch) => {
     .catch((err) => console.log(err));
   if (data.success) {
     //리로드
-    console.log(data);
     dispatch({
       type: READ_VIEWS,
       payload: data.result,
@@ -126,12 +125,12 @@ export const getUserRanking = () => async (dispatch) => {
   dispatch({
     type: READ_USER_LOADING,
   });
-  console.log("시작");
+
   const data = await axios
     .get("/api/users/ranking")
     .then((res) => res.data)
     .catch((err) => console.log(err));
-  console.log(data);
+
   if (data.success) {
     dispatch({
       type: READ_USER_RANKING,

@@ -8,7 +8,6 @@ import { orderHandler } from "../../../modules/edit";
 function EditOrder() {
   const dispatch = useDispatch();
   const cookingOrder = useSelector((state) => state.edit.post.cookingOrder);
-  console.log(cookingOrder);
   const orderAddHandler = (e) => {
     e.preventDefault();
     dispatch(orderHandler());

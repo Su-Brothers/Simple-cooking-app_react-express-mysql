@@ -21,7 +21,6 @@ function AsideBar({ location, history, match }) {
   const scrollPos = useRef(0);
   const logoutHandler = debounce(
     async () => {
-      console.log("logout");
       const data = await Axios.get("/api/users/logout")
         .then((res) => res.data)
         .catch((err) => console.log(err));

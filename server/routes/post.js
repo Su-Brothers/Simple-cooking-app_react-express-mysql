@@ -24,7 +24,6 @@ router.get("/getposts/:type/:limit", async (req, res) => {
       //전체일때
       const [result] = await pool.query(allSql, [parseInt(limit)]);
       if (result.length > 0) {
-        console.log(result);
         return res.json({ success: true, posts: result });
       } else {
         return res.json({ success: true, posts: [] });
@@ -33,7 +32,6 @@ router.get("/getposts/:type/:limit", async (req, res) => {
       //다른 메뉴일때
       const [result] = await pool.query(sql, [type, parseInt(limit)]);
       if (result.length > 0) {
-        console.log(result);
         return res.json({ success: true, posts: result });
       } else {
         return res.json({ success: true, posts: [] });
@@ -58,12 +56,10 @@ router.get("/:postId/edit/getpost/:id", async (req, res) => {
   const { postId, id } = req.params;
   try {
     const [findResult] = await connection.query(findSql, [id, postId]);
-    console.log(findResult);
     if (findResult.length > 0) {
       let obj = {}; //담아서 보내줄 것 이다.
       const [header] = await connection.query(headerSql, [postId]);
       if (header.length > 0) {
-        console.log(header);
         obj = {
           ...obj,
           boardNo: header[0].board_no,
@@ -90,7 +86,6 @@ router.get("/:postId/edit/getpost/:id", async (req, res) => {
       if (tag.length > 0) {
         obj = { ...obj, tag: tag };
       }
-      console.log(obj);
       await connection.commit();
       res.json({ success: true, result: obj });
     } else {
@@ -250,7 +245,6 @@ router.delete("/:postId/delete", async (req, res) => {
     await connection.query(orderSql, [postId]);
     await connection.query(likeSql, [postId]);
     await connection.query(sql, [postId]);
-    console.log("삭제 완료");
     await connection.commit();
     res.json({ success: true, message: "게시글 삭제완료." });
   } catch (err) {
@@ -280,31 +274,25 @@ router.get("/:postId", async (req, res) => {
 
   try {
     let obj = {}; //담아서 보내줄 것 이다.
-    console.log("요청");
     await pool.query(viewSql, [req.params.postId]); //조회수 증가
     const [header] = await connection.query(headerSql, [req.params.postId]);
     if (header.length > 0) {
-      console.log(header);
       obj = { ...obj, header: header[0] };
     }
     const [ingre] = await connection.query(ingreSql, [req.params.postId]);
     if (ingre.length > 0) {
-      console.log(ingre);
       obj = { ...obj, ingre: ingre };
     }
     const [recipe] = await connection.query(recipeSql, [req.params.postId]);
     if (recipe.length > 0) {
-      console.log(recipe);
       obj = { ...obj, recipe: recipe };
     }
     const [tag] = await connection.query(tagSql, [req.params.postId]);
     if (tag.length > 0) {
-      console.log(tag);
       obj = { ...obj, tag: tag };
     }
     const [co] = await connection.query(coSql, [req.params.postId]);
     if (co.length > 0) {
-      console.log(co);
       obj = { ...obj, comment: co };
     }
 
@@ -331,7 +319,6 @@ router.get("/getcomments/:postId", async (req, res) => {
   try {
     const [result] = await pool.query(sql, [req.params.postId]);
     if (result.length > 0) {
-      console.log(result);
       return res.json({ success: true, result: result });
     } else {
       return res.json({ success: true, result: [] });
@@ -349,7 +336,6 @@ router.get("/:postId/likes", async (req, res) => {
   try {
     const [result] = await pool.query(sql, [req.params.postId]);
     if (result.length > 0) {
-      console.log(result);
       return res.json({ success: true, result: result });
     } else {
       return res.json({ success: true, result: [] });
@@ -427,8 +413,6 @@ router.get("/tag/:name/popular/:limit", async (req, res) => {
   try {
     const [result] = await pool.query(sql, [name, parseInt(limit)]);
     if (result.length > 0) {
-      console.log("ㅇㅇ");
-      console.log(result);
       return res.json({ success: true, result: result });
     } else {
       return res.json({ success: true, result: [] });
@@ -451,12 +435,9 @@ router.get("/tag/:name/latest/:limit", async (req, res) => {
   where tag_name = ? and b.isdeleted = 0
   group by board_no order by board_no desc,likes desc,board_views desc
   limit 10 offset ?`;
-  console.log(req.params.name);
   try {
     const [result] = await pool.query(sql, [name, parseInt(limit)]);
     if (result.length > 0) {
-      console.log("ㅇㅇ");
-      console.log(result);
       return res.json({ success: true, result: result });
     } else {
       return res.json({ success: true, result: [] });
@@ -483,8 +464,6 @@ router.get("/tag/:name/views/:limit", async (req, res) => {
   try {
     const [result] = await pool.query(sql, [name, parseInt(limit)]);
     if (result.length > 0) {
-      console.log("ㅇㅇ");
-      console.log(result);
       return res.json({ success: true, result: result });
     } else {
       return res.json({ success: true, result: [] });
@@ -502,7 +481,6 @@ router.get("/:postId/views", async (req, res) => {
   try {
     const [result] = await pool.query(sql, [req.params.postId]);
     if (result.length > 0) {
-      console.log(result[0].board_views);
       return res.json({ success: true, result: result[0].board_views });
     } else {
       return res.json({ success: true, result: 0 });
@@ -518,8 +496,6 @@ router.post("/:postId/views", async (req, res) => {
 
   try {
     const [result] = await pool.query(sql, [req.params.postId]);
-    console.log("asdasdsda");
-    console.log(result);
     if (result.affectedRows > 0) {
       return res.json({ success: true, result: result });
     } else {
@@ -593,9 +569,6 @@ router.get("/search/:name/:sort/:limit", async (req, res) => {
     if (sort === "popular") {
       const [result] = await pool.query(popSql, params);
       if (result.length > 0) {
-        console.log("인기");
-        console.log(parseInt(limit));
-        console.log(result);
         return res.json({ success: true, result: result });
       } else {
         return res.json({ success: true, result: [] });
@@ -603,8 +576,6 @@ router.get("/search/:name/:sort/:limit", async (req, res) => {
     } else if (sort === "latest") {
       const [result] = await pool.query(latSql, params);
       if (result.length > 0) {
-        console.log("최신");
-        console.log(result);
         return res.json({ success: true, result: result });
       } else {
         return res.json({ success: true, result: [] });
@@ -612,8 +583,6 @@ router.get("/search/:name/:sort/:limit", async (req, res) => {
     } else {
       const [result] = await pool.query(viewSql, params);
       if (result.length > 0) {
-        console.log("조회");
-        console.log(result);
         return res.json({ success: true, result: result });
       } else {
         return res.json({ success: true, result: [] });
@@ -631,12 +600,9 @@ router.get("/search/:name/:sort/:limit", async (req, res) => {
 router.get("/cook/getingre/:limit", async (req, res) => {
   const sql = `select ingre_name,count(ingre_name) quan from board_ingredient where isdeleted = 0 group by ingre_name
   order by quan desc,ingre_name asc limit 10 offset ?`;
-  console.log(req.params.limit);
-  console.log(parseInt(req.params.limit));
   try {
     const [result] = await pool.query(sql, [parseInt(req.params.limit)]);
     if (result.length > 0) {
-      console.log(result);
       return res.json({ success: true, result: result });
     } else {
       return res.json({ success: true, result: [] });
@@ -650,7 +616,6 @@ router.get("/cook/getingre/:limit", async (req, res) => {
 router.get("/cook/getingre/:limit/:name", async (req, res) => {
   const sql = `select ingre_name,count(ingre_name) quan from board_ingredient where isdeleted = 0 and ingre_name like ? group by ingre_name
   order by quan desc,ingre_name asc limit 10 offset ?`;
-  console.log(req.params.name);
   try {
     const [result] = await pool.query(sql, [
       "%" + req.params.name + "%",
@@ -672,13 +637,10 @@ router.get("/cook/getposts/:names/:sort/:limit", async (req, res) => {
   //쿡페이지
   //조회순
   const { names, sort, limit } = req.params;
-  console.log("기본" + names);
   const ingres = names
     .split(",")
     .map((item) => "'" + item + "'")
     .join();
-  console.log("변경" + ingres);
-  console.log("dasds" + limit);
   //sql
   const exactSql = `select b.board_no,b.title,ui.user_no,ui.user_nickname writer ,ui.user_img user_img,b.board_img,b.description,b.food_type,b.board_views,count(distinct c.co_no) co,count(distinct bl.user_no) likes,count(distinct bi.ingre_no) quan,date_format(b.created_date,'%Y-%m-%d') date
   from board b left join comment c on b.board_no = c.board_no and c.isdeleted = 0
@@ -712,8 +674,6 @@ router.get("/cook/getposts/:names/:sort/:limit", async (req, res) => {
     if (sort === "exact") {
       const [result] = await pool.query(exactSql, [parseInt(limit)]);
       if (result.length > 0) {
-        console.log("정확");
-        console.log(result);
         return res.json({ success: true, result: result });
       } else {
         return res.json({ success: true, result: [] });
@@ -721,8 +681,6 @@ router.get("/cook/getposts/:names/:sort/:limit", async (req, res) => {
     } else if (sort === "latest") {
       const [result] = await pool.query(latSql, [parseInt(limit)]);
       if (result.length > 0) {
-        console.log("최신");
-        console.log(result);
         return res.json({ success: true, result: result });
       } else {
         return res.json({ success: true, result: [] });
@@ -730,8 +688,6 @@ router.get("/cook/getposts/:names/:sort/:limit", async (req, res) => {
     } else {
       const [result] = await pool.query(popSql, [parseInt(limit)]);
       if (result.length > 0) {
-        console.log("인기");
-        console.log(result);
         return res.json({ success: true, result: result });
       } else {
         return res.json({ success: true, result: [] });

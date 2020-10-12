@@ -11,7 +11,6 @@ function Auth(AuthComponent, option = null) {
     const dispatch = useDispatch();
     //auth로 감싸진 모든 컴포넌트로 이동할때마다 호출
     useEffect(() => {
-      console.log("3");
       dispatch(authHandler(option, props.history));
     }, [dispatch, props.history]);
     return <AuthComponent {...props} />;

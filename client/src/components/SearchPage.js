@@ -79,8 +79,6 @@ function SearchPage({ match }) {
   const getPosts = (target, params = match.params.name) => {
     window.scrollTo(0, 0);
     limitItem.current = 0; //0으로 초기화
-    console.log("겟");
-    console.log(params);
     setLoading(false);
     setIsEnd(false);
     Axios.get(`/api/post/search/${params}/${target}/${limitItem.current}`)
@@ -89,7 +87,6 @@ function SearchPage({ match }) {
           if (res.data.success) {
             setList(res.data.result);
             if (res.data.result.length < 10) {
-              console.log("isEnd");
               setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
             } else {
               if (limitItem.current === 0) {
@@ -107,7 +104,6 @@ function SearchPage({ match }) {
   };
 
   const loadPosts = (target) => {
-    console.log("로드");
     if (!isEnd && prevName === match.params.name) {
       console.log(limitItem.current);
       Axios.get(
@@ -130,7 +126,7 @@ function SearchPage({ match }) {
         })
         .catch((err) => console.log(err));
     } else {
-      console.log("데이터가 없습니다.");
+      console.log("no Data");
     }
   };
   const onChangeRoute = useCallback(
@@ -140,9 +136,6 @@ function SearchPage({ match }) {
         //라우트가 과도하게 변경될때에 대한 디바운스처리로, match를 deps에 넣으면 무조건 바뀌므로 인자로 받아온다.
         if (prevName && prevName !== params && isMounted.current) {
           setPrevName(params);
-          console.log("성공");
-          console.log(prevName);
-          console.log(params);
           getPosts("popular", params);
           setSort("popular");
         }
@@ -160,16 +153,12 @@ function SearchPage({ match }) {
     const scrollHeight = //총 높이
       document.documentElement.scrollHeight || document.body.scrollHeight;
     //document.documentElement만 참조는 위험'
-    console.log(sort);
+
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
       clientHeight !== scrollHeight &&
       loading
     ) {
-      console.log("맨끝");
-      console.log(scrollTop);
-      console.log(clientHeight);
-      console.log(scrollHeight);
       loadPosts(sort);
     }
 
@@ -179,7 +168,6 @@ function SearchPage({ match }) {
   useEffect(() => {
     isMounted.current = true;
     if (isFirst) {
-      console.log("??");
       getPosts("popular");
       setisFirst(false);
       setPrevName(match.params.name);

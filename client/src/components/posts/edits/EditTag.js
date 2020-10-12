@@ -16,7 +16,6 @@ function EditTag() {
     if (e.key === "," || e.key === "Enter") {
       e.preventDefault(); //, 문자는 지워져야함
       if (tag) {
-        console.log("asdsad");
       }
       const isOverlap = tag
         ? tag.every((item) => item.tag_name !== input)

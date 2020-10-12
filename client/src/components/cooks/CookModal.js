@@ -112,7 +112,6 @@ function CookModal({ history, onExit }) {
     const data = await Axios.get(`/api/post/cook/getingre/${limitItem.current}`)
       .then((res) => res.data)
       .catch((err) => console.log(err));
-    console.log(data);
     if (data.success) {
       if (ingreResult.length > 0 && data.result.length > 0) {
         //결과값에 이미 검색한 결과중 하나가 있으면 active
@@ -149,7 +148,6 @@ function CookModal({ history, onExit }) {
   //검색 재료 리스트 관련 함수
   const addIngre = (name) => {
     //추가
-    console.log(name);
 
     setIngreResult([...ingreResult, { id: nextId.current++, ingre: name }]);
     setIngreList(
@@ -194,34 +192,22 @@ function CookModal({ history, onExit }) {
 
   const onScrollHandler = (e) => {
     let box = e.target;
-    console.log(box.scrollTop);
-    console.log(box.clientHeight);
-    console.log(box.scrollHeight);
     if (
       box.scrollTop + box.clientHeight >= box.scrollHeight &&
       box.clientHeight !== box.scrollHeight
     ) {
-      console.log("맨아래");
       onLoadHandler();
     }
   };
 
   const onLoadHandler = async () => {
-    console.log(ingreList);
-    console.log("로드");
-    console.log(limitItem.current);
     if (searchData === "") {
-      console.log(limitItem.current);
-
       const data = await Axios.get(
         `/api/post/cook/getingre/${limitItem.current}`
       )
         .then((res) => res.data)
         .catch((err) => console.log(err));
-      console.log(data);
       if (data.success) {
-        console.log("성공");
-        console.log(ingreList);
         if (ingreResult.length > 0 && data.result.length > 0) {
           //결과값에 이미 검색한 결과중 하나가 있으면 active
           const activeData = data.result.map((item) => {
@@ -249,7 +235,6 @@ function CookModal({ history, onExit }) {
           }
         }
       }
-      console.log("??");
       limitItem.current += 10; //데이터를 가져올때마다 다음 페이지를 위해 +10
     } else {
       const data = await Axios.get(
@@ -291,9 +276,8 @@ function CookModal({ history, onExit }) {
   };
 
   const onLinkHandler = (e) => {
-    console.log(ingreResult);
     const data = ingreResult.map((item) => item.ingre);
-    console.log(data);
+
     onExit();
     history.push(`/cook/ingridents?names=${data}`);
   };

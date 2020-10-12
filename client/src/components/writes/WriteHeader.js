@@ -14,7 +14,6 @@ function WriteHeader() {
     shallowEqual //비구조할당(매 번 새로운 객체를 생성하므로 얕은복사)
   );
   const write = useSelector((state) => state);
-  console.log(write);
   const dispatch = useDispatch();
   const inputHandler = (e) => {
     dispatch(hInputHandler(e.target.name, e.target.value));

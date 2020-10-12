@@ -2,8 +2,6 @@ const express = require("express");
 const multer = require("multer");
 //커넥션 설정
 const pool = require("../config/pool"); //pool을 가져온다.
-const auth = require("../middleware/auth");
-
 const router = express.Router();
 
 const storage = multer.diskStorage({

@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 function IngreItem({ id, value, volume }) {
   //부모에게 스토어에 있는 재료명과 양의 값을 가져온다.
   const dispatch = useDispatch();
-  console.log(id);
   const inputHandler = (e) => {
     dispatch(ingreInputHandler(id, e.target.name, e.target.value));
     //dispatch로 자신의 id,바뀔 인풋의 정보를 넣어준다.
