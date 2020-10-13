@@ -10,7 +10,7 @@ function RecipeItem({ view, img, text, order }) {
         <div className="recipe-img-box">
           {img ? (
             <img
-              src={`http://localhost:5000/${img}`}
+              src={`${process.env.REACT_APP_IMG_URL}/${img}`}
               alt="요리 사진"
               className="recipe-img"
             />

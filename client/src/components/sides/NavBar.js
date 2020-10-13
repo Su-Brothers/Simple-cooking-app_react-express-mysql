@@ -45,7 +45,9 @@ function NavBar({ location, history }) {
 
   const logoutHandler = debounce(
     async () => {
-      const data = await Axios.get("/api/users/logout")
+      const data = await Axios.get(
+        `${process.env.REACT_APP_SERVER_HOST}/api/users/logout`
+      )
         .then((res) => res.data)
         .catch((err) => console.log(err));
       if (data.success) {

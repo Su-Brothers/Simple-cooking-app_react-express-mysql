@@ -66,7 +66,9 @@ function Post({ match, history }) {
       dispatch(readDetail(postId));
     } else if (header && header.board_no == postId) {
       //조회수 증가
-      Axios.post(`/api/post/${postId}/views`)
+      Axios.post(
+        `${process.env.REACT_APP_SERVER_HOST}/api/post/${postId}/views`
+      )
         .then((res) => {
           if (res.data.success) {
             //리로드

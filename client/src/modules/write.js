@@ -39,7 +39,11 @@ export const hImgHandelr = (file) => async (dispatch) => {
   };
   try {
     const result = await axios
-      .post("/api/write/upload/headerimg", formData, config)
+      .post(
+        `${process.env.REACT_APP_SERVER_HOST}/api/write/upload/headerimg`,
+        formData,
+        config
+      )
       .then((res) => res.data);
 
     if (result.success) {
@@ -113,7 +117,11 @@ export const orderImgHandelr = (id, file) => async (dispatch) => {
   };
   try {
     const result = await axios
-      .post("/api/write/upload/orderimg", formData, config)
+      .post(
+        `${process.env.REACT_APP_SERVER_HOST}/api/write/upload/orderimg`,
+        formData,
+        config
+      )
       .then((res) => res.data);
 
     if (result.success) {
@@ -199,7 +207,10 @@ const onDebouncSubmit = debounce(
     try {
       onLoading();
       const data = await axios
-        .post("/api/write/upload/board", board)
+        .post(
+          `${process.env.REACT_APP_SERVER_HOST}/api/write/upload/board`,
+          board
+        )
         .then((res) => res.data);
       if (data.success) {
         alert("게시글 등록완료");

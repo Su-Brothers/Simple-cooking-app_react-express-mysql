@@ -8,7 +8,7 @@ import normalProfile from "../images/normal-profile.png"; //기본 이미지 사
 import { readHandler, readMoreHandler } from "../modules/post";
 import SkeletonLoading from "./loadingCompo/SkeletonLoading";
 import NotFound from "./NotFound";
-function MainPage({ history }) {
+function MainPage() {
   //셀렉터 주의 : 같은 값을 디스패치해도 리액트에서는 다른 값으로본다.(ref가 다르다.) 가져올때 따로 가져오거나 shallowEqual를 사용
   const state = useSelector((state) => state.user.userData, shallowEqual); //얕은 복사
   const posts = useSelector((state) => state.post.posts);
@@ -19,7 +19,6 @@ function MainPage({ history }) {
 
   const limitItem = useRef(0); //페이징 처리용 리미트
   const isMounted = useRef(null);
-
   const dispatch = useDispatch();
   const sortList = [
     //정렬 리스트
@@ -134,7 +133,7 @@ function MainPage({ history }) {
           <div className="writer-img-box">
             {state.isAuth && state._imgFile ? (
               <img
-                src={`http://localhost:5000/${state._imgFile}`}
+                src={`${process.env.REACT_APP_IMG_URL}/${state._imgFile}`}
                 alt="프로필사진"
               />
             ) : (

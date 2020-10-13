@@ -5,7 +5,6 @@ import { loginHandler } from "../../modules/user";
 import { useDispatch } from "react-redux";
 import { debounce } from "lodash";
 function LoginPage({ history }) {
-  console.log("2");
   const dispatch = useDispatch();
   const [userInfo, setUserInfo] = useState({
     userId: "",
@@ -18,7 +17,6 @@ function LoginPage({ history }) {
   };
   const onLogin = debounce(
     () => {
-      console.log("성공");
       dispatch(loginHandler(userId, userPassword, history));
     },
     300,

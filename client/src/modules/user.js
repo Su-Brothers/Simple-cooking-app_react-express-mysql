@@ -7,7 +7,10 @@ const AUTH_USER = "AUTH_USER";
 //액션 생성 함수
 export const loginHandler = (id, password, history) => async (dispatch) => {
   const data = await axios
-    .post("/api/users/login", { id: id, password: password })
+    .post(`${process.env.REACT_APP_SERVER_HOST}/api/users/login`, {
+      id: id,
+      password: password,
+    })
     .then((res) => res.data)
     .catch((err) => console.log(err));
   if (data.success) {
@@ -25,7 +28,7 @@ export const signupHandler = (email, id, password, nickname, history) => async (
   dispatch
 ) => {
   const data = await axios
-    .post("/api/users/signup", {
+    .post(`${process.env.REACT_APP_SERVER_HOST}/api/users/signup`, {
       email: email,
       id: id,
       password: password,
@@ -49,7 +52,7 @@ export const signupHandler = (email, id, password, nickname, history) => async (
 export const reloadUser = () => async (dispatch) => {
   //회원정보 수정 후 리로드
   const data = await axios
-    .get("/api/users/auth")
+    .get(`${process.env.REACT_APP_SERVER_HOST}/api/users/auth`)
     .then((res) => res.data)
     .catch((err) => console.log(err));
   dispatch({
@@ -60,7 +63,7 @@ export const reloadUser = () => async (dispatch) => {
 export const authHandler = (option, history) => async (dispatch) => {
   //페이지간 권한인증
   const data = await axios
-    .get("/api/users/auth")
+    .get(`${process.env.REACT_APP_SERVER_HOST}/api/users/auth`)
     .then((res) => res.data)
     .catch((err) => console.log(err));
   dispatch({

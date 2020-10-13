@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import { useRef } from "react";
 import SkeletonLoading from "../loadingCompo/SkeletonLoading";
 import SkeletonMypage from "../loadingCompo/SkeletonMypage";
+import normalProfile from "../../images/normal-profile.png";
 import NotFound from "../NotFound";
 
 function ChefPage({ match }) {
@@ -57,7 +58,9 @@ function ChefPage({ match }) {
 
   const getUser = (params = match.params.no) => {
     setUserLoading(false);
-    Axios.get(`/api/users/profile/${params}`)
+    Axios.get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/users/profile/${params}`
+    )
       .then((res) => {
         if (isMounted.current) {
           if (res.data.success) {
@@ -91,14 +94,11 @@ function ChefPage({ match }) {
               <div className="my-img-box">
                 {user_img ? (
                   <img
-                    src={`http://localhost:5000/${user_img}`}
+                    src={`${process.env.REACT_APP_IMG_URL}/${user_img}`}
                     alt="프로필사진"
                   />
                 ) : (
-                  <img
-                    src={`http://localhost:5000/uploads/normal-profile.png`}
-                    alt="프로필사진"
-                  />
+                  <img src={normalProfile} alt="프로필사진" />
                 )}
               </div>
               {sortItem}
@@ -147,7 +147,9 @@ function ChefPage({ match }) {
     limitItem.current = 0; //0으로 초기화
     setLoading(false);
     setIsEnd(false);
-    Axios.get(`/api/users/posts/${params}/${target}/${limitItem.current}`)
+    Axios.get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/users/posts/${params}/${target}/${limitItem.current}`
+    )
       .then((res) => {
         if (isMounted.current) {
           if (res.data.success) {
@@ -172,7 +174,7 @@ function ChefPage({ match }) {
     if (!isEnd) {
       console.log(isEnd);
       Axios.get(
-        `/api/users/posts/${match.params.no}/${target}/${limitItem.current}`
+        `${process.env.REACT_APP_SERVER_HOST}/api/users/posts/${match.params.no}/${target}/${limitItem.current}`
       )
         .then((res) => {
           if (isMounted.current) {
@@ -202,7 +204,6 @@ function ChefPage({ match }) {
         if (prevName && prevName !== params && isMounted.current) {
           window.scrollTo(0, 0);
           setPrevName(params); //요청이 먼저 가버리면 다시 실행되기 때문에 가장 먼저 변경
-          console.log("성공");
           getPosts("mypost", params);
           getUser(params);
           setSort("mypost");
@@ -221,16 +222,11 @@ function ChefPage({ match }) {
     const scrollHeight = //총 높이
       document.documentElement.scrollHeight || document.body.scrollHeight;
     //document.documentElement만 참조는 위험'
-    console.log(sort);
     if (
       Math.round(scrollTop) + clientHeight === scrollHeight &&
       clientHeight !== scrollHeight &&
       loading
     ) {
-      console.log("맨끝");
-      console.log(scrollTop);
-      console.log(clientHeight);
-      console.log(scrollHeight);
       loadPosts(sort);
     }
 
@@ -239,8 +235,6 @@ function ChefPage({ match }) {
 
   useEffect(() => {
     isMounted.current = true;
-    console.log("asdsad");
-    console.log(match.params.no);
     if (isFirst) {
       window.scrollTo(0, 0);
       getPosts("mypost");
