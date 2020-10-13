@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const port = 5000;
 const corsOptions = {
-  origin: "https://jabak-cooking.s3-website.ap-northeast-2.amazonaws.com",
+  origin: "https://dn9g4x7ek29ym.cloudfront.net/",
   credentials: true,
 };
 app.use(express.json()); //서버 요청의 값은 body로 들어온다. body에 넣어주기 위해 사용한다.
