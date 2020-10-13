@@ -35,7 +35,7 @@ function TimeLine({
             <div className="img-box">
               {profile ? (
                 <img
-                  src={`http://localhost:5000/${profile}`}
+                  src={`${process.env.REACT_APP_IMG_URL}/${profile}`}
                   alt="프로필사진"
                 />
               ) : (
@@ -55,7 +55,10 @@ function TimeLine({
                 <FaQuoteRight />
               </div>
             </div>
-            <img src={`http://localhost:5000/${photo}`} alt="요리이미지" />
+            <img
+              src={`${process.env.REACT_APP_IMG_URL}/${photo}`}
+              alt="요리이미지"
+            />
             <div className="timeline-title">{title}</div>
           </div>
           <div className="timeline-bottom">

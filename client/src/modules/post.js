@@ -21,7 +21,9 @@ export const readHandler = (type, limit, isEnd) => async (dispatch) => {
     type: LOADING_POSTS,
   });
   const data = await axios
-    .get(`/api/post/getposts/${foodType}/${limit}`)
+    .get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/post/getposts/${foodType}/${limit}`
+    )
     .then((res) => res.data)
     .catch((err) => console.log(err));
 
@@ -41,7 +43,9 @@ export const readHandler = (type, limit, isEnd) => async (dispatch) => {
 export const readMoreHandler = (type, limit, isEnd) => async (dispatch) => {
   const foodType = typeGender(type);
   const data = await axios
-    .get(`/api/post/getposts/${foodType}/${limit}`)
+    .get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/post/getposts/${foodType}/${limit}`
+    )
     .then((res) => res.data)
     .catch((err) => console.log(err));
 
@@ -77,7 +81,7 @@ export const readDetail = (id) => async (dispatch) => {
     type: LOADING_POST,
   });
   const data = await axios //포스트 디테일페이지 로드
-    .get(`/api/post/${id}`)
+    .get(`${process.env.REACT_APP_SERVER_HOST}/api/post/${id}`)
     .then((res) => res.data)
     .catch((err) => console.log(err));
   if (data.success) {
@@ -92,7 +96,7 @@ export const readDetail = (id) => async (dispatch) => {
 
 export const readComment = (id) => async (dispatch) => {
   const data = await axios //코멘트를 추가하거나 제거할때 리로드
-    .get(`/api/post/getcomments/${id}`)
+    .get(`${process.env.REACT_APP_SERVER_HOST}/api/post/getcomments/${id}`)
     .then((res) => res.data)
     .catch((err) => console.log(err));
   if (data.success) {
@@ -107,7 +111,7 @@ export const readComment = (id) => async (dispatch) => {
 
 export const readViews = (id) => async (dispatch) => {
   const data = await axios
-    .get(`/api/post/${id}/views`)
+    .get(`${process.env.REACT_APP_SERVER_HOST}/api/post/${id}/views`)
     .then((res) => res.data)
     .catch((err) => console.log(err));
   if (data.success) {
@@ -127,7 +131,7 @@ export const getUserRanking = () => async (dispatch) => {
   });
 
   const data = await axios
-    .get("/api/users/ranking")
+    .get(`${process.env.REACT_APP_SERVER_HOST}/api/users/ranking`)
     .then((res) => res.data)
     .catch((err) => console.log(err));
 

@@ -85,7 +85,9 @@ function MyPage() {
     limitItem.current = 0; //0으로 초기화
     setLoading(false);
     setIsEnd(false);
-    Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
+    Axios.get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/users/posts/${user._no}/${target}/${limitItem.current}`
+    )
       .then((res) => {
         if (isMounted.current) {
           if (res.data.success) {
@@ -109,7 +111,9 @@ function MyPage() {
   const loadPosts = (target) => {
     if (!isEnd) {
       console.log(isEnd);
-      Axios.get(`/api/users/posts/${user._no}/${target}/${limitItem.current}`)
+      Axios.get(
+        `${process.env.REACT_APP_SERVER_HOST}/api/users/posts/${user._no}/${target}/${limitItem.current}`
+      )
         .then((res) => {
           if (isMounted.current) {
             if (res.data.success) {
@@ -187,7 +191,7 @@ function MyPage() {
             <div className="my-img-box">
               {user._imgFile ? (
                 <img
-                  src={`http://localhost:5000/${user._imgFile}`}
+                  src={`${process.env.REACT_APP_IMG_URL}/${user._imgFile}`}
                   alt="프로필사진"
                 />
               ) : (

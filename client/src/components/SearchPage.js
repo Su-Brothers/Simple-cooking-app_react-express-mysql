@@ -81,7 +81,9 @@ function SearchPage({ match }) {
     limitItem.current = 0; //0으로 초기화
     setLoading(false);
     setIsEnd(false);
-    Axios.get(`/api/post/search/${params}/${target}/${limitItem.current}`)
+    Axios.get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/post/search/${params}/${target}/${limitItem.current}`
+    )
       .then((res) => {
         if (isMounted.current) {
           if (res.data.success) {
@@ -105,16 +107,14 @@ function SearchPage({ match }) {
 
   const loadPosts = (target) => {
     if (!isEnd && prevName === match.params.name) {
-      console.log(limitItem.current);
       Axios.get(
-        `/api/post/search/${match.params.name}/${target}/${limitItem.current}`
+        `${process.env.REACT_APP_SERVER_HOST}/api/post/search/${match.params.name}/${target}/${limitItem.current}`
       )
         .then((res) => {
           if (isMounted.current) {
             if (res.data.success) {
               setList([...postList, ...res.data.result]);
               if (res.data.result.length < 10) {
-                console.log("isEnd");
                 setIsEnd(true); //10개씩 가져오는데 그것 보다 작으면 그것이 최대이다.
               } else {
                 limitItem.current += 10; //10개보다 크거나 같을때만 +10을 해준다.
@@ -173,7 +173,6 @@ function SearchPage({ match }) {
       setPrevName(match.params.name);
     }
     onChangeRoute(match.params.name);
-
     window.addEventListener("scroll", onScrollHandler);
     return () => {
       window.removeEventListener("scroll", onScrollHandler);

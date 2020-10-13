@@ -85,7 +85,7 @@ function CookPage({ location }) {
     setLoading(false);
     setIsEnd(false);
     Axios.get(
-      `/api/post/cook/getposts/${params}/${target}/${limitItem.current}`
+      `${process.env.REACT_APP_SERVER_HOST}/api/post/cook/getposts/${params}/${target}/${limitItem.current}`
     )
       .then((res) => {
         if (isMounted.current) {
@@ -109,7 +109,7 @@ function CookPage({ location }) {
   const loadPosts = (target) => {
     if (!isEnd) {
       Axios.get(
-        `/api/post/cook/getposts/${ingres.names}/${target}/${limitItem.current}`
+        `${process.env.REACT_APP_SERVER_HOST}/api/post/cook/getposts/${ingres.names}/${target}/${limitItem.current}`
       )
         .then((res) => {
           if (isMounted.current) {

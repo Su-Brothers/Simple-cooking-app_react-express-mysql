@@ -56,7 +56,9 @@ export const getPostData = (user, history, match) => async (
 const getPostServer = (history, user, match) => async (dispatch) => {
   //서버에서 가져오기
   const data = await axios
-    .get(`/api/post/${match.params.postId}/edit/getpost/${user._no}`)
+    .get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/post/${match.params.postId}/edit/getpost/${user._no}`
+    )
     .then((res) => res.data)
     .catch((err) => console.log(err));
 
@@ -102,7 +104,11 @@ export const hImgHandelr = (file) => async (dispatch) => {
   };
   try {
     const result = await axios
-      .post("/api/write/upload/headerimg", formData, config)
+      .post(
+        "${process.env.REACT_APP_SERVER_HOST}/api/write/upload/headerimg",
+        formData,
+        config
+      )
       .then((res) => res.data);
 
     if (result.success) {
@@ -176,7 +182,11 @@ export const orderImgHandelr = (id, file) => async (dispatch) => {
   };
   try {
     const result = await axios
-      .post("/api/write/upload/orderimg", formData, config)
+      .post(
+        "${process.env.REACT_APP_SERVER_HOST}/api/write/upload/orderimg",
+        formData,
+        config
+      )
       .then((res) => res.data);
 
     if (result.success) {
@@ -258,7 +268,7 @@ const onDebounceSubmit = debounce(
         type: START_LOADING,
       });
       const data = await axios
-        .post(`/api/post/${id}/edit`, board)
+        .post(`${process.env.REACT_APP_SERVER_HOST}/api/post/${id}/edit`, board)
         .then((res) => res.data);
       if (data.success) {
         alert(data.message);

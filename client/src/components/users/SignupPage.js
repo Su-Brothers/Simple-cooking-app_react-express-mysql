@@ -51,7 +51,6 @@ function SignupPage({ history }) {
 
   const onSignup = debounce(
     () => {
-      console.log("성공!");
       setClickLoading(true);
       dispatch(signupHandler(email, userId, password, userNickname, history));
     },

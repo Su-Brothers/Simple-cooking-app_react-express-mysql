@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../loadingCompo/LoadingSpinner";
+import normalProfile from "../../images/normal-profile.png";
 function CommentItem({
   writer,
   writerNo,
@@ -35,7 +36,9 @@ function CommentItem({
   const onDeleteHandler = debounce(
     async () => {
       setIsDeleted(true);
-      const data = await Axios.delete(`/api/comment/${coNo}`)
+      const data = await Axios.delete(
+        `${process.env.REACT_APP_SERVER_HOST}/api/comment/${coNo}`
+      )
         .then((res) => res.data)
         .catch((err) => console.log(err));
       if (data.success) {
@@ -49,7 +52,9 @@ function CommentItem({
   );
 
   const getLike = async () => {
-    const data = await Axios.get(`/api/comment/getLike/${coNo}`)
+    const data = await Axios.get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/comment/getLike/${coNo}`
+    )
       .then((res) => res.data)
       .catch((err) => console.log(err));
     if (data.success) {
@@ -75,10 +80,13 @@ function CommentItem({
           is_like: 0,
           user_no: userState._no,
         });
-        const data = await Axios.post(`/api/comment/refreshlike`, {
-          user: userState._no,
-          coNo: coNo,
-        })
+        const data = await Axios.post(
+          `${process.env.REACT_APP_SERVER_HOST}/api/comment/refreshlike`,
+          {
+            user: userState._no,
+            coNo: coNo,
+          }
+        )
           .then((res) => res.data)
           .catch((err) => console.log(err));
         if (data.success) {
@@ -95,11 +103,14 @@ function CommentItem({
         if (isUser.is_like === 2) {
           setIsUnlike(isUnlike - 1);
         }
-        const data = await Axios.post(`/api/comment/like`, {
-          user: userState._no,
-          coNo: coNo,
-          boNo: postId,
-        })
+        const data = await Axios.post(
+          `${process.env.REACT_APP_SERVER_HOST}/api/comment/like`,
+          {
+            user: userState._no,
+            coNo: coNo,
+            boNo: postId,
+          }
+        )
           .then((res) => res.data)
           .catch((err) => console.log(err));
         if (data.success) {
@@ -121,10 +132,13 @@ function CommentItem({
           is_like: 0,
           user_no: userState._no,
         });
-        const data = await Axios.post(`/api/comment/refreshlike`, {
-          user: userState._no,
-          coNo: coNo,
-        })
+        const data = await Axios.post(
+          `${process.env.REACT_APP_SERVER_HOST}/api/comment/refreshlike`,
+          {
+            user: userState._no,
+            coNo: coNo,
+          }
+        )
           .then((res) => res.data)
           .catch((err) => console.log(err));
         if (data.success) {
@@ -141,11 +155,14 @@ function CommentItem({
         if (isUser.is_like === 1) {
           setIsLike(isLike - 1);
         }
-        const data = await Axios.post(`/api/comment/unlike`, {
-          user: userState._no,
-          coNo: coNo,
-          boNo: postId,
-        })
+        const data = await Axios.post(
+          `${process.env.REACT_APP_SERVER_HOST}/api/comment/unlike`,
+          {
+            user: userState._no,
+            coNo: coNo,
+            boNo: postId,
+          }
+        )
           .then((res) => res.data)
           .catch((err) => console.log(err));
         if (data.success) {
@@ -169,12 +186,12 @@ function CommentItem({
       <div className="comment-left">
         <Link to={deleteAuth ? `/mypage` : `/chef/${writerNo}`}>
           {profile ? (
-            <img src={`http://localhost:5000/${profile}`} alt="프로필사진" />
-          ) : (
             <img
-              src={`http://localhost:5000/uploads/normal-profile.png`}
+              src={`${process.env.REACT_APP_IMG_URL}/${profile}`}
               alt="프로필사진"
             />
+          ) : (
+            <img src={normalProfile} alt="프로필사진" />
           )}
         </Link>
       </div>

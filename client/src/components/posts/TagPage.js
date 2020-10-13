@@ -80,7 +80,7 @@ function TagPage({ match }) {
     setLoading(false);
     setIsEnd(false);
     Axios.get(
-      `/api/post/tag/${match.params.name}/${target}/${limitItem.current}`
+      `${process.env.REACT_APP_SERVER_HOST}/api/post/tag/${match.params.name}/${target}/${limitItem.current}`
     )
       .then((res) => {
         if (isMounted.current) {
@@ -106,7 +106,7 @@ function TagPage({ match }) {
     if (!isEnd) {
       console.log(isEnd);
       Axios.get(
-        `/api/post/tag/${match.params.name}/${target}/${limitItem.current}`
+        `${process.env.REACT_APP_SERVER_HOST}/api/post/tag/${match.params.name}/${target}/${limitItem.current}`
       )
         .then((res) => {
           if (isMounted.current) {

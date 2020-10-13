@@ -20,10 +20,13 @@ function PostLike({ postId, user }) {
         console.log("싫어요");
         setLikes(likes - 1);
         setIsLiked(false);
-        const data = await Axios.post("/api/post/unlike", {
-          boNo: postId,
-          user: user,
-        })
+        const data = await Axios.post(
+          `${process.env.REACT_APP_SERVER_HOST}/api/post/unlike`,
+          {
+            boNo: postId,
+            user: user,
+          }
+        )
           .then((res) => res.data)
           .catch((err) => console.log(err));
         if (data.success) {
@@ -38,10 +41,13 @@ function PostLike({ postId, user }) {
         console.log("좋아요");
         setLikes(likes + 1);
         setIsLiked(true);
-        const data = await Axios.post("/api/post/like", {
-          boNo: postId,
-          user: user,
-        })
+        const data = await Axios.post(
+          `${process.env.REACT_APP_SERVER_HOST}/api/post/like`,
+          {
+            boNo: postId,
+            user: user,
+          }
+        )
           .then((res) => res.data)
           .catch((err) => console.log(err));
         if (data.success) {
@@ -57,7 +63,9 @@ function PostLike({ postId, user }) {
   }, 200);
 
   const getLikes = () => {
-    Axios.get(`/api/post/${postId}/likes`).then((res) => {
+    Axios.get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/post/${postId}/likes`
+    ).then((res) => {
       if (res.data.success) {
         if (isMounted.current) {
           setLikes(res.data.result.length); //길이 설정

@@ -20,11 +20,14 @@ function Comment({ postId, user }) {
       if (user) {
         //유저가 있으면 요청을 보낸다.
         if (input === "") return alert("최소 한 글자 이상을 입력해주세요.");
-        const data = await Axios.post("/api/comment", {
-          user_no: user, //유저 번호
-          bo_no: postId, //포스트 번호
-          co: input, //인풋값
-        })
+        const data = await Axios.post(
+          `${process.env.REACT_APP_SERVER_HOST}/api/comment`,
+          {
+            user_no: user, //유저 번호
+            bo_no: postId, //포스트 번호
+            co: input, //인풋값
+          }
+        )
           .then((res) => res.data)
           .catch((err) => console.log(err));
         if (data.success) {

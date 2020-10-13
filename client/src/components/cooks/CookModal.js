@@ -36,7 +36,7 @@ function CookModal({ history, onExit }) {
     console.log(limitItem.current);
     if (search === "") {
       const data = await Axios.get(
-        `/api/post/cook/getingre/${limitItem.current}`
+        `${process.env.REACT_APP_SERVER_HOST}/api/post/cook/getingre/${limitItem.current}`
       )
         .then((res) => res.data)
         .catch((err) => console.log(err));
@@ -70,7 +70,7 @@ function CookModal({ history, onExit }) {
       //인풋값에 값이 입력되었을때
       console.log(search);
       const data = await Axios.get(
-        `/api/post/cook/getingre/${limitItem.current}/${search}`
+        `${process.env.REACT_APP_SERVER_HOST}/api/post/cook/getingre/${limitItem.current}/${search}`
       )
         .then((res) => res.data)
         .catch((err) => console.log(err));
@@ -109,7 +109,9 @@ function CookModal({ history, onExit }) {
   const getIngre = async () => {
     scrollBox.current.scrollTo(0, 0);
     setLoading(false);
-    const data = await Axios.get(`/api/post/cook/getingre/${limitItem.current}`)
+    const data = await Axios.get(
+      `${process.env.REACT_APP_SERVER_HOST}/api/post/cook/getingre/${limitItem.current}`
+    )
       .then((res) => res.data)
       .catch((err) => console.log(err));
     if (data.success) {
@@ -203,7 +205,7 @@ function CookModal({ history, onExit }) {
   const onLoadHandler = async () => {
     if (searchData === "") {
       const data = await Axios.get(
-        `/api/post/cook/getingre/${limitItem.current}`
+        `${process.env.REACT_APP_SERVER_HOST}/api/post/cook/getingre/${limitItem.current}`
       )
         .then((res) => res.data)
         .catch((err) => console.log(err));
@@ -238,7 +240,7 @@ function CookModal({ history, onExit }) {
       limitItem.current += 10; //데이터를 가져올때마다 다음 페이지를 위해 +10
     } else {
       const data = await Axios.get(
-        `/api/post/cook/getingre/${limitItem.current}/${searchData}`
+        `${process.env.REACT_APP_SERVER_HOST}/api/post/cook/getingre/${limitItem.current}/${searchData}`
       )
         .then((res) => res.data)
         .catch((err) => console.log(err));

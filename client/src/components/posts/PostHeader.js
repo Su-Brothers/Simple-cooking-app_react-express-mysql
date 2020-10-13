@@ -44,7 +44,9 @@ function PostHeader({
     if (result) {
       //서버 요청
       setDeleteLoading(true);
-      const data = await Axios.delete(`/api/post/${postId}/delete`)
+      const data = await Axios.delete(
+        `${process.env.REACT_APP_SERVER_HOST}/api/post/${postId}/delete`
+      )
         .then((res) => res.data)
         .catch((err) => console.log(err));
       console.log(data);

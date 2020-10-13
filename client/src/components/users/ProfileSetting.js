@@ -63,7 +63,7 @@ function ProfileSetting({
     };
     try {
       const result = await Axios.post(
-        "/api/users/upload/profile",
+        `${process.env.REACT_APP_SERVER_HOST}/api/users/upload/profile`,
         formData,
         config
       ).then((res) => res.data);
@@ -119,15 +119,18 @@ function ProfileSetting({
             if (noData) {
               setclickLoading(false);
               console.log(noData);
-              Axios.post(`/api/users/edit`, {
-                userNo: noData,
-                imgFile: imgFile,
-                email: email,
-                nickname: userNickname,
-                description: description,
-                password: password,
-                newPassword: newPassword,
-              }).then((res) => {
+              Axios.post(
+                `${process.env.REACT_APP_SERVER_HOST}/api/users/edit`,
+                {
+                  userNo: noData,
+                  imgFile: imgFile,
+                  email: email,
+                  nickname: userNickname,
+                  description: description,
+                  password: password,
+                  newPassword: newPassword,
+                }
+              ).then((res) => {
                 if (res.data.success) {
                   setclickLoading(true);
                   alert(res.data.message);
@@ -154,7 +157,7 @@ function ProfileSetting({
       } else {
         if (nickData) {
           setclickLoading(false);
-          Axios.post(`/api/users/edit`, {
+          Axios.post(`${process.env.REACT_APP_SERVER_HOST}/api/users/edit`, {
             userNo: noData,
             imgFile: imgFile,
             email: email,
@@ -201,7 +204,7 @@ function ProfileSetting({
                 <input {...getInputProps()} />
                 {imgFile ? (
                   <img
-                    src={`http://localhost:5000/${imgFile}`}
+                    src={`${process.env.REACT_APP_IMG_URL}/${imgFile}`}
                     alt="프로필사진"
                   />
                 ) : (

@@ -13,7 +13,6 @@ function WriteHeader() {
     (state) => state.write,
     shallowEqual //비구조할당(매 번 새로운 객체를 생성하므로 얕은복사)
   );
-  const write = useSelector((state) => state);
   const dispatch = useDispatch();
   const inputHandler = (e) => {
     dispatch(hInputHandler(e.target.name, e.target.value));
@@ -57,7 +56,7 @@ function WriteHeader() {
                 <FaCamera />
                 {mainPhoto ? (
                   <img
-                    src={`http://localhost:5000/${mainPhoto}`}
+                    src={`${process.env.REACT_APP_IMG_URL}/${mainPhoto}`}
                     alt="요리 대표 사진"
                   />
                 ) : null}
