@@ -69,6 +69,7 @@ router.post("/login", async (req, res) => {
             httpOnly: true,
             secure: true,
             domain: "https://dn9g4x7ek29ym.cloudfront.net",
+            sameSite: "none",
           });
           res.json({ success: true, user: token });
         } else {
