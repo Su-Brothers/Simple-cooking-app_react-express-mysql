@@ -7,10 +7,14 @@ const AUTH_USER = "AUTH_USER";
 //액션 생성 함수
 export const loginHandler = (id, password, history) => async (dispatch) => {
   const data = await axios
-    .post(`${process.env.REACT_APP_SERVER_HOST}/api/users/login`, {
-      id: id,
-      password: password,
-    })
+    .post(
+      `${process.env.REACT_APP_SERVER_HOST}/api/users/login`,
+      {
+        id: id,
+        password: password,
+      },
+      { withCredentials: true }
+    )
     .then((res) => res.data)
     .catch((err) => console.log(err));
   if (data.success) {

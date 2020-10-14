@@ -68,7 +68,7 @@ router.post("/login", async (req, res) => {
           res.cookie("user", token, {
             httpOnly: true,
             secure: true,
-            domain: "dn9g4x7ek29ym.cloudfront.net",
+            domain: "https://dn9g4x7ek29ym.cloudfront.net",
           });
           res.json({ success: true, user: token });
         } else {
