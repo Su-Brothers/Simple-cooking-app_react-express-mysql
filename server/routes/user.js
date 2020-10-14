@@ -90,7 +90,7 @@ router.post("/login", async (req, res) => {
 router.get("/logout", (req, res) => {
   if (req.cookies.user) {
     //로그아웃하려는 쿠키가 있을때
-    res.clearCookie("user", { domain: "jabakexpress.site" });
+    res.clearCookie("user", { domain: "jabakexpress.site", path: "/" });
     res.json({ success: true, message: "로그아웃 성공" });
   } else {
     res.json({ success: false, message: "로그아웃 에러" });
