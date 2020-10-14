@@ -53,7 +53,7 @@ function EditHeader({ title, description, time, diff, type, photo }) {
                 <FaCamera />
                 {photo ? (
                   <img
-                    src={`http://localhost:5000/${photo}`}
+                    src={`${process.env.REACT_APP_IMG_URL}/${photo}`}
                     alt="요리 대표 사진"
                   />
                 ) : null}

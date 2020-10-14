@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { signupHandler } from "../../modules/user";
 import { debounce } from "lodash";
 import LoadingSpinner from "../loadingCompo/LoadingSpinner";
+import { useRef } from "react";
+import { useEffect } from "react";
 function SignupPage({ history }) {
   const [info, setInfo] = useState({
     email: "",
@@ -13,6 +15,7 @@ function SignupPage({ history }) {
     passwordCheck: "",
     userNickname: "",
   });
+  const isMounted = useRef(null);
 
   const [clickLoading, setClickLoading] = useState(false);
   const [emailBool, setEmailBool] = useState(""); //이메일 일치 상태
@@ -52,7 +55,16 @@ function SignupPage({ history }) {
   const onSignup = debounce(
     () => {
       setClickLoading(true);
-      dispatch(signupHandler(email, userId, password, userNickname, history));
+      dispatch(
+        signupHandler(
+          email,
+          userId,
+          password,
+          userNickname,
+          history,
+          completeLoading
+        )
+      );
     },
     300,
     { leading: true, trailing: false }
@@ -71,6 +83,18 @@ function SignupPage({ history }) {
       onSignup();
     }
   };
+
+  const completeLoading = () => {
+    if (!isMounted.current) return;
+    setClickLoading(false);
+  };
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
   return (
     <div className="signup_container">
       <div className="signup_container_logo">

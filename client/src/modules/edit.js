@@ -105,7 +105,7 @@ export const hImgHandelr = (file) => async (dispatch) => {
   try {
     const result = await axios
       .post(
-        "${process.env.REACT_APP_SERVER_HOST}/api/write/upload/headerimg",
+        `${process.env.REACT_APP_SERVER_HOST}/api/write/upload/headerimg`,
         formData,
         config
       )
@@ -183,7 +183,7 @@ export const orderImgHandelr = (id, file) => async (dispatch) => {
   try {
     const result = await axios
       .post(
-        "${process.env.REACT_APP_SERVER_HOST}/api/write/upload/orderimg",
+        `${process.env.REACT_APP_SERVER_HOST}/api/write/upload/orderimg`,
         formData,
         config
       )
