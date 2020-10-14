@@ -19,7 +19,11 @@ const auth = (req, res, next) => {
         next();
       } catch {
         //쿠키가 일치하지 않거나 만료되었을때
-        res.clearCookie("user", { domain: "jabakexpress.site", path: "/" });
+        res.clearCookie("user", {
+          domain: "jabakexpress.site",
+          path: "/",
+          sameSite: "none",
+        });
         return res.json({ isAuth: false, error: "세션 만료" });
       }
     });
