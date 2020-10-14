@@ -94,6 +94,8 @@ router.get("/logout", (req, res) => {
       domain: "jabakexpress.site",
       path: "/",
       sameSite: "none",
+      httpOnly: true,
+      secure: true,
     });
     res.json({ success: true, message: "로그아웃 성공" });
   } else {
