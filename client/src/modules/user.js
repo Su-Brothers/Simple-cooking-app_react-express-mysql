@@ -28,9 +28,14 @@ export const loginHandler = (id, password, history) => async (dispatch) => {
   }
 };
 
-export const signupHandler = (email, id, password, nickname, history) => async (
-  dispatch
-) => {
+export const signupHandler = (
+  email,
+  id,
+  password,
+  nickname,
+  history,
+  completeLoading
+) => async (dispatch) => {
   const data = await axios
     .post(`${process.env.REACT_APP_SERVER_HOST}/api/users/signup`, {
       email: email,
@@ -49,6 +54,7 @@ export const signupHandler = (email, id, password, nickname, history) => async (
     });
     history.push("/");
   } else {
+    completeLoading();
     alert(data.message);
   }
 };
@@ -56,7 +62,9 @@ export const signupHandler = (email, id, password, nickname, history) => async (
 export const reloadUser = () => async (dispatch) => {
   //회원정보 수정 후 리로드
   const data = await axios
-    .get(`${process.env.REACT_APP_SERVER_HOST}/api/users/auth`)
+    .get(`${process.env.REACT_APP_SERVER_HOST}/api/users/auth`, {
+      withCredentials: true,
+    })
     .then((res) => res.data)
     .catch((err) => console.log(err));
   dispatch({

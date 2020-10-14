@@ -33,7 +33,7 @@ function EditOrderItem({ id, text, order, orderPhoto }) {
               <FaCamera />
               {orderPhoto ? (
                 <img
-                  src={`http://localhost:5000/${orderPhoto}`}
+                  src={`${process.env.REACT_APP_IMG_URL}/${orderPhoto}`}
                   alt="요리사진"
                 />
               ) : null}
