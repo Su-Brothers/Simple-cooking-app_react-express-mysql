@@ -23,6 +23,8 @@ const auth = (req, res, next) => {
           domain: "jabakexpress.site",
           path: "/",
           sameSite: "none",
+          httpOnly: true,
+          secure: true,
         });
         return res.json({ isAuth: false, error: "세션 만료" });
       }
