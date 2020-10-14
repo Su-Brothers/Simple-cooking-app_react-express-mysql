@@ -65,7 +65,11 @@ router.post("/login", async (req, res) => {
             }
           );
           // 쿠키저장
-          res.cookie("user", token);
+          res.cookie("user", token, {
+            httpOnly: true,
+            secure: true,
+            domain: "dn9g4x7ek29ym.cloudfront.net",
+          });
           res.json({ success: true, user: token });
         } else {
           res.json({

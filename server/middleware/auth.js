@@ -8,7 +8,6 @@ const auth = (req, res, next) => {
   //클라이언트측에서 쿠키를 가져온다.
   const token = req.cookies.user;
   console.log(token);
-  console.log("??");
   if (!token) {
     return res.json({ isAuth: null, error: "로그인이 필요합니다." });
   } else {

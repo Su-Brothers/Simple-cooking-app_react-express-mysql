@@ -87,7 +87,7 @@ function PostHeader({
 
         <div className="post-header-middle">
           <img
-            src={`http://localhost:5000/${board_img}`}
+            src={`${process.env.REACT_APP_IMG_URL}/${board_img}`}
             alt="대표 이미지"
             className="header-food-img"
           />
@@ -101,7 +101,7 @@ function PostHeader({
             </div>
             {profile ? (
               <img
-                src={`http://localhost:5000/${profile}`}
+                src={`${process.env.REACT_APP_IMG_URL}/${profile}`}
                 alt="프로필 이미지"
                 className="header-profile-img"
               />
