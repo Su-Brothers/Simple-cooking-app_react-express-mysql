@@ -22,7 +22,8 @@ function AsideBar({ location, history, match }) {
   const logoutHandler = debounce(
     async () => {
       const data = await Axios.get(
-        `${process.env.REACT_APP_SERVER_HOST}/api/users/logout`
+        `${process.env.REACT_APP_SERVER_HOST}/api/users/logout`,
+        { withCredentials: true }
       )
         .then((res) => res.data)
         .catch((err) => console.log(err));

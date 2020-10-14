@@ -67,7 +67,9 @@ export const reloadUser = () => async (dispatch) => {
 export const authHandler = (option, history) => async (dispatch) => {
   //페이지간 권한인증
   const data = await axios
-    .get(`${process.env.REACT_APP_SERVER_HOST}/api/users/auth`)
+    .get(`${process.env.REACT_APP_SERVER_HOST}/api/users/auth`, {
+      withCredentials: true,
+    })
     .then((res) => res.data)
     .catch((err) => console.log(err));
   dispatch({
