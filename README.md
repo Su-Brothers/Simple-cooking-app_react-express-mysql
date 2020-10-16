@@ -289,7 +289,7 @@ lodash의 메서드를 이용했고, 서버에 직접적으로 요청이 가게�
 * 배포한 호스팅서비스와 그 이유
     - react(aws s3, cloudfront 배포) -https가 무료였고 사용하기 편했다.
     - nodejs(aws ec2,ubuntu 18.04 배포) -서버 초기단계부터 내가 직접 해보고 싶었다.
-    - mysql(digitialocean,ubuntu 18.04 배포) -학생인 나에게 비용이 저렴했고 언어의 장벽 빼곤 사용하기 편했다.
+    - mysql(digitalocean,ubuntu 18.04 배포) -학생인 나에게 비용이 저렴했고 언어의 장벽 빼곤 사용하기 편했다.
    
 aws를 처음 사용해보았기 때문에 재미있었고 어렵기도 했다. 배포한 직후 cors 이슈 때문에 통신이 안될 땐 힘들었다.
 
