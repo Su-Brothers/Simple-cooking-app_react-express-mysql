@@ -95,7 +95,11 @@
 # 기획
 
 * 프론트엔드
+   ![오븐](https://user-images.githubusercontent.com/61229227/96288875-135fad00-101f-11eb-9325-0cd00cfd3e55.PNG)
+   ![오븐2](https://user-images.githubusercontent.com/61229227/96288887-178bca80-101f-11eb-83d8-00d1deb39061.PNG)
    - ui를 잡기 위해 카카오오븐을 사용하였다.
+* 백엔드
+   
    
 
 # 프로젝트 기능 설명
