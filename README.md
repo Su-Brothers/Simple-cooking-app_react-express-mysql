@@ -22,7 +22,6 @@
    - React(AWS S3, with cloudfront)
    - Express(AWS EC2)
    - MYSQL(Digitalocean)
-   - ubuntu 18.04
  
  * 프론트엔드 (REACT)
    - React(v16.13.1)
@@ -39,7 +38,7 @@
    - cors
    - jsonwebtoken
    - multer
-   - ubuntu
+   - ubuntu 18.04
    - nginx
    - pm2
    - --
