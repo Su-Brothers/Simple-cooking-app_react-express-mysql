@@ -305,7 +305,16 @@ cloudfront덕분에 react측은 ssl인증서를 발급받을 필요가 없었지
 let's encrypt를 통해서 ssl인증서를 무료로 발급 받아 자동갱신을 해주었다.
 
 # 완성 모습
-
+ * pc 
+ ---
+ ![완성(pc)](https://user-images.githubusercontent.com/61229227/96349418-723e2880-10ea-11eb-9c06-eec1749e048b.PNG)
+ * ipad 
+ ---
+ ![완성(ipad)](https://user-images.githubusercontent.com/61229227/96349416-710cfb80-10ea-11eb-87f5-b3fef30e7a81.PNG)
+ * mobile 
+ ---
+ ![완성(모바일)](https://user-images.githubusercontent.com/61229227/96349419-736f5580-10ea-11eb-8876-712d13324727.PNG)
+ 
 # 👨🏼‍💻learned...
 
 1. 클라이언트와 서버측의 흐름을 많이 알 수 있었다.
